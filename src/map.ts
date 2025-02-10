@@ -2,10 +2,13 @@ export class Map {
   map: number[][];
   size: number;
 
-  constructor(map: number[][], canvasHeight: number) {
+  constructor(
+    map: Array<Array<number>>,
+    mapSize: number,
+    canvasHeight: number,
+  ) {
     this.map = map;
-    this.size = canvasHeight / map.length;
-    console.log(this.size);
+    this.size = canvasHeight / mapSize;
   }
 
   draw(c: any, scale: number) {

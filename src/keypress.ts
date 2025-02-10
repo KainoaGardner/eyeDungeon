@@ -3,6 +3,7 @@ keyMap.set("ArrowRight", false);
 keyMap.set("ArrowLeft", false);
 keyMap.set("ArrowUp", false);
 keyMap.set("ArrowDown", false);
+keyMap.set("Space", false);
 
 window.addEventListener("keydown", keyDown, false);
 window.addEventListener("keyup", keyUp, false);
