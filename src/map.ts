@@ -20,8 +20,16 @@ export class Map {
 
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
-        if (this.map[i][j] !== 0) {
+        if (this.map[i][j] === 1) {
           c.fillStyle = "black";
+          c.fillRect(
+            this.size * j * scale,
+            this.size * i * scale,
+            this.size * scale,
+            this.size * scale,
+          );
+        } else if (this.map[i][j] === 2) {
+          c.fillStyle = "green";
           c.fillRect(
             this.size * j * scale,
             this.size * i * scale,

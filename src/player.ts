@@ -1,3 +1,16 @@
+const flashlightImg = new Image();
+flashlightImg.src = "/img/flashlight.png";
+const flashlightoffImg = new Image();
+flashlightoffImg.src = "/img/flashlightoff.png";
+
+const gunImg = new Image();
+gunImg.src = "/img/gun.png";
+
+interface distanceOutput {
+  distance: number;
+  goal: number;
+}
+
 export class Player {
   x: number;
   y: number;
@@ -19,6 +32,9 @@ export class Player {
   flashlight: boolean = true;
 
   speed: number;
+
+  holding: number = 2;
+  //0 nothing 1 gun 2 flashlight
 
   constructor(x: number, y: number, radius: number, speed: number) {
     this.x = x;
@@ -48,29 +64,76 @@ export class Player {
   }
 
   drawView(c: any, canvas: any, map: number[][], mapSize: number) {
-    c.fillStyle = "black";
+    const lu = this.viewDist / 255;
+    c.fillStyle = `rgb(${17 * lu}, ${10 * lu}, ${10 * lu})`;
     c.fillRect(0, 0, canvas.width, canvas.height / 2);
-    c.fillStyle = "black";
-    c.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
-    for (let x = 0; x < canvas.width; x++) {
-      const viewAngle = (90 * x) / (canvas.width / 2) - 45;
-      const newAngle = this.direction + viewAngle;
-      const distance = this.distance(newAngle, map, mapSize);
 
-      if (distance === -1) {
+    c.fillStyle = `rgb(${30 * lu}, ${10 * lu}, ${10 * lu})`;
+    c.fillRect(0, canvas.height / 2, canvas.width, canvas.height);
+
+    for (let x = 0; x < canvas.width; x++) {
+      const viewAngle = (130 * x) / (canvas.width / 2) - 75;
+      const newAngle = this.direction + viewAngle;
+      const distanceOut = this.distance(newAngle, map, mapSize);
+
+      if (distanceOut.distance === -1) {
         continue;
       }
 
-      const height = ((1 / (distance / 500) - 1) * canvas.height) / 5;
+      let height =
+        ((1 / (distanceOut.distance / 100) - 1) * canvas.height) / 10;
 
-      const color = (height / canvas.height) * this.viewDist;
+      height = Math.min(height, canvas.height);
+
+      const color = ((height / canvas.height) * this.viewDist) / 2;
       c.fillStyle = `rgb(${color},${color},${color})`;
       c.fillRect(x * 2, canvas.height / 2 - height / 2, 2, height);
+
+      if (distanceOut.goal != -1) {
+        let goalHeight =
+          ((1 / (distanceOut.goal / 100) - 1) * canvas.height) / 10;
+
+        goalHeight = Math.min(goalHeight, canvas.height);
+
+        c.globalAlpha = 0.05;
+        c.fillStyle = "#2ecc71";
+        c.fillRect(x * 2, canvas.height / 2 - goalHeight / 2, 2, goalHeight);
+        c.globalAlpha = 1;
+      }
+    }
+
+    if (this.viewDist === 64) {
+      c.globalAlpha = 0.02;
+      c.fillStyle = "#f1c40f";
+      c.fillRect(0, 0, canvas.width, canvas.height);
+
+      c.globalAlpha = 0.02;
+      c.fillStyle = "white";
+      c.beginPath();
+      c.arc(
+        canvas.width / 2,
+        canvas.height / 2,
+        canvas.height / 2,
+        0,
+        2 * Math.PI,
+      );
+      c.fill();
+
+      c.beginPath();
+      c.arc(canvas.width / 2, canvas.height - 150, 125, 0, 2 * Math.PI);
+      c.fill();
+
+      c.globalAlpha = 1;
     }
   }
 
-  private distance(angle: number, map: number[][], mapSize: number) {
-    for (let i = 1; i <= 500; i += 5) {
+  private distance(
+    angle: number,
+    map: number[][],
+    mapSize: number,
+  ): distanceOutput {
+    const result: distanceOutput = { distance: -1, goal: -1 };
+    for (let i = 1; i <= 100; i += 0.3) {
       const nX = this.x + i * Math.cos((angle * Math.PI) / 180);
       const nY = this.y + i * Math.sin((angle * Math.PI) / 180);
 
@@ -83,15 +146,20 @@ export class Player {
         blockY < 0 ||
         blockY >= map.length
       ) {
-        return -1;
+        return result;
       }
 
-      if (map[blockY][blockX] !== 0) {
-        return i;
+      if (result.goal === -1 && map[blockY][blockX] === 2) {
+        result.goal = i;
+      }
+
+      if (map[blockY][blockX] === 1) {
+        result.distance = i;
+        return result;
       }
     }
 
-    return -1;
+    return result;
   }
 
   drawUi(c: any, canvas: any) {
@@ -101,6 +169,18 @@ export class Player {
       c.fillStyle = "#b33939";
     }
     c.fillRect(canvas.width - 110, 10, (this.battery / 1000) * 100, 10);
+
+    if (this.holding === 2) {
+      if (this.viewDist === 64) {
+        c.drawImage(flashlightImg, canvas.width / 2 - 120, canvas.height - 200);
+      } else {
+        c.drawImage(
+          flashlightoffImg,
+          canvas.width / 2 - 120,
+          canvas.height - 200,
+        );
+      }
+    }
   }
 
   update(
@@ -115,8 +195,10 @@ export class Player {
       this.flashlight = true;
     }
     if (keyMap.get("Space") && this.battery > 0 && this.flashlight) {
-      this.viewDist = 128;
-      this.battery--;
+      if (this.holding === 2) {
+        this.viewDist = 64;
+        this.battery--;
+      }
     } else {
       this.viewDist = 16;
       if (this.battery < 1000) {
@@ -146,7 +228,7 @@ export class Player {
           xBlock < map[0].length &&
           yBlock >= 0 &&
           yBlock < map.length &&
-          map[yBlock][xBlock] === 0)
+          map[yBlock][xBlock] !== 1)
       ) {
         this.x = nx;
         this.y = ny;

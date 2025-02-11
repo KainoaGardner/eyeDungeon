@@ -16,18 +16,23 @@ window.addEventListener("resize", function () {
   canvas.height = window.innerHeight;
 });
 
-const map = new Map(makeMap(100, c, canvas), 100, canvas.height);
+const map = new Map(makeMap(10, c), 100, canvas.height);
 
-const player = new Player(map.size * 2, map.size * 2, 15, 0.5);
+const player = new Player(
+  map.size + map.size / 2,
+  map.size + map.size / 2,
+  5,
+  0.1,
+);
 
 function main(): void {
   requestAnimationFrame(main);
-  // c.clearRect(0, 0, canvas.width, canvas.height);
-  // player.update(keyMap, map.map, map.size);
-  // player.drawView(c, canvas, map.map, map.size);
-  // player.drawUi(c, canvas);
-  // map.draw(c, 1);
-  // player.draw(c, 1);
+  c.clearRect(0, 0, canvas.width, canvas.height);
+  player.update(keyMap, map.map, map.size);
+  player.drawView(c, canvas, map.map, map.size);
+  player.drawUi(c, canvas);
+  map.draw(c, 1);
+  player.draw(c, 1);
 }
 
 main();

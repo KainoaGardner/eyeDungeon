@@ -5,100 +5,148 @@ interface cell {
   down: boolean;
 }
 
-export function makeMap(size: number, c: any, canvas: any) {
-  const stack: number[][] = [];
-  const cells = new Map<string, cell>();
-  stack.push([0, 0, 0]);
-  cells.set("0,0", { right: true, left: true, up: true, down: true });
+export function makeMap(size: number, ctx: any) {
+  const maze: cell[][] = [];
 
-  //stack [x,y,direction relative to start]
-  //direction    0 = left 1 = right 2 = up 3 = down
-  while (stack.length > 0) {
-    const neighbors: number[][] = [];
-    const x = stack[stack.length - 1][0];
-    const y = stack[stack.length - 1][1];
-
-    if (x - 1 >= 0 && !cells.has(`${x - 1},${y}`)) {
-      neighbors.push([x - 1, y, 0]);
+  for (let r = 0; r < size; r++) {
+    const row = [];
+    for (let c = 0; c < size; c++) {
+      let currCell = { right: true, left: true, up: true, down: true };
+      row.push(currCell);
     }
-    if (x + 1 < size && !cells.has(`${x + 1},${y}`)) {
-      neighbors.push([x + 1, y, 1]);
-    }
-    if (y - 1 >= 0 && !cells.has(`${x},${y - 1}`)) {
-      neighbors.push([x, y - 1, 2]);
-    }
-    if (y + 1 < size && !cells.has(`${x},${y + 1}`)) {
-      neighbors.push([x, y + 1, 3]);
-    }
-
-    if (neighbors.length === 0) {
-      stack.pop();
-      continue;
-    }
-
-    const rand = Math.floor(Math.random()) * neighbors.length;
-
-    let currWalls = cells.get(`${x},${y}`)!;
-    let nextWalls: cell = {
-      right: true,
-      left: true,
-      up: true,
-      down: true,
-    };
-
-    switch (neighbors[rand][2]) {
-      case 0:
-        currWalls.left = false;
-        nextWalls.right = false;
-        break;
-      case 1:
-        currWalls.right = false;
-        nextWalls.left = false;
-        break;
-      case 2:
-        currWalls.up = false;
-        nextWalls.down = false;
-        break;
-      case 3:
-        currWalls.down = false;
-        nextWalls.up = false;
-        break;
-    }
-
-    stack.push(neighbors[rand]);
-    cells.set(`${x},${y}`, currWalls);
-    cells.set(`${neighbors[rand][0]},${neighbors[rand][1]}`, nextWalls);
+    maze.push(row);
   }
-  console.log(cells);
 
-  const map = Array<Array<number>>(size).fill(Array<number>(size).fill(0));
+  const visited = new Set<string>();
+  makeBaseMaze(0, 0, maze, visited);
 
-  c.fillStyle = "white";
-  c.fillRect(0, 0, canvas.width, canvas.height);
-  c.beginPath();
-  c.moveTo(0, 0);
-  c.lineTo(canvas.width, canvas.height);
-  c.stroke();
-  const cellSize = 10;
+  return makeFinalMaze(maze);
+}
 
-  // for (let i = 0; i < size; i++) {
-  //   for (let j = 0; j < size; j++) {
-  //     const cellWalls = cells.get(`${i},${j}`)!;
-  //     if (cellWalls.left) {
-  //       c.beginPath();
-  //       c.moveTo(i * cellSize, j * cellSize);
-  //       c.lineTo(i * cellSize, (j + 1) * cellSize);
-  //       c.strokeStyle = "black";
-  //       c.stroke();
-  //     }
-  //     if (cellWalls.right) {
-  //       c.beginPath();
-  //       c.moveTo((i + 1) * cellSize, j * cellSize);
-  //       c.lineTo((i + 1) * cellSize, (j + 1) * cellSize);
-  //       c.strokeStyle = "black";
-  //       c.stroke();
-  //     }
-  //   }
-  // }
-  return map;
+function makeBaseMaze(
+  r: number,
+  c: number,
+  maze: cell[][],
+  visited: Set<string>,
+) {
+  visited.add(`${r},${c}`);
+  const dir = [
+    [0, 1],
+    [0, -1],
+    [-1, 0],
+    [1, 0],
+  ];
+  let shuffDir = dir
+    .map((value) => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value);
+
+  for (let i = 0; i < shuffDir.length; i++) {
+    const dY = shuffDir[i][0];
+    const dX = shuffDir[i][1];
+    const y = r + dY;
+    const x = c + dX;
+
+    if (
+      !visited.has(`${y},${x}`) &&
+      y >= 0 &&
+      y < maze.length &&
+      x >= 0 &&
+      x < maze.length
+    ) {
+      switch (`${dY},${dX}`) {
+        case "0,1":
+          maze[r][c].right = false;
+          maze[y][x].left = false;
+          break;
+        case "0,-1":
+          maze[r][c].left = false;
+          maze[y][x].right = false;
+          break;
+        case "-1,0":
+          maze[r][c].up = false;
+          maze[y][x].down = false;
+          break;
+        case "1,0":
+          maze[r][c].down = false;
+          maze[y][x].up = false;
+          break;
+      }
+      makeBaseMaze(y, x, maze, visited);
+    }
+  }
+}
+
+function makeFinalMaze(baseMaze: cell[][]): number[][] {
+  const size = baseMaze.length;
+  const finalMaze: number[][] = [];
+
+  for (let r = 0; r < size; r++) {
+    const row1 = [1];
+    const row2 = [1];
+    for (let c = 0; c < size; c++) {
+      const cell = baseMaze[r][c];
+      if (cell.up) {
+        row1.push(1);
+        row1.push(1);
+        if (cell.right) {
+          row2.push(0);
+          row2.push(1);
+        } else {
+          row2.push(0);
+          row2.push(0);
+        }
+      } else {
+        const upRight = r - 1 >= 0 && baseMaze[r - 1][c].right;
+        const rightUp = c + 1 < size && baseMaze[r][c + 1].up;
+
+        if (cell.right) {
+          row1.push(0);
+          row1.push(1);
+          row2.push(0);
+          row2.push(1);
+        } else if (upRight || rightUp) {
+          row1.push(0);
+          row1.push(1);
+          row2.push(0);
+          row2.push(0);
+        } else {
+          row1.push(0);
+          row1.push(0);
+          row2.push(0);
+          row2.push(0);
+        }
+      }
+    }
+    finalMaze.push(row1);
+    finalMaze.push(row2);
+  }
+
+  const finalRow: number[] = [];
+  for (let i = 0; i < size * 2 + 1; i++) {
+    finalRow.push(1);
+  }
+  finalMaze.push(finalRow);
+  finalMaze[size * 2 - 1][size * 2 - 1] = 2;
+
+  return removeWalls(finalMaze, size * 2 + 1);
+}
+
+function removeWalls(maze: number[][], size: number): number[][] {
+  for (let r = 0; r < size; r++) {
+    for (let c = 0; c < size; c++) {
+      if (
+        r != 0 &&
+        r != size - 1 &&
+        c != 0 &&
+        c != size - 1 &&
+        maze[r][c] === 1 &&
+        Math.floor(Math.random() * 4) === 0
+      ) {
+        maze[r][c] = 0;
+      }
+    }
+  }
+
+  return maze;
 }
