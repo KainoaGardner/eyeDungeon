@@ -6,6 +6,23 @@ flashlightoffImg.src = "/img/flashlightoff.png";
 const gunImg = new Image();
 gunImg.src = "/img/gun.png";
 
+const flashLightInvImg = new Image();
+flashLightInvImg.src = "/img/flashlight-inv.png";
+const gunInvImg = new Image();
+gunInvImg.src = "/img/gun-inv.png";
+
+const ammoImg = new Image();
+ammoImg.src = "/img/ammo.png";
+
+function drawImage(ctx, image, x, y, w, h, degrees) {
+  ctx.save();
+  ctx.translate(x + w / 2, y + h / 2);
+  ctx.rotate((degrees * Math.PI) / 180.0);
+  ctx.translate(-x - w / 2, -y - h / 2);
+  ctx.drawImage(image, x, y, w, h);
+  ctx.restore();
+}
+
 interface distanceOutput {
   distance: number;
   goal: number;
@@ -31,9 +48,11 @@ export class Player {
   battery: number = 1000;
   flashlight: boolean = true;
 
+  ammo: number = 3;
   speed: number;
 
-  holding: number = 2;
+  holding: number = 1;
+
   //0 nothing 1 gun 2 flashlight
 
   constructor(x: number, y: number, radius: number, speed: number) {
@@ -163,14 +182,61 @@ export class Player {
   }
 
   drawUi(c: any, canvas: any) {
+    c.beginPath();
+    c.globalAlpha = 0.5;
+    c.fillStyle = "#7f8c8d";
+    c.fillRect(10, canvas.height - 85, 75, 75);
+    c.fillRect(95, canvas.height - 85, 75, 75);
+    c.globalAlpha = 1;
+    c.drawImage;
+
+    c.drawImage(gunInvImg, 10, canvas.height - 82, 75, 75);
+    c.drawImage(flashLightInvImg, 95, canvas.height - 82, 75, 75);
+
+    c.globalAlpha = 0.5;
+    c.fillStyle = "black";
+    if (this.holding !== 1) {
+      c.fillRect(10, canvas.height - 85, 75, 75);
+    }
+    if (this.holding !== 2) {
+      c.fillRect(95, canvas.height - 85, 75, 75);
+    }
+
+    c.globalAlpha = 1;
+
+    for (let i = 0; i < this.ammo; i++) {
+      drawImage(
+        c,
+        ammoImg,
+        canvas.width - 75,
+        canvas.height - 110 - i * 50,
+        37,
+        84,
+        -90,
+      );
+    }
+
     if (this.flashlight) {
       c.fillStyle = "#f1c40f";
     } else {
       c.fillStyle = "#b33939";
     }
-    c.fillRect(canvas.width - 110, 10, (this.battery / 1000) * 100, 10);
+    c.fillRect(
+      canvas.width - 210,
+      canvas.height - 30,
+      (this.battery / 1000) * 200,
+      20,
+    );
 
-    if (this.holding === 2) {
+    if (this.holding === 1) {
+      c.drawImage(
+        gunImg,
+        canvas.width / 2 - 140,
+        canvas.height - 260,
+        280,
+        280,
+      );
+    } else if (this.holding === 2) {
       if (this.viewDist === 64) {
         c.drawImage(flashlightImg, canvas.width / 2 - 120, canvas.height - 200);
       } else {
@@ -194,12 +260,21 @@ export class Player {
     if (!this.flashlight && this.battery >= 1000) {
       this.flashlight = true;
     }
-    if (keyMap.get("Space") && this.battery > 0 && this.flashlight) {
-      if (this.holding === 2) {
+    if (keyMap.get("Space")) {
+      if (this.holding === 2 && this.battery > 0 && this.flashlight) {
         this.viewDist = 64;
         this.battery--;
       }
-    } else {
+      if (this.holding === 1 && this.ammo > 0) {
+        this.ammo--;
+      }
+    }
+
+    if (
+      !this.flashlight ||
+      (this.holding === 2 && !keyMap.get("Space")) ||
+      this.holding !== 2
+    ) {
       this.viewDist = 16;
       if (this.battery < 1000) {
         this.battery += 0.5;
@@ -254,6 +329,12 @@ export class Player {
         this.x = nx;
         this.y = ny;
       }
+    }
+
+    if (keyMap.get("Digit1")) {
+      this.holding = 1;
+    } else if (keyMap.get("Digit2")) {
+      this.holding = 2;
     }
   }
 }
