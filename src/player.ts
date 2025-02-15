@@ -14,7 +14,18 @@ gunInvImg.src = "/img/gun-inv.png";
 const ammoImg = new Image();
 ammoImg.src = "/img/ammo.png";
 
-function drawImage(ctx, image, x, y, w, h, degrees) {
+const texWidth = 32;
+const texHeight = 32;
+
+function drawImage(
+  ctx: any,
+  image: typeof Image,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  degrees: number,
+) {
   ctx.save();
   ctx.translate(x + w / 2, y + h / 2);
   ctx.rotate((degrees * Math.PI) / 180.0);
@@ -29,19 +40,16 @@ interface distanceOutput {
 }
 
 export class Player {
-  x: number;
-  y: number;
-
-  posX = 22;
-  posY = 12;
+  posX: number;
+  posY: number;
   dirX = -1;
   dirY = 0;
   planeX: number = 0;
-  planeY: number = 1;
+  planeY: number = 1.5;
 
   radius: number;
   direction: number = 0;
-  turnSpeed: number = 1;
+  turnSpeed: number = 0.01;
 
   viewDist: number = 32;
 
@@ -56,70 +64,150 @@ export class Player {
   //0 nothing 1 gun 2 flashlight
 
   constructor(x: number, y: number, radius: number, speed: number) {
-    this.x = x;
-    this.y = y;
+    // this.x = x;
+    // this.y = y;
+    this.posX = x;
+    this.posY = y;
     this.radius = radius;
     this.speed = speed;
   }
 
-  draw(c: any, scale: number): void {
+  draw(c: any, scale: number, blockSize: number): void {
+    console.log(this.dirX, this.dirY);
     const angleRad = (this.direction * Math.PI) / 180;
     c.beginPath();
-    c.arc(this.x * scale, this.y * scale, this.radius * scale, 0, 2 * Math.PI);
+    c.arc(
+      this.posX * scale * blockSize,
+      this.posY * scale * blockSize,
+      this.radius * scale,
+      0,
+      2 * Math.PI,
+    );
     c.fillStyle = "red";
     c.fill();
 
+    c.lineWidth = 2;
+    c.strokeStyle = "white";
+
     c.beginPath();
-    c.arc(
-      this.x * scale,
-      this.y * scale,
-      this.radius * scale,
-      angleRad - Math.PI / 2,
-      angleRad + Math.PI / 2,
+    c.moveTo(
+      (this.posX + this.dirX + this.planeX) * scale * blockSize,
+      (this.posY + this.dirY + this.planeY) * scale * blockSize,
     );
-    c.lineWidth = 5;
-    c.strokeStyle = "black";
+    c.lineTo(
+      (this.posX + this.dirX - this.planeX) * scale * blockSize,
+      (this.posY + this.dirY - this.planeY) * scale * blockSize,
+    );
     c.stroke();
   }
 
   drawView(c: any, canvas: any, map: number[][], mapSize: number) {
-    const lu = this.viewDist / 255;
-    c.fillStyle = `rgb(${17 * lu}, ${10 * lu}, ${10 * lu})`;
-    c.fillRect(0, 0, canvas.width, canvas.height / 2);
-
-    c.fillStyle = `rgb(${30 * lu}, ${10 * lu}, ${10 * lu})`;
-    c.fillRect(0, canvas.height / 2, canvas.width, canvas.height);
-
     for (let x = 0; x < canvas.width; x++) {
-      const viewAngle = (130 * x) / (canvas.width / 2) - 75;
-      const newAngle = this.direction + viewAngle;
-      const distanceOut = this.distance(newAngle, map, mapSize);
+      const cameraX = (2 * x) / canvas.width - 0.5;
+      const rayDirX = this.dirX + this.planeX * cameraX;
+      const rayDirY = this.dirY + this.planeY * cameraX;
 
-      if (distanceOut.distance === -1) {
-        continue;
+      let mapX = Math.floor(this.posX);
+      let mapY = Math.floor(this.posY);
+
+      let sideDistX: number;
+      let sideDistY: number;
+
+      let deltaDistX = Math.abs(1 / rayDirX);
+      let deltaDistY = Math.abs(1 / rayDirY);
+      let perpWallDist: number;
+
+      let stepX: number;
+      let stepY: number;
+
+      let hit = 0;
+      let side = 0;
+
+      if (rayDirX < 0) {
+        stepX = -1;
+        sideDistX = (this.posX - mapX) * deltaDistX;
+      } else {
+        stepX = 1;
+        sideDistX = (mapX + 1 - this.posX) * deltaDistX;
+      }
+      if (rayDirY < 0) {
+        stepY = -1;
+        sideDistY = (this.posY - mapY) * deltaDistY;
+      } else {
+        stepY = 1;
+        sideDistY = (mapY + 1 - this.posY) * deltaDistY;
       }
 
-      let height =
-        ((1 / (distanceOut.distance / 100) - 1) * canvas.height) / 10;
+      while (hit === 0) {
+        if (sideDistX < sideDistY) {
+          sideDistX += deltaDistX;
+          mapX += stepX;
+          side = 0;
+        } else {
+          sideDistY += deltaDistY;
+          mapY += stepY;
+          side = 1;
+        }
+        if (map[mapX][mapY] > 0) {
+          hit = 1;
+        }
+      }
 
-      height = Math.min(height, canvas.height);
+      if (side === 0) {
+        perpWallDist = sideDistX - deltaDistX;
+      } else {
+        perpWallDist = sideDistY - deltaDistY;
+      }
 
-      const color = ((height / canvas.height) * this.viewDist) / 2;
-      c.fillStyle = `rgb(${color},${color},${color})`;
+      const height = Math.floor(canvas.height / perpWallDist);
+      let color: string;
+      if (side === 0) {
+        color = "red";
+      } else {
+        color = "green";
+      }
+
+      c.fillStyle = color;
       c.fillRect(x * 2, canvas.height / 2 - height / 2, 2, height);
-
-      if (distanceOut.goal != -1) {
-        let goalHeight =
-          ((1 / (distanceOut.goal / 100) - 1) * canvas.height) / 10;
-
-        goalHeight = Math.min(goalHeight, canvas.height);
-
-        c.globalAlpha = 0.05;
-        c.fillStyle = "#2ecc71";
-        c.fillRect(x * 2, canvas.height / 2 - goalHeight / 2, 2, goalHeight);
-        c.globalAlpha = 1;
-      }
     }
+
+    // const lu = this.viewDist / 255;
+    // c.fillStyle = `rgb(${17 * lu}, ${10 * lu}, ${10 * lu})`;
+    // c.fillRect(0, 0, canvas.width, canvas.height / 2);
+    //
+    // c.fillStyle = `rgb(${30 * lu}, ${10 * lu}, ${10 * lu})`;
+    // c.fillRect(0, canvas.height / 2, canvas.width, canvas.height);
+
+    // for (let x = 0; x < canvas.width; x++) {
+    //   const viewAngle = (130 * x) / (canvas.width / 2) - 75;
+    //   const newAngle = this.direction + viewAngle;
+    //   const distanceOut = this.distance(newAngle, map, mapSize);
+    //
+    //   if (distanceOut.distance === -1) {
+    //     continue;
+    //   }
+    //
+    //   let height =
+    //     ((1 / (distanceOut.distance / 100) - 1) * canvas.height) / 10;
+    //
+    //   height = Math.min(height, canvas.height);
+    //
+    //   const color = ((height / canvas.height) * this.viewDist) / 2;
+    //   c.fillStyle = `rgb(${color},${color},${color})`;
+    //   c.fillRect(x * 2, canvas.height / 2 - height / 2, 2, height);
+    //
+    //   if (distanceOut.goal != -1) {
+    //     let goalHeight =
+    //       ((1 / (distanceOut.goal / 100) - 1) * canvas.height) / 10;
+    //
+    //     goalHeight = Math.min(goalHeight, canvas.height);
+    //
+    //     c.globalAlpha = 0.05;
+    //     c.fillStyle = "#2ecc71";
+    //     c.fillRect(x * 2, canvas.height / 2 - goalHeight / 2, 2, goalHeight);
+    //     c.globalAlpha = 1;
+    //   }
+    // }
 
     if (this.viewDist === 64) {
       c.globalAlpha = 0.02;
@@ -146,40 +234,40 @@ export class Player {
     }
   }
 
-  private distance(
-    angle: number,
-    map: number[][],
-    mapSize: number,
-  ): distanceOutput {
-    const result: distanceOutput = { distance: -1, goal: -1 };
-    for (let i = 1; i <= 100; i += 0.3) {
-      const nX = this.x + i * Math.cos((angle * Math.PI) / 180);
-      const nY = this.y + i * Math.sin((angle * Math.PI) / 180);
-
-      const blockX = Math.floor(nX / mapSize);
-      const blockY = Math.floor(nY / mapSize);
-
-      if (
-        blockX < 0 ||
-        blockX >= map[0].length ||
-        blockY < 0 ||
-        blockY >= map.length
-      ) {
-        return result;
-      }
-
-      if (result.goal === -1 && map[blockY][blockX] === 2) {
-        result.goal = i;
-      }
-
-      if (map[blockY][blockX] === 1) {
-        result.distance = i;
-        return result;
-      }
-    }
-
-    return result;
-  }
+  // private distance(
+  //   angle: number,
+  //   map: number[][],
+  //   mapSize: number,
+  // ): distanceOutput {
+  //   const result: distanceOutput = { distance: -1, goal: -1 };
+  //   // for (let i = 1; i <= 100; i += 0.3) {
+  //   //   const nX = this.x + i * Math.cos((angle * Math.PI) / 180);
+  //   //   const nY = this.y + i * Math.sin((angle * Math.PI) / 180);
+  //   //
+  //   //   const blockX = Math.floor(nX / mapSize);
+  //   //   const blockY = Math.floor(nY / mapSize);
+  //   //
+  //   //   if (
+  //   //     blockX < 0 ||
+  //   //     blockX >= map[0].length ||
+  //   //     blockY < 0 ||
+  //   //     blockY >= map.length
+  //   //   ) {
+  //   //     return result;
+  //   //   }
+  //   //
+  //   //   if (result.goal === -1 && map[blockY][blockX] === 2) {
+  //   //     result.goal = i;
+  //   //   }
+  //   //
+  //   //   if (map[blockY][blockX] === 1) {
+  //   //     result.distance = i;
+  //   //     return result;
+  //   //   }
+  //   // }
+  //   //
+  //   return result;
+  // }
 
   drawUi(c: any, canvas: any) {
     c.beginPath();
@@ -281,55 +369,116 @@ export class Player {
       }
     }
 
-    if (keyMap.get("ArrowRight")) {
-      this.direction += this.turnSpeed;
-    }
-    if (keyMap.get("ArrowLeft")) {
-      this.direction -= this.turnSpeed;
-    }
-
     if (keyMap.get("ArrowUp")) {
-      const nx =
-        this.x + this.speed * Math.cos((this.direction * Math.PI) / 180);
-      const ny =
-        this.y + this.speed * Math.sin((this.direction * Math.PI) / 180);
-
-      const xBlock = Math.floor(nx / blockSize);
-      const yBlock = Math.floor(ny / blockSize);
       if (
-        xBlock >= map[0].length ||
-        yBlock >= map.length ||
-        (xBlock >= 0 &&
-          xBlock < map[0].length &&
-          yBlock >= 0 &&
-          yBlock < map.length &&
-          map[yBlock][xBlock] !== 1)
+        map[Math.floor(this.posX + this.dirX * this.speed)][
+          Math.floor(this.posY)
+        ] === 0
       ) {
-        this.x = nx;
-        this.y = ny;
+        this.posX += this.dirX * this.speed;
+      }
+      if (
+        map[Math.floor(this.posX)][
+          Math.floor(this.posY + this.dirY * this.speed)
+        ] === 0
+      ) {
+        this.posY += this.dirY * this.speed;
       }
     }
+
     if (keyMap.get("ArrowDown")) {
-      const nx =
-        this.x - this.speed * Math.cos((this.direction * Math.PI) / 180);
-      const ny =
-        this.y - this.speed * Math.sin((this.direction * Math.PI) / 180);
-
-      const xBlock = Math.floor(nx / blockSize);
-      const yBlock = Math.floor(ny / blockSize);
       if (
-        xBlock >= map[0].length ||
-        yBlock >= map.length ||
-        (xBlock >= 0 &&
-          xBlock < map[0].length &&
-          yBlock >= 0 &&
-          yBlock < map.length &&
-          map[yBlock][xBlock] === 0)
+        map[Math.floor(this.posX)][
+          Math.floor(this.posY - this.dirY * this.speed)
+        ] === 0
       ) {
-        this.x = nx;
-        this.y = ny;
+        this.posY -= this.dirY * this.speed;
+      }
+      if (
+        map[Math.floor(this.posX - this.dirX * this.speed)][
+          Math.floor(this.posY)
+        ] === 0
+      ) {
+        this.posX -= this.dirX * this.speed;
       }
     }
+
+    if (keyMap.get("ArrowRight")) {
+      const oldDirX = this.dirX;
+      this.dirX =
+        this.dirX * Math.cos(-this.turnSpeed) -
+        this.dirY * Math.sin(-this.turnSpeed);
+      this.dirY =
+        oldDirX * Math.sin(-this.turnSpeed) +
+        this.dirY * Math.cos(-this.turnSpeed);
+
+      const oldPlaneX = this.planeX;
+      this.planeX =
+        this.planeX * Math.cos(-this.turnSpeed) -
+        this.planeY * Math.sin(-this.turnSpeed);
+      this.planeY =
+        oldPlaneX * Math.sin(-this.turnSpeed) +
+        this.planeY * Math.cos(-this.turnSpeed);
+    }
+
+    if (keyMap.get("ArrowLeft")) {
+      const oldDirX = this.dirX;
+      this.dirX =
+        this.dirX * Math.cos(this.turnSpeed) -
+        this.dirY * Math.sin(this.turnSpeed);
+      this.dirY =
+        oldDirX * Math.sin(this.turnSpeed) +
+        this.dirY * Math.cos(this.turnSpeed);
+      const oldPlaneX = this.planeX;
+      this.planeX =
+        this.planeX * Math.cos(this.turnSpeed) -
+        this.planeY * Math.sin(this.turnSpeed);
+      this.planeY =
+        oldPlaneX * Math.sin(this.turnSpeed) +
+        this.planeY * Math.cos(this.turnSpeed);
+    }
+
+    // const nx =
+    //   this.posX + this.speed * Math.cos((this.direction * Math.PI) / 180);
+    // const ny =
+    //   this.y + this.speed * Math.sin((this.direction * Math.PI) / 180);
+    //
+    // const xBlock = Math.floor(nx / blockSize);
+    // const yBlock = Math.floor(ny / blockSize);
+    // if (
+    //   xBlock >= map[0].length ||
+    //   yBlock >= map.length ||
+    //   (xBlock >= 0 &&
+    //     xBlock < map[0].length &&
+    //     yBlock >= 0 &&
+    //     yBlock < map.length &&
+    //     map[yBlock][xBlock] !== 1)
+    // ) {
+    //   this.x = nx;
+    //   this.y = ny;
+    // }
+
+    // if (keyMap.get("ArrowDown")) {
+    //   const nx =
+    //     this.x - this.speed * Math.cos((this.direction * Math.PI) / 180);
+    //   const ny =
+    //     this.y - this.speed * Math.sin((this.direction * Math.PI) / 180);
+
+    //   const xBlock = Math.floor(nx / blockSize);
+    //   const yBlock = Math.floor(ny / blockSize);
+    //   if (
+    //     xBlock >= map[0].length ||
+    //     yBlock >= map.length ||
+    //     (xBlock >= 0 &&
+    //       xBlock < map[0].length &&
+    //       yBlock >= 0 &&
+    //       yBlock < map.length &&
+    //       map[yBlock][xBlock] === 0)
+    //   ) {
+    //     this.x = nx;
+    //     this.y = ny;
+    //   }
+    // }
 
     if (keyMap.get("Digit1")) {
       this.holding = 1;
