@@ -8,11 +8,26 @@ gunImg.src = "/img/gun.png";
 
 const flashLightInvImg = new Image();
 flashLightInvImg.src = "/img/flashlight-inv.png";
+
 const gunInvImg = new Image();
 gunInvImg.src = "/img/gun-inv.png";
 
+const shootImgs: [] = [];
+
+const shoot0 = new Image();
+shoot0.src = "/img/gun-inv.png";
+
+for (let i = 0; i < 3; i++) {
+  const shoot = new Image();
+  shoot.src = `/img/shoot${i}.png`;
+  shootImgs.push(shoot);
+}
+
 const ammoImg = new Image();
 ammoImg.src = "/img/ammo.png";
+
+const shootSound = new Audio("/sound/shoot.wav");
+shootSound.volume = 0.3;
 
 const texWidth = 16;
 
@@ -66,8 +81,10 @@ export class Player {
   battery: number = 1000;
   flashlight: boolean = true;
 
-  ammo: number = 3;
+  shootingCounter = 0;
+  ammo: number = 10;
   speed: number;
+  ammoCounter = 0;
 
   holding: number = 1;
   //0 nothing 1 gun 2 flashlight
@@ -116,9 +133,12 @@ export class Player {
       c.globalAlpha = 1;
 
       let brightness = result.distance;
+      if (result.goalDistance !== -1) {
+        brightness = result.goalDistance;
+      }
       let alpha: number;
       if (this.viewDist === 64) {
-        alpha = brightness / 6;
+        alpha = brightness / 7;
       } else {
         alpha = brightness / 3;
       }
@@ -315,13 +335,42 @@ export class Player {
       20,
     );
 
+    if (this.shootingCounter > 0 && this.shootingCounter < 10) {
+      c.drawImage(
+        shootImgs[0],
+        canvas.width / 2 - 80,
+        canvas.height - 370,
+        160,
+        160,
+      );
+    } else if (this.shootingCounter > 9 && this.shootingCounter < 30) {
+      c.drawImage(
+        shootImgs[1],
+        canvas.width / 2 - 80,
+        canvas.height - 370,
+        160,
+        160,
+      );
+    }
+
+    let recoil = 0;
+    if (this.shootingCounter !== 0) {
+      recoil = 1 - (100 / this.shootingCounter) * 3;
+    }
     if (this.holding === 1) {
       c.drawImage(
         gunImg,
         canvas.width / 2 - 140,
-        canvas.height - 260,
+        canvas.height - 260 + recoil,
         280,
         280,
+      );
+      c.fillStyle = "#e74c3c";
+      c.fillRect(
+        canvas.width / 2 - 50,
+        canvas.height - 20,
+        this.shootingCounter,
+        10,
       );
     } else if (this.holding === 2) {
       if (this.viewDist === 64) {
@@ -352,9 +401,28 @@ export class Player {
         this.viewDist = 64;
         this.battery--;
       }
-      if (this.holding === 1 && this.ammo > 0) {
-        this.ammo--;
+      if (this.holding === 1) {
+        if (this.ammo > 0 && this.shootingCounter === 0) {
+          shootSound.play();
+          this.ammo--;
+          this.shootingCounter = 1;
+        }
       }
+    }
+
+    if (this.ammoCounter === 1000) {
+      if (this.ammo < 10) {
+        this.ammo += 1;
+      }
+      this.ammoCounter = 0;
+    }
+    this.ammoCounter += 1;
+
+    if (this.shootingCounter !== 0 && this.shootingCounter < 100) {
+      this.shootingCounter += 1;
+    }
+    if (this.shootingCounter == 100 && !keyMap.get("Space")) {
+      this.shootingCounter = 0;
     }
 
     if (
@@ -437,50 +505,9 @@ export class Player {
         this.planeY * Math.cos(this.turnSpeed);
     }
 
-    // const nx =
-    //   this.posX + this.speed * Math.cos((this.direction * Math.PI) / 180);
-    // const ny =
-    //   this.y + this.speed * Math.sin((this.direction * Math.PI) / 180);
-    //
-    // const xBlock = Math.floor(nx / blockSize);
-    // const yBlock = Math.floor(ny / blockSize);
-    // if (
-    //   xBlock >= map[0].length ||
-    //   yBlock >= map.length ||
-    //   (xBlock >= 0 &&
-    //     xBlock < map[0].length &&
-    //     yBlock >= 0 &&
-    //     yBlock < map.length &&
-    //     map[yBlock][xBlock] !== 1)
-    // ) {
-    //   this.x = nx;
-    //   this.y = ny;
-    // }
-
-    // if (keyMap.get("ArrowDown")) {
-    //   const nx =
-    //     this.x - this.speed * Math.cos((this.direction * Math.PI) / 180);
-    //   const ny =
-    //     this.y - this.speed * Math.sin((this.direction * Math.PI) / 180);
-
-    //   const xBlock = Math.floor(nx / blockSize);
-    //   const yBlock = Math.floor(ny / blockSize);
-    //   if (
-    //     xBlock >= map[0].length ||
-    //     yBlock >= map.length ||
-    //     (xBlock >= 0 &&
-    //       xBlock < map[0].length &&
-    //       yBlock >= 0 &&
-    //       yBlock < map.length &&
-    //       map[yBlock][xBlock] === 0)
-    //   ) {
-    //     this.x = nx;
-    //     this.y = ny;
-    //   }
-    // }
-
     if (keyMap.get("Digit1")) {
       this.holding = 1;
+      this.shootingCounter = 30;
     } else if (keyMap.get("Digit2")) {
       this.holding = 2;
     }

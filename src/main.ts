@@ -12,7 +12,7 @@ const c = canvas.getContext("2d")!;
 
 document.body.style.overflow = "hidden";
 
-const map = new Map(makeMap(3, c, 1), 100, canvas.height);
+const map = new Map(makeMap(5, c, 5), 100, canvas.height);
 
 const player = new Player(1.5, 1.5, 5, 0.01);
 
