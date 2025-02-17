@@ -14,8 +14,16 @@ gunInvImg.src = "/img/gun-inv.png";
 const ammoImg = new Image();
 ammoImg.src = "/img/ammo.png";
 
-const texWidth = 32;
-const texHeight = 32;
+const texWidth = 16;
+
+const textures: [][] = [];
+textures.push([]);
+
+for (let i = 0; i < texWidth; i++) {
+  const slice = new Image();
+  slice.src = `/img/walls/stone${i}.png`;
+  textures[0].push(slice);
+}
 
 function drawImage(
   ctx: any,
@@ -36,7 +44,9 @@ function drawImage(
 
 interface distanceOutput {
   distance: number;
-  goal: number;
+  texX: number;
+  wallType: number;
+  goalDistance: number;
 }
 
 export class Player {
@@ -45,7 +55,7 @@ export class Player {
   dirX = -1;
   dirY = 0;
   planeX: number = 0;
-  planeY: number = 1.5;
+  planeY: number = 1;
 
   radius: number;
   direction: number = 0;
@@ -60,12 +70,9 @@ export class Player {
   speed: number;
 
   holding: number = 1;
-
   //0 nothing 1 gun 2 flashlight
 
   constructor(x: number, y: number, radius: number, speed: number) {
-    // this.x = x;
-    // this.y = y;
     this.posX = x;
     this.posY = y;
     this.radius = radius;
@@ -73,8 +80,6 @@ export class Player {
   }
 
   draw(c: any, scale: number, blockSize: number): void {
-    console.log(this.dirX, this.dirY);
-    const angleRad = (this.direction * Math.PI) / 180;
     c.beginPath();
     c.arc(
       this.posX * scale * blockSize,
@@ -101,113 +106,47 @@ export class Player {
     c.stroke();
   }
 
-  drawView(c: any, canvas: any, map: number[][], mapSize: number) {
+  drawView(c: any, canvas: any, map: number[][]) {
+    c.fillStyle = "black";
+    c.fillRect(0, 0, canvas.width, canvas.height);
     for (let x = 0; x < canvas.width; x++) {
-      const cameraX = (2 * x) / canvas.width - 0.5;
-      const rayDirX = this.dirX + this.planeX * cameraX;
-      const rayDirY = this.dirY + this.planeY * cameraX;
+      const result = this.distance(x, map, canvas);
+      const height = Math.floor(canvas.height / result.distance);
 
-      let mapX = Math.floor(this.posX);
-      let mapY = Math.floor(this.posY);
+      c.globalAlpha = 1;
 
-      let sideDistX: number;
-      let sideDistY: number;
-
-      let deltaDistX = Math.abs(1 / rayDirX);
-      let deltaDistY = Math.abs(1 / rayDirY);
-      let perpWallDist: number;
-
-      let stepX: number;
-      let stepY: number;
-
-      let hit = 0;
-      let side = 0;
-
-      if (rayDirX < 0) {
-        stepX = -1;
-        sideDistX = (this.posX - mapX) * deltaDistX;
+      let brightness = result.distance;
+      let alpha: number;
+      if (this.viewDist === 64) {
+        alpha = brightness / 6;
       } else {
-        stepX = 1;
-        sideDistX = (mapX + 1 - this.posX) * deltaDistX;
+        alpha = brightness / 3;
       }
-      if (rayDirY < 0) {
-        stepY = -1;
-        sideDistY = (this.posY - mapY) * deltaDistY;
-      } else {
-        stepY = 1;
-        sideDistY = (mapY + 1 - this.posY) * deltaDistY;
+      if (alpha > 1) {
+        continue;
       }
 
-      while (hit === 0) {
-        if (sideDistX < sideDistY) {
-          sideDistX += deltaDistX;
-          mapX += stepX;
-          side = 0;
-        } else {
-          sideDistY += deltaDistY;
-          mapY += stepY;
-          side = 1;
-        }
-        if (map[mapX][mapY] > 0) {
-          hit = 1;
-        }
+      if (result.wallType === 1) {
+        c.drawImage(
+          textures[0][result.texX],
+          x,
+          canvas.height / 2 - height / 2,
+          1,
+          height,
+        );
+      } // let brightness = Math.min(, 1000);
+
+      if (result.goalDistance !== -1) {
+        const goalHeight = Math.floor(canvas.height / result.goalDistance);
+        c.globalAlpha = 0.5;
+        c.fillStyle = "green";
+        c.fillRect(x, canvas.height / 2 - goalHeight / 2, 1, goalHeight);
       }
 
-      if (side === 0) {
-        perpWallDist = sideDistX - deltaDistX;
-      } else {
-        perpWallDist = sideDistY - deltaDistY;
-      }
-
-      const height = Math.floor(canvas.height / perpWallDist);
-      let color: string;
-      if (side === 0) {
-        color = "red";
-      } else {
-        color = "green";
-      }
-
-      c.fillStyle = color;
-      c.fillRect(x * 2, canvas.height / 2 - height / 2, 2, height);
+      c.globalAlpha = alpha;
+      c.fillStyle = "black";
+      c.fillRect(x, canvas.height / 2 - height / 2, 1, height);
     }
-
-    // const lu = this.viewDist / 255;
-    // c.fillStyle = `rgb(${17 * lu}, ${10 * lu}, ${10 * lu})`;
-    // c.fillRect(0, 0, canvas.width, canvas.height / 2);
-    //
-    // c.fillStyle = `rgb(${30 * lu}, ${10 * lu}, ${10 * lu})`;
-    // c.fillRect(0, canvas.height / 2, canvas.width, canvas.height);
-
-    // for (let x = 0; x < canvas.width; x++) {
-    //   const viewAngle = (130 * x) / (canvas.width / 2) - 75;
-    //   const newAngle = this.direction + viewAngle;
-    //   const distanceOut = this.distance(newAngle, map, mapSize);
-    //
-    //   if (distanceOut.distance === -1) {
-    //     continue;
-    //   }
-    //
-    //   let height =
-    //     ((1 / (distanceOut.distance / 100) - 1) * canvas.height) / 10;
-    //
-    //   height = Math.min(height, canvas.height);
-    //
-    //   const color = ((height / canvas.height) * this.viewDist) / 2;
-    //   c.fillStyle = `rgb(${color},${color},${color})`;
-    //   c.fillRect(x * 2, canvas.height / 2 - height / 2, 2, height);
-    //
-    //   if (distanceOut.goal != -1) {
-    //     let goalHeight =
-    //       ((1 / (distanceOut.goal / 100) - 1) * canvas.height) / 10;
-    //
-    //     goalHeight = Math.min(goalHeight, canvas.height);
-    //
-    //     c.globalAlpha = 0.05;
-    //     c.fillStyle = "#2ecc71";
-    //     c.fillRect(x * 2, canvas.height / 2 - goalHeight / 2, 2, goalHeight);
-    //     c.globalAlpha = 1;
-    //   }
-    // }
 
     if (this.viewDist === 64) {
       c.globalAlpha = 0.02;
@@ -234,40 +173,100 @@ export class Player {
     }
   }
 
-  // private distance(
-  //   angle: number,
-  //   map: number[][],
-  //   mapSize: number,
-  // ): distanceOutput {
-  //   const result: distanceOutput = { distance: -1, goal: -1 };
-  //   // for (let i = 1; i <= 100; i += 0.3) {
-  //   //   const nX = this.x + i * Math.cos((angle * Math.PI) / 180);
-  //   //   const nY = this.y + i * Math.sin((angle * Math.PI) / 180);
-  //   //
-  //   //   const blockX = Math.floor(nX / mapSize);
-  //   //   const blockY = Math.floor(nY / mapSize);
-  //   //
-  //   //   if (
-  //   //     blockX < 0 ||
-  //   //     blockX >= map[0].length ||
-  //   //     blockY < 0 ||
-  //   //     blockY >= map.length
-  //   //   ) {
-  //   //     return result;
-  //   //   }
-  //   //
-  //   //   if (result.goal === -1 && map[blockY][blockX] === 2) {
-  //   //     result.goal = i;
-  //   //   }
-  //   //
-  //   //   if (map[blockY][blockX] === 1) {
-  //   //     result.distance = i;
-  //   //     return result;
-  //   //   }
-  //   // }
-  //   //
-  //   return result;
-  // }
+  private distance(x: number, map: number[][], canvas: any): distanceOutput {
+    const result: distanceOutput = {
+      distance: -1,
+      texX: -1,
+      wallType: -1,
+      goalDistance: -1,
+    };
+
+    const cameraX = (2 * x) / canvas.width - 1;
+    const rayDirX = this.dirX + this.planeX * cameraX;
+    const rayDirY = this.dirY + this.planeY * cameraX;
+
+    let mapX = Math.floor(this.posX);
+    let mapY = Math.floor(this.posY);
+
+    let sideDistX: number;
+    let sideDistY: number;
+
+    let deltaDistX = Math.abs(1 / rayDirX);
+    let deltaDistY = Math.abs(1 / rayDirY);
+    let perpWallDist: number;
+
+    let stepX: number;
+    let stepY: number;
+
+    let hit = 0;
+    let side = 0;
+
+    if (rayDirX < 0) {
+      stepX = -1;
+      sideDistX = (this.posX - mapX) * deltaDistX;
+    } else {
+      stepX = 1;
+      sideDistX = (mapX + 1 - this.posX) * deltaDistX;
+    }
+    if (rayDirY < 0) {
+      stepY = -1;
+      sideDistY = (this.posY - mapY) * deltaDistY;
+    } else {
+      stepY = 1;
+      sideDistY = (mapY + 1 - this.posY) * deltaDistY;
+    }
+
+    while (hit === 0) {
+      if (sideDistX < sideDistY) {
+        sideDistX += deltaDistX;
+        mapX += stepX;
+        side = 0;
+      } else {
+        sideDistY += deltaDistY;
+        mapY += stepY;
+        side = 1;
+      }
+      if (map[mapX][mapY] === 2 && result.goalDistance === -1) {
+        if (side === 0) {
+          result.goalDistance = sideDistX - deltaDistX;
+        } else {
+          result.goalDistance = sideDistY - deltaDistY;
+        }
+      }
+      if (map[mapX][mapY] === 1) {
+        hit = 1;
+      }
+    }
+
+    result.wallType = map[mapX][mapY];
+
+    if (side === 0) {
+      perpWallDist = sideDistX - deltaDistX;
+    } else {
+      perpWallDist = sideDistY - deltaDistY;
+    }
+
+    result.distance = perpWallDist;
+
+    let wallX: number;
+    if (side === 0) {
+      wallX = this.posY + perpWallDist * rayDirY;
+    } else {
+      wallX = this.posX + perpWallDist * rayDirX;
+    }
+    wallX -= Math.floor(wallX);
+    let texX = Math.floor(wallX * texWidth);
+    if (side === 0 && rayDirX > 0) {
+      texX = texWidth - texX - 1;
+    }
+    if (side === 1 && rayDirY < 0) {
+      texX = texWidth - texX - 1;
+    }
+
+    result.texX = texX;
+
+    return result;
+  }
 
   drawUi(c: any, canvas: any) {
     c.beginPath();
@@ -371,16 +370,16 @@ export class Player {
 
     if (keyMap.get("ArrowUp")) {
       if (
-        map[Math.floor(this.posX + this.dirX * this.speed)][
+        map[Math.floor(this.posX + this.dirX * this.speed * 25)][
           Math.floor(this.posY)
-        ] === 0
+        ] !== 1
       ) {
         this.posX += this.dirX * this.speed;
       }
       if (
         map[Math.floor(this.posX)][
-          Math.floor(this.posY + this.dirY * this.speed)
-        ] === 0
+          Math.floor(this.posY + this.dirY * this.speed * 25)
+        ] !== 1
       ) {
         this.posY += this.dirY * this.speed;
       }
@@ -389,15 +388,15 @@ export class Player {
     if (keyMap.get("ArrowDown")) {
       if (
         map[Math.floor(this.posX)][
-          Math.floor(this.posY - this.dirY * this.speed)
-        ] === 0
+          Math.floor(this.posY - this.dirY * this.speed * 25)
+        ] !== 1
       ) {
         this.posY -= this.dirY * this.speed;
       }
       if (
-        map[Math.floor(this.posX - this.dirX * this.speed)][
+        map[Math.floor(this.posX - this.dirX * this.speed * 25)][
           Math.floor(this.posY)
-        ] === 0
+        ] !== 1
       ) {
         this.posX -= this.dirX * this.speed;
       }
