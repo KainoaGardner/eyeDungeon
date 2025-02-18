@@ -35,13 +35,13 @@ ammoSound.volume = 0.3;
 const texWidth = 16;
 const texHeight = 16;
 
-const textures: [][] = [];
-textures.push([]);
+// const textures: [][] = [];
+const textures = new Array(2).fill(null).map(() => Array(texWidth).fill(0));
 
 for (let i = 0; i < texWidth; i++) {
-  const slice = new Image();
-  slice.src = `/img/walls/stone${i}.png`;
-  textures[0].push(slice);
+  const stoneSlice = new Image();
+  stoneSlice.src = `/img/walls/stone${i}.png`;
+  textures[0][i] = stoneSlice;
 }
 
 const bufferRatio = 10;
@@ -75,10 +75,10 @@ interface distanceOutput {
 export class Player {
   posX: number;
   posY: number;
-  dirX = -1;
+  dirX = 1;
   dirY = 0;
   planeX: number = 0;
-  planeY: number = 1;
+  planeY: number = -1;
 
   radius: number;
   direction: number = 0;
@@ -135,26 +135,15 @@ export class Player {
     c.fillStyle = "black";
     c.fillRect(0, 0, canvas.width, canvas.height);
 
-    for (let y = 0; y < bufferHeight; y++) {
-      const p = y - bufferHeight / 2;
-      const posZ = 0.5 * bufferHeight;
-
-      const rowDistance = posZ / p;
-
-      let brightness = ((256 * 1) / rowDistance) * 0.5;
-      if (brightness > 256) {
-        brightness = 256;
-      }
-
-      const color = `rgb(${brightness} 0 0)`;
+    for (let i = 0; i < canvas.height / 10; i++) {
+      const brightness = (i - 20) / (canvas.height / 10);
+      let color = `rgb(${brightness * 140} ${brightness * 83} ${brightness * 50})`;
+      color = `rgb(${brightness * 71} ${brightness * 10} ${brightness * 10})`;
       c.fillStyle = color;
-      c.fillRect(0, y * bufferRatio, canvas.width, bufferRatio);
-      c.fillRect(
-        0,
-        (bufferHeight - y - 1) * bufferRatio,
-        canvas.width,
-        bufferRatio,
-      );
+      c.fillRect(0, i * 5 + canvas.height / 2, canvas.width, 5);
+
+      c.fillStyle = color;
+      c.fillRect(0, canvas.height / 2 - i * 5 - 5, canvas.width, 5);
     }
 
     for (let x = 0; x < canvas.width; x++) {

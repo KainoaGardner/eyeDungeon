@@ -23,7 +23,6 @@ export class Map {
         }
       }
     }
-    console.log(lights);
 
     return lights;
   }
