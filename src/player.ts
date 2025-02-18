@@ -29,7 +29,11 @@ ammoImg.src = "/img/ammo.png";
 const shootSound = new Audio("/sound/shoot.wav");
 shootSound.volume = 0.3;
 
+const ammoSound = new Audio("/sound/ammo.wav");
+ammoSound.volume = 0.3;
+
 const texWidth = 16;
+const texHeight = 16;
 
 const textures: [][] = [];
 textures.push([]);
@@ -39,6 +43,9 @@ for (let i = 0; i < texWidth; i++) {
   slice.src = `/img/walls/stone${i}.png`;
   textures[0].push(slice);
 }
+
+const bufferRatio = 10;
+const bufferHeight = Math.floor(720 / bufferRatio);
 
 function drawImage(
   ctx: any,
@@ -62,6 +69,7 @@ interface distanceOutput {
   texX: number;
   wallType: number;
   goalDistance: number;
+  pos: string;
 }
 
 export class Player {
@@ -123,27 +131,47 @@ export class Player {
     c.stroke();
   }
 
-  drawView(c: any, canvas: any, map: number[][]) {
+  drawView(c: any, canvas: any, map: number[][], lights: string[]) {
     c.fillStyle = "black";
     c.fillRect(0, 0, canvas.width, canvas.height);
+
+    for (let y = 0; y < bufferHeight; y++) {
+      const p = y - bufferHeight / 2;
+      const posZ = 0.5 * bufferHeight;
+
+      const rowDistance = posZ / p;
+
+      let brightness = ((256 * 1) / rowDistance) * 0.5;
+      if (brightness > 256) {
+        brightness = 256;
+      }
+
+      const color = `rgb(${brightness} 0 0)`;
+      c.fillStyle = color;
+      c.fillRect(0, y * bufferRatio, canvas.width, bufferRatio);
+      c.fillRect(
+        0,
+        (bufferHeight - y - 1) * bufferRatio,
+        canvas.width,
+        bufferRatio,
+      );
+    }
+
     for (let x = 0; x < canvas.width; x++) {
       const result = this.distance(x, map, canvas);
       const height = Math.floor(canvas.height / result.distance);
 
       c.globalAlpha = 1;
 
-      let brightness = result.distance;
-      if (result.goalDistance !== -1) {
-        brightness = result.goalDistance;
-      }
+      let brightness = this.getBrightness(result, lights);
       let alpha: number;
-      if (this.viewDist === 64) {
+      if (
+        this.viewDist === 64 ||
+        (this.shootingCounter > 0 && this.shootingCounter < 15)
+      ) {
         alpha = brightness / 7;
       } else {
-        alpha = brightness / 3;
-      }
-      if (alpha > 1) {
-        continue;
+        alpha = brightness / 4;
       }
 
       if (result.wallType === 1) {
@@ -154,7 +182,12 @@ export class Player {
           1,
           height,
         );
-      } // let brightness = Math.min(, 1000);
+      }
+      if (alpha > 1) {
+        c.globalAlpha = 1;
+        c.fillStyle = "black";
+        c.fillRect(x, canvas.height / 2 - height / 2, 1, height);
+      }
 
       if (result.goalDistance !== -1) {
         const goalHeight = Math.floor(canvas.height / result.goalDistance);
@@ -168,12 +201,17 @@ export class Player {
       c.fillRect(x, canvas.height / 2 - height / 2, 1, height);
     }
 
+    if (this.shootingCounter > 0 && this.shootingCounter < 10) {
+      c.globalAlpha = 0.1;
+      c.fillStyle = "#f39c12";
+      c.fillRect(0, 0, canvas.width, canvas.height);
+    }
     if (this.viewDist === 64) {
-      c.globalAlpha = 0.02;
+      c.globalAlpha = 0.05;
       c.fillStyle = "#f1c40f";
       c.fillRect(0, 0, canvas.width, canvas.height);
 
-      c.globalAlpha = 0.02;
+      c.globalAlpha = 0.05;
       c.fillStyle = "white";
       c.beginPath();
       c.arc(
@@ -193,12 +231,39 @@ export class Player {
     }
   }
 
+  private getBrightness(result: distanceOutput, lights: string[]): number {
+    let min = Infinity;
+    const wallPos = result.pos.split(",");
+
+    for (let i = 0; i < lights.length; i++) {
+      const lightPos = lights[i].split(",");
+      const distance = Math.sqrt(
+        Math.pow(Number(lightPos[0]) - Number(wallPos[0]), 2) +
+          Math.pow(Number(lightPos[1]) - Number(wallPos[1]), 2),
+      );
+
+      if (distance < min) {
+        min = distance;
+      }
+    }
+    const distance = Math.sqrt(
+      Math.pow(this.posX - Number(wallPos[0]), 2) +
+        Math.pow(this.posY - Number(wallPos[1]), 2),
+    );
+
+    if (distance < min) {
+      min = distance;
+    }
+    return min;
+  }
+
   private distance(x: number, map: number[][], canvas: any): distanceOutput {
     const result: distanceOutput = {
       distance: -1,
       texX: -1,
       wallType: -1,
       goalDistance: -1,
+      pos: "",
     };
 
     const cameraX = (2 * x) / canvas.width - 1;
@@ -271,8 +336,10 @@ export class Player {
     let wallX: number;
     if (side === 0) {
       wallX = this.posY + perpWallDist * rayDirY;
+      result.pos = `${mapX},${wallX}`;
     } else {
       wallX = this.posX + perpWallDist * rayDirX;
+      result.pos = `${wallX},${mapY}`;
     }
     wallX -= Math.floor(wallX);
     let texX = Math.floor(wallX * texWidth);
@@ -412,6 +479,7 @@ export class Player {
 
     if (this.ammoCounter === 1000) {
       if (this.ammo < 10) {
+        ammoSound.play();
         this.ammo += 1;
       }
       this.ammoCounter = 0;
