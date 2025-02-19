@@ -1,3 +1,5 @@
+import { canvas, c } from "./global";
+
 const flashlightImg = new Image();
 flashlightImg.src = "/img/flashlight.png";
 const flashlightoffImg = new Image();
@@ -8,13 +10,97 @@ gunImg.src = "/img/gun.png";
 
 const flashLightInvImg = new Image();
 flashLightInvImg.src = "/img/flashlight-inv.png";
+
 const gunInvImg = new Image();
 gunInvImg.src = "/img/gun-inv.png";
+
+const shootImgs: [] = [];
+
+const shoot0 = new Image();
+shoot0.src = "/img/gun-inv.png";
+
+for (let i = 0; i < 3; i++) {
+  const shoot = new Image();
+  shoot.src = `/img/shoot${i}.png`;
+  shootImgs.push(shoot);
+}
 
 const ammoImg = new Image();
 ammoImg.src = "/img/ammo.png";
 
-function drawImage(ctx, image, x, y, w, h, degrees) {
+const shootSound = new Audio("/sound/shoot.wav");
+shootSound.volume = 0.3;
+
+const ammoSound = new Audio("/sound/ammo.wav");
+ammoSound.volume = 0.3;
+
+const texWidth = 16;
+const texHeight = 16;
+
+// const textures: [][] = [];
+const textures = new Array(3).fill(null).map(() => Array(texWidth).fill(0));
+
+for (let i = 0; i < texWidth; i++) {
+  const stoneSlice = new Image();
+  stoneSlice.src = `/img/walls/stone${i}.png`;
+  textures[0][i] = stoneSlice;
+}
+
+const floorTexList = new Array(texWidth).fill("");
+const floorTex = new Image();
+floorTex.src = "/img/floor.png";
+floorTex.addEventListener("load", () => {
+  c.drawImage(floorTex, 0, 0, 16, 16);
+
+  let floorTexData;
+  floorTexData = c.getImageData(0, 0, 16, 16).data;
+  for (let i = 0; i < floorTexData.length; i += 4) {
+    const red = floorTexData[i];
+    const green = floorTexData[i + 1];
+    const blue = floorTexData[i + 2];
+    const color = `rgb(${red} ${green} ${blue})`;
+
+    floorTexList[i / 4] = color;
+  }
+  textures[1] = floorTexList;
+});
+
+const roofTexList = new Array(texWidth).fill("");
+const roofTex = new Image();
+roofTex.src = "/img/roof.png";
+roofTex.addEventListener("load", () => {
+  c.drawImage(roofTex, 0, 0, 16, 16);
+
+  let roofTexData;
+  roofTexData = c.getImageData(0, 0, 16, 16).data;
+  for (let i = 0; i < roofTexData.length; i += 4) {
+    const red = roofTexData[i];
+    const green = roofTexData[i + 1];
+    const blue = roofTexData[i + 2];
+    const color = `rgb(${red} ${green} ${blue})`;
+
+    roofTexList[i / 4] = color;
+  }
+  textures[2] = roofTexList;
+});
+
+const bufferRatio = 20;
+const bufferWidth = Math.floor(canvas.width / bufferRatio);
+const bufferHeight = Math.floor(canvas.height / bufferRatio);
+
+const buffer = new Array(bufferHeight)
+  .fill()
+  .map(() => Array(bufferWidth).fill(""));
+
+function drawImage(
+  ctx: any,
+  image: typeof Image,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  degrees: number,
+) {
   ctx.save();
   ctx.translate(x + w / 2, y + h / 2);
   ctx.rotate((degrees * Math.PI) / 180.0);
@@ -25,108 +111,220 @@ function drawImage(ctx, image, x, y, w, h, degrees) {
 
 interface distanceOutput {
   distance: number;
-  goal: number;
+  texX: number;
+  wallType: number;
+  goalDistance: number;
+  pos: string;
 }
 
 export class Player {
-  x: number;
-  y: number;
-
-  posX = 22;
-  posY = 12;
-  dirX = -1;
+  posX: number;
+  posY: number;
+  dirX = 1;
   dirY = 0;
   planeX: number = 0;
-  planeY: number = 1;
+  planeY: number = -1;
 
   radius: number;
   direction: number = 0;
-  turnSpeed: number = 1;
+  turnSpeed: number = 0.01;
 
   viewDist: number = 32;
 
   battery: number = 1000;
   flashlight: boolean = true;
 
-  ammo: number = 3;
+  shootingCounter = 0;
+  ammo: number = 10;
   speed: number;
+  ammoCounter = 0;
 
   holding: number = 1;
-
   //0 nothing 1 gun 2 flashlight
 
   constructor(x: number, y: number, radius: number, speed: number) {
-    this.x = x;
-    this.y = y;
+    this.posX = x;
+    this.posY = y;
     this.radius = radius;
     this.speed = speed;
   }
 
-  draw(c: any, scale: number): void {
-    const angleRad = (this.direction * Math.PI) / 180;
+  clearBuffer() {
+    for (let i = 0; i < bufferHeight; i++) {
+      for (let j = 0; j < bufferWidth; j++) {
+        buffer[i][j] = "";
+      }
+    }
+  }
+
+  drawBuffer(c: any) {
+    for (let i = 0; i < bufferHeight; i++) {
+      for (let j = 0; j < bufferWidth; j++) {
+        if (buffer[i][j] !== "") {
+          c.fillStyle = buffer[i][j];
+          c.fillRect(
+            j * bufferRatio,
+            i * bufferRatio,
+            bufferRatio,
+            bufferRatio,
+          );
+        }
+      }
+    }
+  }
+
+  draw(c: any, scale: number, blockSize: number): void {
     c.beginPath();
-    c.arc(this.x * scale, this.y * scale, this.radius * scale, 0, 2 * Math.PI);
+    c.arc(
+      this.posX * scale * blockSize,
+      this.posY * scale * blockSize,
+      this.radius * scale,
+      0,
+      2 * Math.PI,
+    );
     c.fillStyle = "red";
     c.fill();
 
+    c.lineWidth = 2;
+    c.strokeStyle = "white";
+
     c.beginPath();
-    c.arc(
-      this.x * scale,
-      this.y * scale,
-      this.radius * scale,
-      angleRad - Math.PI / 2,
-      angleRad + Math.PI / 2,
+    c.moveTo(
+      (this.posX + this.dirX + this.planeX) * scale * blockSize,
+      (this.posY + this.dirY + this.planeY) * scale * blockSize,
     );
-    c.lineWidth = 5;
-    c.strokeStyle = "black";
+    c.lineTo(
+      (this.posX + this.dirX - this.planeX) * scale * blockSize,
+      (this.posY + this.dirY - this.planeY) * scale * blockSize,
+    );
     c.stroke();
   }
 
-  drawView(c: any, canvas: any, map: number[][], mapSize: number) {
-    const lu = this.viewDist / 255;
-    c.fillStyle = `rgb(${17 * lu}, ${10 * lu}, ${10 * lu})`;
-    c.fillRect(0, 0, canvas.width, canvas.height / 2);
+  drawView(c: any, canvas: any, map: number[][], lights: string[]) {
+    this.clearBuffer();
 
-    c.fillStyle = `rgb(${30 * lu}, ${10 * lu}, ${10 * lu})`;
-    c.fillRect(0, canvas.height / 2, canvas.width, canvas.height);
+    c.fillStyle = "black";
+    c.fillRect(0, 0, canvas.width, canvas.height);
+    for (let y = 0; y < bufferHeight; y++) {
+      const rayDirX0 = this.dirX - this.planeX;
+      const rayDirY0 = this.dirY - this.planeY;
+      const rayDirX1 = this.dirX + this.planeX;
+      const rayDirY1 = this.dirY + this.planeY;
 
-    for (let x = 0; x < canvas.width; x++) {
-      const viewAngle = (130 * x) / (canvas.width / 2) - 75;
-      const newAngle = this.direction + viewAngle;
-      const distanceOut = this.distance(newAngle, map, mapSize);
+      let p = y - bufferHeight / 2;
+      const posZ = bufferHeight / 2;
 
-      if (distanceOut.distance === -1) {
-        continue;
-      }
+      const rowDistance = posZ / p;
 
-      let height =
-        ((1 / (distanceOut.distance / 100) - 1) * canvas.height) / 10;
+      const floorStepX = (rowDistance * (rayDirX1 - rayDirX0)) / bufferWidth;
+      const floorStepY = (rowDistance * (rayDirY1 - rayDirY0)) / bufferHeight;
 
-      height = Math.min(height, canvas.height);
+      let floorX = this.posX + rowDistance * rayDirX0;
+      let floorY = this.posY + rowDistance * rayDirY0;
 
-      const color = ((height / canvas.height) * this.viewDist) / 2;
-      c.fillStyle = `rgb(${color},${color},${color})`;
-      c.fillRect(x * 2, canvas.height / 2 - height / 2, 2, height);
+      for (let x = 0; x < bufferWidth; x++) {
+        const cellX = Math.floor(floorX);
+        const cellY = Math.floor(floorY);
 
-      if (distanceOut.goal != -1) {
-        let goalHeight =
-          ((1 / (distanceOut.goal / 100) - 1) * canvas.height) / 10;
+        const tX = Math.floor((texWidth * (floorX - cellX)) / 2);
+        const tY = Math.floor((texHeight * (floorY - cellY)) / 2);
 
-        goalHeight = Math.min(goalHeight, canvas.height);
+        floorX += floorStepX;
+        floorY += floorStepY;
 
-        c.globalAlpha = 0.05;
-        c.fillStyle = "#2ecc71";
-        c.fillRect(x * 2, canvas.height / 2 - goalHeight / 2, 2, goalHeight);
-        c.globalAlpha = 1;
+        let color = textures[1][texWidth * tY + tX];
+        buffer[y][x] = color;
+
+        color = textures[2][texWidth * tY + tX];
+        buffer[bufferHeight - y - 1][x] = color;
       }
     }
+    this.drawBuffer(c);
 
+    c.fillStyle = "black";
+    for (let y = 0; y < bufferHeight / 2; y++) {
+      let brightness: number;
+      if (
+        this.viewDist === 64 ||
+        (this.shootingCounter > 0 && this.shootingCounter < 15)
+      ) {
+        brightness = y / (bufferHeight / 2);
+      } else {
+        brightness = (y - 5) / (bufferHeight / 2);
+      }
+
+      c.globalAlpha = 1 - brightness;
+      c.fillRect(
+        0,
+        canvas.height / 2 + y * bufferRatio,
+        canvas.width,
+        bufferRatio,
+      );
+
+      c.fillRect(
+        0,
+        canvas.height / 2 - bufferRatio - y * bufferRatio,
+        canvas.width,
+        bufferRatio,
+      );
+    }
+    c.globalAlpha = 1;
+
+    for (let x = 0; x < canvas.width; x++) {
+      const result = this.distance(x, map, canvas);
+      const height = Math.floor(canvas.height / result.distance);
+
+      c.globalAlpha = 1;
+
+      let brightness = this.getBrightness(result, lights);
+      let alpha: number;
+      if (
+        this.viewDist === 64 ||
+        (this.shootingCounter > 0 && this.shootingCounter < 15)
+      ) {
+        alpha = brightness / 7;
+      } else {
+        alpha = brightness / 4;
+      }
+
+      if (result.wallType === 1) {
+        c.drawImage(
+          textures[0][result.texX],
+          x,
+          canvas.height / 2 - height / 2,
+          1,
+          height,
+        );
+      }
+      if (alpha > 1) {
+        c.globalAlpha = 1;
+        c.fillStyle = "black";
+        c.fillRect(x, canvas.height / 2 - height / 2, 1, height);
+      }
+
+      if (result.goalDistance !== -1) {
+        const goalHeight = Math.floor(canvas.height / result.goalDistance);
+        c.globalAlpha = 0.5;
+        c.fillStyle = "green";
+        c.fillRect(x, canvas.height / 2 - goalHeight / 2, 1, goalHeight);
+      }
+
+      c.globalAlpha = alpha;
+      c.fillStyle = "black";
+      c.fillRect(x, canvas.height / 2 - height / 2, 1, height);
+    }
+
+    if (this.shootingCounter > 0 && this.shootingCounter < 10) {
+      c.globalAlpha = 0.1;
+      c.fillStyle = "#f39c12";
+      c.fillRect(0, 0, canvas.width, canvas.height);
+    }
     if (this.viewDist === 64) {
-      c.globalAlpha = 0.02;
+      c.globalAlpha = 0.05;
       c.fillStyle = "#f1c40f";
       c.fillRect(0, 0, canvas.width, canvas.height);
 
-      c.globalAlpha = 0.02;
+      c.globalAlpha = 0.05;
       c.fillStyle = "white";
       c.beginPath();
       c.arc(
@@ -146,37 +344,126 @@ export class Player {
     }
   }
 
-  private distance(
-    angle: number,
-    map: number[][],
-    mapSize: number,
-  ): distanceOutput {
-    const result: distanceOutput = { distance: -1, goal: -1 };
-    for (let i = 1; i <= 100; i += 0.3) {
-      const nX = this.x + i * Math.cos((angle * Math.PI) / 180);
-      const nY = this.y + i * Math.sin((angle * Math.PI) / 180);
+  private getBrightness(result: distanceOutput, lights: string[]): number {
+    let min = Infinity;
+    const wallPos = result.pos.split(",");
 
-      const blockX = Math.floor(nX / mapSize);
-      const blockY = Math.floor(nY / mapSize);
+    for (let i = 0; i < lights.length; i++) {
+      const lightPos = lights[i].split(",");
+      const distance = Math.sqrt(
+        Math.pow(Number(lightPos[0]) - Number(wallPos[0]), 2) +
+          Math.pow(Number(lightPos[1]) - Number(wallPos[1]), 2),
+      );
 
-      if (
-        blockX < 0 ||
-        blockX >= map[0].length ||
-        blockY < 0 ||
-        blockY >= map.length
-      ) {
-        return result;
-      }
-
-      if (result.goal === -1 && map[blockY][blockX] === 2) {
-        result.goal = i;
-      }
-
-      if (map[blockY][blockX] === 1) {
-        result.distance = i;
-        return result;
+      if (distance < min) {
+        min = distance;
       }
     }
+    const distance = Math.sqrt(
+      Math.pow(this.posX - Number(wallPos[0]), 2) +
+        Math.pow(this.posY - Number(wallPos[1]), 2),
+    );
+
+    if (distance < min) {
+      min = distance;
+    }
+    return min;
+  }
+
+  private distance(x: number, map: number[][], canvas: any): distanceOutput {
+    const result: distanceOutput = {
+      distance: -1,
+      texX: -1,
+      wallType: -1,
+      goalDistance: -1,
+      pos: "",
+    };
+
+    const cameraX = (2 * x) / canvas.width - 1;
+    const rayDirX = this.dirX + this.planeX * cameraX;
+    const rayDirY = this.dirY + this.planeY * cameraX;
+
+    let mapX = Math.floor(this.posX);
+    let mapY = Math.floor(this.posY);
+
+    let sideDistX: number;
+    let sideDistY: number;
+
+    let deltaDistX = Math.abs(1 / rayDirX);
+    let deltaDistY = Math.abs(1 / rayDirY);
+    let perpWallDist: number;
+
+    let stepX: number;
+    let stepY: number;
+
+    let hit = 0;
+    let side = 0;
+
+    if (rayDirX < 0) {
+      stepX = -1;
+      sideDistX = (this.posX - mapX) * deltaDistX;
+    } else {
+      stepX = 1;
+      sideDistX = (mapX + 1 - this.posX) * deltaDistX;
+    }
+    if (rayDirY < 0) {
+      stepY = -1;
+      sideDistY = (this.posY - mapY) * deltaDistY;
+    } else {
+      stepY = 1;
+      sideDistY = (mapY + 1 - this.posY) * deltaDistY;
+    }
+
+    while (hit === 0) {
+      if (sideDistX < sideDistY) {
+        sideDistX += deltaDistX;
+        mapX += stepX;
+        side = 0;
+      } else {
+        sideDistY += deltaDistY;
+        mapY += stepY;
+        side = 1;
+      }
+      if (map[mapX][mapY] === 2 && result.goalDistance === -1) {
+        if (side === 0) {
+          result.goalDistance = sideDistX - deltaDistX;
+        } else {
+          result.goalDistance = sideDistY - deltaDistY;
+        }
+      }
+      if (map[mapX][mapY] === 1) {
+        hit = 1;
+      }
+    }
+
+    result.wallType = map[mapX][mapY];
+
+    if (side === 0) {
+      perpWallDist = sideDistX - deltaDistX;
+    } else {
+      perpWallDist = sideDistY - deltaDistY;
+    }
+
+    result.distance = perpWallDist;
+
+    let wallX: number;
+    if (side === 0) {
+      wallX = this.posY + perpWallDist * rayDirY;
+      result.pos = `${mapX},${wallX}`;
+    } else {
+      wallX = this.posX + perpWallDist * rayDirX;
+      result.pos = `${wallX},${mapY}`;
+    }
+    wallX -= Math.floor(wallX);
+    let texX = Math.floor(wallX * texWidth);
+    if (side === 0 && rayDirX > 0) {
+      texX = texWidth - texX - 1;
+    }
+    if (side === 1 && rayDirY < 0) {
+      texX = texWidth - texX - 1;
+    }
+
+    result.texX = texX;
 
     return result;
   }
@@ -228,13 +515,42 @@ export class Player {
       20,
     );
 
+    if (this.shootingCounter > 0 && this.shootingCounter < 10) {
+      c.drawImage(
+        shootImgs[0],
+        canvas.width / 2 - 80,
+        canvas.height - 370,
+        160,
+        160,
+      );
+    } else if (this.shootingCounter > 9 && this.shootingCounter < 30) {
+      c.drawImage(
+        shootImgs[1],
+        canvas.width / 2 - 80,
+        canvas.height - 370,
+        160,
+        160,
+      );
+    }
+
+    let recoil = 0;
+    if (this.shootingCounter !== 0) {
+      recoil = 1 - (100 / this.shootingCounter) * 3;
+    }
     if (this.holding === 1) {
       c.drawImage(
         gunImg,
         canvas.width / 2 - 140,
-        canvas.height - 260,
+        canvas.height - 260 + recoil,
         280,
         280,
+      );
+      c.fillStyle = "#e74c3c";
+      c.fillRect(
+        canvas.width / 2 - 50,
+        canvas.height - 20,
+        this.shootingCounter,
+        10,
       );
     } else if (this.holding === 2) {
       if (this.viewDist === 64) {
@@ -265,9 +581,29 @@ export class Player {
         this.viewDist = 64;
         this.battery--;
       }
-      if (this.holding === 1 && this.ammo > 0) {
-        this.ammo--;
+      if (this.holding === 1) {
+        if (this.ammo > 0 && this.shootingCounter === 0) {
+          shootSound.play();
+          this.ammo--;
+          this.shootingCounter = 1;
+        }
       }
+    }
+
+    if (this.ammoCounter === 1000) {
+      if (this.ammo < 10) {
+        ammoSound.play();
+        this.ammo += 1;
+      }
+      this.ammoCounter = 0;
+    }
+    this.ammoCounter += 1;
+
+    if (this.shootingCounter !== 0 && this.shootingCounter < 100) {
+      this.shootingCounter += 1;
+    }
+    if (this.shootingCounter == 100 && !keyMap.get("Space")) {
+      this.shootingCounter = 0;
     }
 
     if (
@@ -281,58 +617,78 @@ export class Player {
       }
     }
 
-    if (keyMap.get("ArrowRight")) {
-      this.direction += this.turnSpeed;
-    }
-    if (keyMap.get("ArrowLeft")) {
-      this.direction -= this.turnSpeed;
-    }
-
     if (keyMap.get("ArrowUp")) {
-      const nx =
-        this.x + this.speed * Math.cos((this.direction * Math.PI) / 180);
-      const ny =
-        this.y + this.speed * Math.sin((this.direction * Math.PI) / 180);
-
-      const xBlock = Math.floor(nx / blockSize);
-      const yBlock = Math.floor(ny / blockSize);
       if (
-        xBlock >= map[0].length ||
-        yBlock >= map.length ||
-        (xBlock >= 0 &&
-          xBlock < map[0].length &&
-          yBlock >= 0 &&
-          yBlock < map.length &&
-          map[yBlock][xBlock] !== 1)
+        map[Math.floor(this.posX + this.dirX * this.speed * 25)][
+          Math.floor(this.posY)
+        ] !== 1
       ) {
-        this.x = nx;
-        this.y = ny;
+        this.posX += this.dirX * this.speed;
+      }
+      if (
+        map[Math.floor(this.posX)][
+          Math.floor(this.posY + this.dirY * this.speed * 25)
+        ] !== 1
+      ) {
+        this.posY += this.dirY * this.speed;
       }
     }
-    if (keyMap.get("ArrowDown")) {
-      const nx =
-        this.x - this.speed * Math.cos((this.direction * Math.PI) / 180);
-      const ny =
-        this.y - this.speed * Math.sin((this.direction * Math.PI) / 180);
 
-      const xBlock = Math.floor(nx / blockSize);
-      const yBlock = Math.floor(ny / blockSize);
+    if (keyMap.get("ArrowDown")) {
       if (
-        xBlock >= map[0].length ||
-        yBlock >= map.length ||
-        (xBlock >= 0 &&
-          xBlock < map[0].length &&
-          yBlock >= 0 &&
-          yBlock < map.length &&
-          map[yBlock][xBlock] === 0)
+        map[Math.floor(this.posX)][
+          Math.floor(this.posY - this.dirY * this.speed * 25)
+        ] !== 1
       ) {
-        this.x = nx;
-        this.y = ny;
+        this.posY -= this.dirY * this.speed;
       }
+      if (
+        map[Math.floor(this.posX - this.dirX * this.speed * 25)][
+          Math.floor(this.posY)
+        ] !== 1
+      ) {
+        this.posX -= this.dirX * this.speed;
+      }
+    }
+
+    if (keyMap.get("ArrowRight")) {
+      const oldDirX = this.dirX;
+      this.dirX =
+        this.dirX * Math.cos(-this.turnSpeed) -
+        this.dirY * Math.sin(-this.turnSpeed);
+      this.dirY =
+        oldDirX * Math.sin(-this.turnSpeed) +
+        this.dirY * Math.cos(-this.turnSpeed);
+
+      const oldPlaneX = this.planeX;
+      this.planeX =
+        this.planeX * Math.cos(-this.turnSpeed) -
+        this.planeY * Math.sin(-this.turnSpeed);
+      this.planeY =
+        oldPlaneX * Math.sin(-this.turnSpeed) +
+        this.planeY * Math.cos(-this.turnSpeed);
+    }
+
+    if (keyMap.get("ArrowLeft")) {
+      const oldDirX = this.dirX;
+      this.dirX =
+        this.dirX * Math.cos(this.turnSpeed) -
+        this.dirY * Math.sin(this.turnSpeed);
+      this.dirY =
+        oldDirX * Math.sin(this.turnSpeed) +
+        this.dirY * Math.cos(this.turnSpeed);
+      const oldPlaneX = this.planeX;
+      this.planeX =
+        this.planeX * Math.cos(this.turnSpeed) -
+        this.planeY * Math.sin(this.turnSpeed);
+      this.planeY =
+        oldPlaneX * Math.sin(this.turnSpeed) +
+        this.planeY * Math.cos(this.turnSpeed);
     }
 
     if (keyMap.get("Digit1")) {
       this.holding = 1;
+      this.shootingCounter = 30;
     } else if (keyMap.get("Digit2")) {
       this.holding = 2;
     }
