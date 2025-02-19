@@ -1,3 +1,5 @@
+import { canvas, c } from "./global";
+
 const flashlightImg = new Image();
 flashlightImg.src = "/img/flashlight.png";
 const flashlightoffImg = new Image();
@@ -36,7 +38,7 @@ const texWidth = 16;
 const texHeight = 16;
 
 // const textures: [][] = [];
-const textures = new Array(2).fill(null).map(() => Array(texWidth).fill(0));
+const textures = new Array(3).fill(null).map(() => Array(texWidth).fill(0));
 
 for (let i = 0; i < texWidth; i++) {
   const stoneSlice = new Image();
@@ -44,8 +46,51 @@ for (let i = 0; i < texWidth; i++) {
   textures[0][i] = stoneSlice;
 }
 
-const bufferRatio = 10;
-const bufferHeight = Math.floor(720 / bufferRatio);
+const floorTexList = new Array(texWidth).fill("");
+const floorTex = new Image();
+floorTex.src = "/img/floor.png";
+floorTex.addEventListener("load", () => {
+  c.drawImage(floorTex, 0, 0, 16, 16);
+
+  let floorTexData;
+  floorTexData = c.getImageData(0, 0, 16, 16).data;
+  for (let i = 0; i < floorTexData.length; i += 4) {
+    const red = floorTexData[i];
+    const green = floorTexData[i + 1];
+    const blue = floorTexData[i + 2];
+    const color = `rgb(${red} ${green} ${blue})`;
+
+    floorTexList[i / 4] = color;
+  }
+  textures[1] = floorTexList;
+});
+
+const roofTexList = new Array(texWidth).fill("");
+const roofTex = new Image();
+roofTex.src = "/img/roof.png";
+roofTex.addEventListener("load", () => {
+  c.drawImage(roofTex, 0, 0, 16, 16);
+
+  let roofTexData;
+  roofTexData = c.getImageData(0, 0, 16, 16).data;
+  for (let i = 0; i < roofTexData.length; i += 4) {
+    const red = roofTexData[i];
+    const green = roofTexData[i + 1];
+    const blue = roofTexData[i + 2];
+    const color = `rgb(${red} ${green} ${blue})`;
+
+    roofTexList[i / 4] = color;
+  }
+  textures[2] = roofTexList;
+});
+
+const bufferRatio = 20;
+const bufferWidth = Math.floor(canvas.width / bufferRatio);
+const bufferHeight = Math.floor(canvas.height / bufferRatio);
+
+const buffer = new Array(bufferHeight)
+  .fill()
+  .map(() => Array(bufferWidth).fill(""));
 
 function drawImage(
   ctx: any,
@@ -104,6 +149,30 @@ export class Player {
     this.speed = speed;
   }
 
+  clearBuffer() {
+    for (let i = 0; i < bufferHeight; i++) {
+      for (let j = 0; j < bufferWidth; j++) {
+        buffer[i][j] = "";
+      }
+    }
+  }
+
+  drawBuffer(c: any) {
+    for (let i = 0; i < bufferHeight; i++) {
+      for (let j = 0; j < bufferWidth; j++) {
+        if (buffer[i][j] !== "") {
+          c.fillStyle = buffer[i][j];
+          c.fillRect(
+            j * bufferRatio,
+            i * bufferRatio,
+            bufferRatio,
+            bufferRatio,
+          );
+        }
+      }
+    }
+  }
+
   draw(c: any, scale: number, blockSize: number): void {
     c.beginPath();
     c.arc(
@@ -132,19 +201,74 @@ export class Player {
   }
 
   drawView(c: any, canvas: any, map: number[][], lights: string[]) {
+    this.clearBuffer();
+
     c.fillStyle = "black";
     c.fillRect(0, 0, canvas.width, canvas.height);
+    for (let y = 0; y < bufferHeight; y++) {
+      const rayDirX0 = this.dirX - this.planeX;
+      const rayDirY0 = this.dirY - this.planeY;
+      const rayDirX1 = this.dirX + this.planeX;
+      const rayDirY1 = this.dirY + this.planeY;
 
-    for (let i = 0; i < canvas.height / 10; i++) {
-      const brightness = (i - 20) / (canvas.height / 10);
-      let color = `rgb(${brightness * 140} ${brightness * 83} ${brightness * 50})`;
-      color = `rgb(${brightness * 71} ${brightness * 10} ${brightness * 10})`;
-      c.fillStyle = color;
-      c.fillRect(0, i * 5 + canvas.height / 2, canvas.width, 5);
+      let p = y - bufferHeight / 2;
+      const posZ = bufferHeight / 2;
 
-      c.fillStyle = color;
-      c.fillRect(0, canvas.height / 2 - i * 5 - 5, canvas.width, 5);
+      const rowDistance = posZ / p;
+
+      const floorStepX = (rowDistance * (rayDirX1 - rayDirX0)) / bufferWidth;
+      const floorStepY = (rowDistance * (rayDirY1 - rayDirY0)) / bufferHeight;
+
+      let floorX = this.posX + rowDistance * rayDirX0;
+      let floorY = this.posY + rowDistance * rayDirY0;
+
+      for (let x = 0; x < bufferWidth; x++) {
+        const cellX = Math.floor(floorX);
+        const cellY = Math.floor(floorY);
+
+        const tX = Math.floor((texWidth * (floorX - cellX)) / 2);
+        const tY = Math.floor((texHeight * (floorY - cellY)) / 2);
+
+        floorX += floorStepX;
+        floorY += floorStepY;
+
+        let color = textures[1][texWidth * tY + tX];
+        buffer[y][x] = color;
+
+        color = textures[2][texWidth * tY + tX];
+        buffer[bufferHeight - y - 1][x] = color;
+      }
     }
+    this.drawBuffer(c);
+
+    c.fillStyle = "black";
+    for (let y = 0; y < bufferHeight / 2; y++) {
+      let brightness: number;
+      if (
+        this.viewDist === 64 ||
+        (this.shootingCounter > 0 && this.shootingCounter < 15)
+      ) {
+        brightness = y / (bufferHeight / 2);
+      } else {
+        brightness = (y - 5) / (bufferHeight / 2);
+      }
+
+      c.globalAlpha = 1 - brightness;
+      c.fillRect(
+        0,
+        canvas.height / 2 + y * bufferRatio,
+        canvas.width,
+        bufferRatio,
+      );
+
+      c.fillRect(
+        0,
+        canvas.height / 2 - bufferRatio - y * bufferRatio,
+        canvas.width,
+        bufferRatio,
+      );
+    }
+    c.globalAlpha = 1;
 
     for (let x = 0; x < canvas.width; x++) {
       const result = this.distance(x, map, canvas);

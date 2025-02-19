@@ -1,14 +1,8 @@
+import { canvas, c } from "./global";
 import { Player } from "./player";
 import { Map } from "./map";
 import { keyMap } from "./keypress";
 import { makeMap } from "./maze";
-
-const canvas = document.querySelector("canvas")!;
-
-canvas.width = 1280;
-canvas.height = 720;
-
-const c = canvas.getContext("2d")!;
 
 document.body.style.overflow = "hidden";
 
