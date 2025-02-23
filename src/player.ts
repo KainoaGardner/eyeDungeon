@@ -1,96 +1,29 @@
-import { canvas, c } from "./global";
+import { sprite } from "./sprite";
+import { keyMap } from "./keypress";
 
-const flashlightImg = new Image();
-flashlightImg.src = "/img/flashlight.png";
-const flashlightoffImg = new Image();
-flashlightoffImg.src = "/img/flashlightoff.png";
+import {
+  texWidth,
+  texHeight,
+  textures,
+  gunImg,
+  gunInvImg,
+  flashlightImg,
+  flashlightoffImg,
+  flashLightInvImg,
+  shootImgs,
+  ammoImg,
+  shootSound,
+  ammoSound,
+} from "./textures";
 
-const gunImg = new Image();
-gunImg.src = "/img/gun.png";
-
-const flashLightInvImg = new Image();
-flashLightInvImg.src = "/img/flashlight-inv.png";
-
-const gunInvImg = new Image();
-gunInvImg.src = "/img/gun-inv.png";
-
-const shootImgs: [] = [];
-
-const shoot0 = new Image();
-shoot0.src = "/img/gun-inv.png";
-
-for (let i = 0; i < 3; i++) {
-  const shoot = new Image();
-  shoot.src = `/img/shoot${i}.png`;
-  shootImgs.push(shoot);
-}
-
-const ammoImg = new Image();
-ammoImg.src = "/img/ammo.png";
-
-const shootSound = new Audio("/sound/shoot.wav");
-shootSound.volume = 0.3;
-
-const ammoSound = new Audio("/sound/ammo.wav");
-ammoSound.volume = 0.3;
-
-const texWidth = 16;
-const texHeight = 16;
-
-// const textures: [][] = [];
-const textures = new Array(3).fill(null).map(() => Array(texWidth).fill(0));
-
-for (let i = 0; i < texWidth; i++) {
-  const stoneSlice = new Image();
-  stoneSlice.src = `/img/walls/stone${i}.png`;
-  textures[0][i] = stoneSlice;
-}
-
-const floorTexList = new Array(texWidth).fill("");
-const floorTex = new Image();
-floorTex.src = "/img/floor.png";
-floorTex.addEventListener("load", () => {
-  c.drawImage(floorTex, 0, 0, 16, 16);
-
-  let floorTexData;
-  floorTexData = c.getImageData(0, 0, 16, 16).data;
-  for (let i = 0; i < floorTexData.length; i += 4) {
-    const red = floorTexData[i];
-    const green = floorTexData[i + 1];
-    const blue = floorTexData[i + 2];
-    const color = `rgb(${red} ${green} ${blue})`;
-
-    floorTexList[i / 4] = color;
-  }
-  textures[1] = floorTexList;
-});
-
-const roofTexList = new Array(texWidth).fill("");
-const roofTex = new Image();
-roofTex.src = "/img/roof.png";
-roofTex.addEventListener("load", () => {
-  c.drawImage(roofTex, 0, 0, 16, 16);
-
-  let roofTexData;
-  roofTexData = c.getImageData(0, 0, 16, 16).data;
-  for (let i = 0; i < roofTexData.length; i += 4) {
-    const red = roofTexData[i];
-    const green = roofTexData[i + 1];
-    const blue = roofTexData[i + 2];
-    const color = `rgb(${red} ${green} ${blue})`;
-
-    roofTexList[i / 4] = color;
-  }
-  textures[2] = roofTexList;
-});
-
-const bufferRatio = 20;
-const bufferWidth = Math.floor(canvas.width / bufferRatio);
-const bufferHeight = Math.floor(canvas.height / bufferRatio);
-
-const buffer = new Array(bufferHeight)
-  .fill()
-  .map(() => Array(bufferWidth).fill(""));
+import {
+  canvas,
+  c,
+  buffer,
+  bufferWidth,
+  bufferHeight,
+  bufferRatio,
+} from "./global";
 
 function drawImage(
   ctx: any,
@@ -126,20 +59,21 @@ export class Player {
   planeY: number = -1;
 
   radius: number;
-  direction: number = 0;
-  turnSpeed: number = 0.01;
-
-  viewDist: number = 32;
-
-  battery: number = 1000;
-  flashlight: boolean = true;
-
-  shootingCounter = 0;
-  ammo: number = 10;
   speed: number;
-  ammoCounter = 0;
+  turnSpeed: number = 0.01;
+  health: number = 1000;
+  stamina: number = 1000;
 
-  holding: number = 1;
+  private viewDist: number = 32;
+
+  private battery: number = 1000;
+  private flashlight: boolean = true;
+
+  private shootingCounter = 0;
+  ammo: number = 10;
+  private ammoCounter = 0;
+
+  private holding: number = 1;
   //0 nothing 1 gun 2 flashlight
 
   constructor(x: number, y: number, radius: number, speed: number) {
@@ -149,7 +83,7 @@ export class Player {
     this.speed = speed;
   }
 
-  clearBuffer() {
+  private clearBuffer() {
     for (let i = 0; i < bufferHeight; i++) {
       for (let j = 0; j < bufferWidth; j++) {
         buffer[i][j] = "";
@@ -157,7 +91,7 @@ export class Player {
     }
   }
 
-  drawBuffer(c: any) {
+  private drawBuffer() {
     for (let i = 0; i < bufferHeight; i++) {
       for (let j = 0; j < bufferWidth; j++) {
         if (buffer[i][j] !== "") {
@@ -173,7 +107,7 @@ export class Player {
     }
   }
 
-  draw(c: any, scale: number, blockSize: number): void {
+  draw(scale: number, blockSize: number): void {
     c.beginPath();
     c.arc(
       this.posX * scale * blockSize,
@@ -200,7 +134,7 @@ export class Player {
     c.stroke();
   }
 
-  drawView(c: any, canvas: any, map: number[][], lights: string[]) {
+  private drawBG() {
     this.clearBuffer();
 
     c.fillStyle = "black";
@@ -239,8 +173,12 @@ export class Player {
         buffer[bufferHeight - y - 1][x] = color;
       }
     }
-    this.drawBuffer(c);
+    this.drawBuffer();
+  }
 
+  private drawSprites(sprites: sprite[]) {}
+
+  private drawBGLight() {
     c.fillStyle = "black";
     for (let y = 0; y < bufferHeight / 2; y++) {
       let brightness: number;
@@ -269,7 +207,35 @@ export class Player {
       );
     }
     c.globalAlpha = 1;
+  }
 
+  private drawFlashBeam() {
+    if (this.viewDist === 64) {
+      c.globalAlpha = 0.05;
+      c.fillStyle = "#f1c40f";
+      c.fillRect(0, 0, canvas.width, canvas.height);
+
+      c.globalAlpha = 0.05;
+      c.fillStyle = "white";
+      c.beginPath();
+      c.arc(
+        canvas.width / 2,
+        canvas.height / 2,
+        canvas.height / 2,
+        0,
+        2 * Math.PI,
+      );
+      c.fill();
+
+      c.beginPath();
+      c.arc(canvas.width / 2, canvas.height - 150, 125, 0, 2 * Math.PI);
+      c.fill();
+
+      c.globalAlpha = 1;
+    }
+  }
+
+  private drawWalls(map: number[][], lights: string[]) {
     for (let x = 0; x < canvas.width; x++) {
       const result = this.distance(x, map, canvas);
       const height = Math.floor(canvas.height / result.distance);
@@ -313,35 +279,23 @@ export class Player {
       c.fillStyle = "black";
       c.fillRect(x, canvas.height / 2 - height / 2, 1, height);
     }
+  }
 
+  private drawShootingFlash() {
     if (this.shootingCounter > 0 && this.shootingCounter < 10) {
       c.globalAlpha = 0.1;
       c.fillStyle = "#f39c12";
       c.fillRect(0, 0, canvas.width, canvas.height);
     }
-    if (this.viewDist === 64) {
-      c.globalAlpha = 0.05;
-      c.fillStyle = "#f1c40f";
-      c.fillRect(0, 0, canvas.width, canvas.height);
+  }
 
-      c.globalAlpha = 0.05;
-      c.fillStyle = "white";
-      c.beginPath();
-      c.arc(
-        canvas.width / 2,
-        canvas.height / 2,
-        canvas.height / 2,
-        0,
-        2 * Math.PI,
-      );
-      c.fill();
-
-      c.beginPath();
-      c.arc(canvas.width / 2, canvas.height - 150, 125, 0, 2 * Math.PI);
-      c.fill();
-
-      c.globalAlpha = 1;
-    }
+  drawView(map: number[][], lights: string[], sprites: sprite[]) {
+    this.drawBG();
+    this.drawBGLight();
+    this.drawWalls(map, lights);
+    this.drawSprites(sprites);
+    this.drawShootingFlash();
+    this.drawFlashBeam();
   }
 
   private getBrightness(result: distanceOutput, lights: string[]): number {
@@ -468,71 +422,9 @@ export class Player {
     return result;
   }
 
-  drawUi(c: any, canvas: any) {
-    c.beginPath();
-    c.globalAlpha = 0.5;
-    c.fillStyle = "#7f8c8d";
-    c.fillRect(10, canvas.height - 85, 75, 75);
-    c.fillRect(95, canvas.height - 85, 75, 75);
-    c.globalAlpha = 1;
-    c.drawImage;
+  // private draw
 
-    c.drawImage(gunInvImg, 10, canvas.height - 82, 75, 75);
-    c.drawImage(flashLightInvImg, 95, canvas.height - 82, 75, 75);
-
-    c.globalAlpha = 0.5;
-    c.fillStyle = "black";
-    if (this.holding !== 1) {
-      c.fillRect(10, canvas.height - 85, 75, 75);
-    }
-    if (this.holding !== 2) {
-      c.fillRect(95, canvas.height - 85, 75, 75);
-    }
-
-    c.globalAlpha = 1;
-
-    for (let i = 0; i < this.ammo; i++) {
-      drawImage(
-        c,
-        ammoImg,
-        canvas.width - 75,
-        canvas.height - 110 - i * 50,
-        37,
-        84,
-        -90,
-      );
-    }
-
-    if (this.flashlight) {
-      c.fillStyle = "#f1c40f";
-    } else {
-      c.fillStyle = "#b33939";
-    }
-    c.fillRect(
-      canvas.width - 210,
-      canvas.height - 30,
-      (this.battery / 1000) * 200,
-      20,
-    );
-
-    if (this.shootingCounter > 0 && this.shootingCounter < 10) {
-      c.drawImage(
-        shootImgs[0],
-        canvas.width / 2 - 80,
-        canvas.height - 370,
-        160,
-        160,
-      );
-    } else if (this.shootingCounter > 9 && this.shootingCounter < 30) {
-      c.drawImage(
-        shootImgs[1],
-        canvas.width / 2 - 80,
-        canvas.height - 370,
-        160,
-        160,
-      );
-    }
-
+  private drawHoldingUi() {
     let recoil = 0;
     if (this.shootingCounter !== 0) {
       recoil = 1 - (100 / this.shootingCounter) * 3;
@@ -565,17 +457,131 @@ export class Player {
     }
   }
 
-  update(
-    keyMap: Map<string, boolean>,
-    map: number[][],
-    blockSize: number,
-  ): void {
+  private drawShootingUi() {
+    if (this.shootingCounter > 0 && this.shootingCounter < 10) {
+      c.drawImage(
+        shootImgs[0],
+        canvas.width / 2 - 80,
+        canvas.height - 370,
+        160,
+        160,
+      );
+    } else if (this.shootingCounter > 9 && this.shootingCounter < 30) {
+      c.drawImage(
+        shootImgs[1],
+        canvas.width / 2 - 80,
+        canvas.height - 370,
+        160,
+        160,
+      );
+    }
+  }
+
+  private drawInvUi() {
+    c.globalAlpha = 0.5;
+    c.fillStyle = "#7f8c8d";
+    c.fillRect(10, canvas.height - 110, 100, 100);
+    c.fillRect(120, canvas.height - 110, 100, 100);
+    c.globalAlpha = 1;
+    c.drawImage;
+
+    c.drawImage(gunInvImg, 10, canvas.height - 107, 100, 100);
+    c.drawImage(flashLightInvImg, 120, canvas.height - 107, 100, 100);
+
+    c.globalAlpha = 0.5;
+    c.fillStyle = "black";
+    if (this.holding !== 1) {
+      c.fillRect(10, canvas.height - 110, 100, 100);
+    }
+    if (this.holding !== 2) {
+      c.fillRect(120, canvas.height - 110, 100, 100);
+    }
+
+    c.globalAlpha = 1;
+  }
+
+  private drawAmmoUi() {
+    for (let i = 0; i < this.ammo; i++) {
+      drawImage(
+        c,
+        ammoImg,
+        canvas.width - 70,
+        canvas.height - 200 - i * 40,
+        37,
+        84,
+        -90,
+      );
+    }
+  }
+
+  private drawBatteryUi() {
+    if (this.flashlight) {
+      c.fillStyle = "#f1c40f";
+    } else {
+      c.fillStyle = "#b33939";
+    }
+    c.fillRect(
+      canvas.width - 310 + ((1000 - this.battery) / 10) * 3,
+      canvas.height - 120,
+      (this.battery / 10) * 3,
+      30,
+    );
+  }
+
+  private drawStaminaUi() {
+    c.fillStyle = "#2ecc71";
+    c.fillRect(
+      canvas.width - 310 + ((1000 - this.stamina) / 10) * 3,
+      canvas.height - 80,
+      (this.stamina / 10) * 3,
+      30,
+    );
+  }
+
+  private drawHealthUi() {
+    c.fillStyle = "#e74c3c";
+    c.fillRect(
+      canvas.width - 310 + ((1000 - this.health) / 10) * 3,
+      canvas.height - 40,
+      (this.health / 10) * 3,
+      30,
+    );
+  }
+
+  private drawLevelUi(level: number) {
+    c.fillStyle = "#241d1d";
+    c.fillRect(0, 0, 100, 100);
+
+    c.fillStyle = "red";
+    c.font = "bold 75px Arial";
+    c.fillText("" + level, 50, 50);
+  }
+
+  drawUi(level: number) {
+    this.drawInvUi();
+
+    this.drawAmmoUi();
+    this.drawShootingUi();
+
+    this.drawLevelUi(level);
+
+    this.drawBatteryUi();
+    this.drawStaminaUi();
+    this.drawHealthUi();
+
+    this.drawHoldingUi();
+  }
+
+  private batteryUpdate() {
     if (this.battery <= 0) {
       this.flashlight = false;
     }
     if (!this.flashlight && this.battery >= 1000) {
       this.flashlight = true;
     }
+  }
+
+  private useUpdate() {
     if (keyMap.get("Space")) {
       if (this.holding === 2 && this.battery > 0 && this.flashlight) {
         this.viewDist = 64;
@@ -589,34 +595,9 @@ export class Player {
         }
       }
     }
+  }
 
-    if (this.ammoCounter === 1000) {
-      if (this.ammo < 10) {
-        ammoSound.play();
-        this.ammo += 1;
-      }
-      this.ammoCounter = 0;
-    }
-    this.ammoCounter += 1;
-
-    if (this.shootingCounter !== 0 && this.shootingCounter < 100) {
-      this.shootingCounter += 1;
-    }
-    if (this.shootingCounter == 100 && !keyMap.get("Space")) {
-      this.shootingCounter = 0;
-    }
-
-    if (
-      !this.flashlight ||
-      (this.holding === 2 && !keyMap.get("Space")) ||
-      this.holding !== 2
-    ) {
-      this.viewDist = 16;
-      if (this.battery < 1000) {
-        this.battery += 0.5;
-      }
-    }
-
+  private moveUpdate(map: number[][]) {
     if (keyMap.get("ArrowUp")) {
       if (
         map[Math.floor(this.posX + this.dirX * this.speed * 25)][
@@ -685,12 +666,56 @@ export class Player {
         oldPlaneX * Math.sin(this.turnSpeed) +
         this.planeY * Math.cos(this.turnSpeed);
     }
+  }
 
+  private holdingUpdate() {
     if (keyMap.get("Digit1")) {
       this.holding = 1;
       this.shootingCounter = 30;
     } else if (keyMap.get("Digit2")) {
       this.holding = 2;
     }
+  }
+
+  private gunUpdate() {
+    if (this.ammoCounter === 1000) {
+      if (this.ammo < 10) {
+        ammoSound.play();
+        this.ammo += 1;
+      }
+      this.ammoCounter = 0;
+    }
+    this.ammoCounter += 1;
+
+    if (this.shootingCounter !== 0 && this.shootingCounter < 100) {
+      this.shootingCounter += 1;
+    }
+    if (this.shootingCounter == 100 && !keyMap.get("Space")) {
+      this.shootingCounter = 0;
+    }
+  }
+
+  private flashlightUpdate() {
+    if (
+      !this.flashlight ||
+      (this.holding === 2 && !keyMap.get("Space")) ||
+      this.holding !== 2
+    ) {
+      this.viewDist = 16;
+      if (this.battery < 1000) {
+        this.battery += 0.5;
+      }
+    }
+  }
+
+  update(map: number[][]): void {
+    this.batteryUpdate();
+    this.useUpdate();
+
+    this.gunUpdate();
+    this.flashlightUpdate();
+
+    this.moveUpdate(map);
+    this.holdingUpdate();
   }
 }

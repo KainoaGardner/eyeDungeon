@@ -1,3 +1,5 @@
+import { canvas, c } from "./global";
+
 export class Map {
   map: number[][];
   lightList: string[];
@@ -27,7 +29,7 @@ export class Map {
     return lights;
   }
 
-  draw(c: any, scale: number) {
+  draw(scale: number) {
     const rows = this.map.length;
     const cols = this.map[0].length;
 

@@ -6,7 +6,17 @@ canvas.height = 720;
 // canvas.height = 540;
 
 const c = canvas.getContext("2d")!;
+c.textBaseline = "middle";
+c.textAlign = "center";
 
 document.body.style.overflow = "hidden";
 
-export { canvas, c };
+const bufferRatio = 15;
+const bufferWidth = Math.floor(canvas.width / bufferRatio);
+const bufferHeight = Math.floor(canvas.height / bufferRatio);
+
+const buffer = new Array(bufferHeight)
+  .fill(null)
+  .map(() => Array(bufferWidth).fill(""));
+
+export { canvas, c, buffer, bufferWidth, bufferHeight, bufferRatio };
