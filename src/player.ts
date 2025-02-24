@@ -53,10 +53,10 @@ interface distanceOutput {
 export class Player {
   posX: number;
   posY: number;
-  dirX = 1;
+  dirX = -1;
   dirY = 0;
   planeX: number = 0;
-  planeY: number = -1;
+  planeY: number = 1;
 
   radius: number;
   speed: number;
@@ -151,7 +151,7 @@ export class Player {
       const rowDistance = posZ / p;
 
       const floorStepX = (rowDistance * (rayDirX1 - rayDirX0)) / bufferWidth;
-      const floorStepY = (rowDistance * (rayDirY1 - rayDirY0)) / bufferHeight;
+      const floorStepY = (rowDistance * (rayDirY1 - rayDirY0)) / bufferWidth;
 
       let floorX = this.posX + rowDistance * rayDirX0;
       let floorY = this.posY + rowDistance * rayDirY0;
@@ -160,8 +160,8 @@ export class Player {
         const cellX = Math.floor(floorX);
         const cellY = Math.floor(floorY);
 
-        const tX = Math.floor((texWidth * (floorX - cellX)) / 2);
-        const tY = Math.floor((texHeight * (floorY - cellY)) / 2);
+        const tX = Math.floor(texWidth * (floorX - cellX));
+        const tY = Math.floor(texHeight * (floorY - cellY));
 
         floorX += floorStepX;
         floorY += floorStepY;
@@ -261,7 +261,14 @@ export class Player {
           1,
           height,
         );
+      } else if (result.wallType === 9) {
+        c.fillStyle = "red";
+        c.fillRect(x, canvas.height / 2 - height / 2, 1, height);
+      } else if (result.wallType === 8) {
+        c.fillStyle = "yellow";
+        c.fillRect(x, canvas.height / 2 - height / 2, 1, height);
       }
+
       if (alpha > 1) {
         c.globalAlpha = 1;
         c.fillStyle = "black";
@@ -385,7 +392,7 @@ export class Player {
           result.goalDistance = sideDistY - deltaDistY;
         }
       }
-      if (map[mapX][mapY] === 1) {
+      if (map[mapX][mapY] !== 0) {
         hit = 1;
       }
     }
