@@ -12,6 +12,9 @@ export function setLevel(
     case 1:
       level1(player, map, sprites);
       break;
+    case 2:
+      level2(player, map, sprites);
+      break;
   }
 }
 
@@ -95,7 +98,30 @@ function level1(player: Player, map: Map, sprites: sprite[]) {
 
   sprites = [{ x: 2.5, y: 2.5, texture: 1 }];
 }
-function level2(player: Player, map: Map, sprites: sprite[]) {}
+function level2(player: Player, map: Map, sprites: sprite[]) {
+  //player
+  player.posX = 1.5;
+  player.posY = 1.5;
+  player.dirX = 1;
+  player.dirY = 0;
+  player.planeX = 0;
+  player.planeY = -1;
+
+  //map
+
+  map.map = [
+    [1, 1, 1, 1, 1, 1, 2, 1],
+    [1, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 1],
+    [1, 8, 0, 0, 0, 0, 9, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1],
+  ];
+
+  // sprites = [{ x: 2.5, y: 2.5, texture: 1 }];
+}
 function level3(player: Player, map: Map, sprites: sprite[]) {}
 function level4(player: Player, map: Map, sprites: sprite[]) {}
 function level5(player: Player, map: Map, sprites: sprite[]) {}

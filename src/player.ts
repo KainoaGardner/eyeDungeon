@@ -60,7 +60,7 @@ export class Player {
 
   radius: number;
   speed: number;
-  turnSpeed: number = 0.01;
+  turnSpeed: number;
   health: number = 1000;
   stamina: number = 1000;
 
@@ -76,11 +76,18 @@ export class Player {
   private holding: number = 1;
   //0 nothing 1 gun 2 flashlight
 
-  constructor(x: number, y: number, radius: number, speed: number) {
+  constructor(
+    x: number,
+    y: number,
+    radius: number,
+    speed: number,
+    turnSpeed: number,
+  ) {
     this.posX = x;
     this.posY = y;
     this.radius = radius;
     this.speed = speed;
+    this.turnSpeed = turnSpeed;
   }
 
   private clearBuffer() {
@@ -607,7 +614,7 @@ export class Player {
   private moveUpdate(map: number[][]) {
     if (keyMap.get("ArrowUp")) {
       if (
-        map[Math.floor(this.posX + this.dirX * this.speed * 25)][
+        map[Math.floor(this.posX + this.dirX * this.speed * this.radius)][
           Math.floor(this.posY)
         ] !== 1
       ) {
@@ -615,7 +622,7 @@ export class Player {
       }
       if (
         map[Math.floor(this.posX)][
-          Math.floor(this.posY + this.dirY * this.speed * 25)
+          Math.floor(this.posY + this.dirY * this.speed * this.radius)
         ] !== 1
       ) {
         this.posY += this.dirY * this.speed;
@@ -625,13 +632,13 @@ export class Player {
     if (keyMap.get("ArrowDown")) {
       if (
         map[Math.floor(this.posX)][
-          Math.floor(this.posY - this.dirY * this.speed * 25)
+          Math.floor(this.posY - this.dirY * this.speed * this.radius)
         ] !== 1
       ) {
         this.posY -= this.dirY * this.speed;
       }
       if (
-        map[Math.floor(this.posX - this.dirX * this.speed * 25)][
+        map[Math.floor(this.posX - this.dirX * this.speed * this.radius)][
           Math.floor(this.posY)
         ] !== 1
       ) {
@@ -685,7 +692,7 @@ export class Player {
   }
 
   private gunUpdate() {
-    if (this.ammoCounter === 1000) {
+    if (this.ammoCounter === 500) {
       if (this.ammo < 10) {
         ammoSound.play();
         this.ammo += 1;
@@ -695,9 +702,9 @@ export class Player {
     this.ammoCounter += 1;
 
     if (this.shootingCounter !== 0 && this.shootingCounter < 100) {
-      this.shootingCounter += 1;
+      this.shootingCounter += 4;
     }
-    if (this.shootingCounter == 100 && !keyMap.get("Space")) {
+    if (this.shootingCounter >= 100 && !keyMap.get("Space")) {
       this.shootingCounter = 0;
     }
   }
@@ -710,7 +717,7 @@ export class Player {
     ) {
       this.viewDist = 16;
       if (this.battery < 1000) {
-        this.battery += 0.5;
+        this.battery += 3;
       }
     }
   }

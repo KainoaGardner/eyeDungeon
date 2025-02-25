@@ -1,5 +1,7 @@
 const canvas = document.querySelector("canvas")!;
 
+const targetFps = 30;
+
 canvas.width = 1280;
 canvas.height = 720;
 // canvas.width = 960;
@@ -10,7 +12,7 @@ c.textAlign = "center";
 
 document.body.style.overflow = "hidden";
 
-const bufferRatio = 20;
+const bufferRatio = 5;
 const bufferWidth = Math.floor(canvas.width / bufferRatio);
 const bufferHeight = Math.floor(canvas.height / bufferRatio);
 
@@ -18,4 +20,4 @@ const buffer = new Array(bufferHeight)
   .fill(null)
   .map(() => Array(bufferWidth).fill(""));
 
-export { canvas, c, buffer, bufferWidth, bufferHeight, bufferRatio };
+export { canvas, c, buffer, bufferWidth, bufferHeight, bufferRatio, targetFps };
