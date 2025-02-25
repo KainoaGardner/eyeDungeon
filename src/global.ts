@@ -2,22 +2,45 @@ const canvas = document.querySelector("canvas")!;
 
 const targetFps = 30;
 
+// canvas.width = 1920;
+// canvas.height = 1080;
+
+// canvas.width = 1366;
+// canvas.height = 768;
+
 canvas.width = 1280;
 canvas.height = 720;
-// canvas.width = 960;
-// canvas.height = 540;
+
+// canvas.width = 640;
+// canvas.height = 360;
+
+// canvas.width = 256;
+// canvas.height = 144;
+
+const bufferWidth = 256;
+const bufferHeight = 144;
+
+const bufferRatio = canvas.width / bufferWidth;
+
 const c = canvas.getContext("2d")!;
 c.textBaseline = "middle";
 c.textAlign = "center";
 
 document.body.style.overflow = "hidden";
 
-const bufferRatio = 5;
-const bufferWidth = Math.floor(canvas.width / bufferRatio);
-const bufferHeight = Math.floor(canvas.height / bufferRatio);
-
 const buffer = new Array(bufferHeight)
   .fill(null)
-  .map(() => Array(bufferWidth).fill(""));
+  .map(() => Array(bufferWidth).fill(undefined));
 
-export { canvas, c, buffer, bufferWidth, bufferHeight, bufferRatio, targetFps };
+const lightingBuffer = new Array(bufferWidth).fill(undefined);
+
+export {
+  canvas,
+  c,
+  buffer,
+  lightingBuffer,
+  bufferWidth,
+  bufferHeight,
+  bufferRatio,
+  targetFps,
+};

@@ -20,6 +20,7 @@ import {
   canvas,
   c,
   buffer,
+  lightingBuffer,
   bufferWidth,
   bufferHeight,
   bufferRatio,
@@ -93,7 +94,7 @@ export class Player {
   private clearBuffer() {
     for (let i = 0; i < bufferHeight; i++) {
       for (let j = 0; j < bufferWidth; j++) {
-        buffer[i][j] = "";
+        buffer[i][j] = undefined;
       }
     }
   }
@@ -101,8 +102,12 @@ export class Player {
   private drawBuffer() {
     for (let i = 0; i < bufferHeight; i++) {
       for (let j = 0; j < bufferWidth; j++) {
-        if (buffer[i][j] !== "") {
-          c.fillStyle = buffer[i][j];
+        if (buffer[i][j] !== undefined) {
+          const red = buffer[i][j][0];
+          const green = buffer[i][j][1];
+          const blue = buffer[i][j][2];
+          const color = `rgb(${red} ${green} ${blue})`;
+          c.fillStyle = color;
           c.fillRect(
             j * bufferRatio,
             i * bufferRatio,
@@ -112,6 +117,30 @@ export class Player {
         }
       }
     }
+  }
+
+  private clearLightBuffer() {
+    for (let i = 0; i < bufferWidth; i++) {
+      lightingBuffer[i] = undefined;
+    }
+  }
+
+  private drawLightBuffer() {
+    for (let i = 0; i < bufferWidth; i++) {
+      if (lightingBuffer[i] !== undefined) {
+        const height = lightingBuffer[i][0];
+        const alpha = lightingBuffer[i][1];
+        c.globalAlpha = alpha;
+        c.fillStyle = "black";
+        c.fillRect(
+          bufferRatio * i,
+          canvas.height / 2 - height / 2,
+          bufferRatio,
+          height,
+        );
+      }
+    }
+    c.globalAlpha = 1;
   }
 
   draw(scale: number, blockSize: number): void {
@@ -142,8 +171,6 @@ export class Player {
   }
 
   private drawBG() {
-    this.clearBuffer();
-
     c.fillStyle = "black";
     c.fillRect(0, 0, canvas.width, canvas.height);
     for (let y = 0; y < bufferHeight; y++) {
@@ -180,7 +207,6 @@ export class Player {
         buffer[bufferHeight - y - 1][x] = color;
       }
     }
-    this.drawBuffer();
   }
 
   private drawSprites(sprites: sprite[]) {}
@@ -243,55 +269,49 @@ export class Player {
   }
 
   private drawWalls(map: number[][], lights: string[]) {
-    for (let x = 0; x < canvas.width; x++) {
+    for (let x = 0; x < bufferWidth; x++) {
       const result = this.distance(x, map, canvas);
-      const height = Math.floor(canvas.height / result.distance);
-
-      c.globalAlpha = 1;
+      const height = Math.floor(bufferHeight / result.distance);
+      let drawStart = Math.floor(-height / 2 + bufferHeight / 2);
+      if (drawStart < 0) {
+        drawStart = 0;
+      }
+      let drawEnd = Math.floor(height / 2 + bufferHeight / 2);
+      if (drawEnd >= bufferHeight) {
+        drawEnd = bufferHeight - 1;
+      }
 
       let brightness = this.getBrightness(result, lights);
-      let alpha: number;
+      let alpha = 0;
       if (
         this.viewDist === 64 ||
         (this.shootingCounter > 0 && this.shootingCounter < 15)
       ) {
-        alpha = brightness / 7;
+        alpha = brightness / 15;
       } else {
         alpha = brightness / 4;
       }
 
-      if (result.wallType === 1) {
-        c.drawImage(
-          textures[0][result.texX],
-          x,
-          canvas.height / 2 - height / 2,
-          1,
-          height,
-        );
-      } else if (result.wallType === 9) {
-        c.fillStyle = "red";
-        c.fillRect(x, canvas.height / 2 - height / 2, 1, height);
-      } else if (result.wallType === 8) {
-        c.fillStyle = "yellow";
-        c.fillRect(x, canvas.height / 2 - height / 2, 1, height);
-      }
-
       if (alpha > 1) {
-        c.globalAlpha = 1;
-        c.fillStyle = "black";
-        c.fillRect(x, canvas.height / 2 - height / 2, 1, height);
+        alpha = 1;
+      }
+      lightingBuffer[x] = [height * bufferRatio, alpha];
+
+      let texNum = result.wallType - 1;
+      if (texNum > textures.length) {
+        texNum = 0;
       }
 
-      if (result.goalDistance !== -1) {
-        const goalHeight = Math.floor(canvas.height / result.goalDistance);
-        c.globalAlpha = 0.5;
-        c.fillStyle = "green";
-        c.fillRect(x, canvas.height / 2 - goalHeight / 2, 1, goalHeight);
-      }
+      const step = texHeight / height;
+      let texPos = (drawStart - bufferHeight / 2 + height / 2) * step;
 
-      c.globalAlpha = alpha;
-      c.fillStyle = "black";
-      c.fillRect(x, canvas.height / 2 - height / 2, 1, height);
+      for (let y = drawStart; y < drawEnd; y++) {
+        const texY = Math.floor(texPos);
+        texPos += step;
+
+        let color = textures[texNum][texHeight * texY + result.texX];
+        buffer[y][x] = color;
+      }
     }
   }
 
@@ -304,9 +324,17 @@ export class Player {
   }
 
   drawView(map: number[][], lights: string[], sprites: sprite[]) {
+    this.clearBuffer();
     this.drawBG();
+    this.drawBuffer();
     this.drawBGLight();
+
+    this.clearBuffer();
+    this.clearLightBuffer();
     this.drawWalls(map, lights);
+    this.drawBuffer();
+    this.drawLightBuffer();
+
     this.drawSprites(sprites);
     this.drawShootingFlash();
     this.drawFlashBeam();
@@ -347,7 +375,7 @@ export class Player {
       pos: "",
     };
 
-    const cameraX = (2 * x) / canvas.width - 1;
+    const cameraX = (2 * x) / bufferWidth - 1;
     const rayDirX = this.dirX + this.planeX * cameraX;
     const rayDirY = this.dirY + this.planeY * cameraX;
 
@@ -392,13 +420,6 @@ export class Player {
         mapY += stepY;
         side = 1;
       }
-      if (map[mapX][mapY] === 2 && result.goalDistance === -1) {
-        if (side === 0) {
-          result.goalDistance = sideDistX - deltaDistX;
-        } else {
-          result.goalDistance = sideDistY - deltaDistY;
-        }
-      }
       if (map[mapX][mapY] !== 0) {
         hit = 1;
       }
@@ -423,6 +444,7 @@ export class Player {
       result.pos = `${wallX},${mapY}`;
     }
     wallX -= Math.floor(wallX);
+
     let texX = Math.floor(wallX * texWidth);
     if (side === 0 && rayDirX > 0) {
       texX = texWidth - texX - 1;
@@ -446,26 +468,34 @@ export class Player {
     if (this.holding === 1) {
       c.drawImage(
         gunImg,
-        canvas.width / 2 - 140,
-        canvas.height - 260 + recoil,
-        280,
-        280,
+        canvas.width / 2 - 28 * bufferRatio,
+        canvas.height - 52 * bufferRatio + recoil,
+        56 * bufferRatio,
+        56 * bufferRatio,
       );
       c.fillStyle = "#e74c3c";
       c.fillRect(
-        canvas.width / 2 - 50,
-        canvas.height - 20,
-        this.shootingCounter,
-        10,
+        canvas.width / 2 - (50 * bufferRatio) / 5,
+        canvas.height - 5 * bufferRatio,
+        (this.shootingCounter * bufferRatio) / 5,
+        2 * bufferRatio,
       );
     } else if (this.holding === 2) {
       if (this.viewDist === 64) {
-        c.drawImage(flashlightImg, canvas.width / 2 - 120, canvas.height - 200);
+        c.drawImage(
+          flashlightImg,
+          canvas.width / 2 - 25 * bufferRatio,
+          canvas.height - 40 * bufferRatio,
+          50 * bufferRatio,
+          40 * bufferRatio,
+        );
       } else {
         c.drawImage(
           flashlightoffImg,
-          canvas.width / 2 - 120,
-          canvas.height - 200,
+          canvas.width / 2 - 25 * bufferRatio,
+          canvas.height - 40 * bufferRatio,
+          50 * bufferRatio,
+          40 * bufferRatio,
         );
       }
     }
@@ -475,18 +505,18 @@ export class Player {
     if (this.shootingCounter > 0 && this.shootingCounter < 10) {
       c.drawImage(
         shootImgs[0],
-        canvas.width / 2 - 80,
-        canvas.height - 370,
-        160,
-        160,
+        canvas.width / 2 - 16 * bufferRatio,
+        canvas.height - 70 * bufferRatio,
+        32 * bufferRatio,
+        32 * bufferRatio,
       );
-    } else if (this.shootingCounter > 9 && this.shootingCounter < 30) {
+    } else if (this.shootingCounter > 9 && this.shootingCounter < 20) {
       c.drawImage(
         shootImgs[1],
-        canvas.width / 2 - 80,
-        canvas.height - 370,
-        160,
-        160,
+        canvas.width / 2 - 16 * bufferRatio,
+        canvas.height - 70 * bufferRatio,
+        32 * bufferRatio,
+        32 * bufferRatio,
       );
     }
   }
@@ -494,21 +524,53 @@ export class Player {
   private drawInvUi() {
     c.globalAlpha = 0.5;
     c.fillStyle = "#7f8c8d";
-    c.fillRect(10, canvas.height - 110, 100, 100);
-    c.fillRect(120, canvas.height - 110, 100, 100);
+    c.fillRect(
+      2 * bufferRatio,
+      canvas.height - 22 * bufferRatio,
+      20 * bufferRatio,
+      20 * bufferRatio,
+    );
+    c.fillRect(
+      24 * bufferRatio,
+      canvas.height - 22 * bufferRatio,
+      20 * bufferRatio,
+      20 * bufferRatio,
+    );
     c.globalAlpha = 1;
     c.drawImage;
 
-    c.drawImage(gunInvImg, 10, canvas.height - 107, 100, 100);
-    c.drawImage(flashLightInvImg, 120, canvas.height - 107, 100, 100);
+    c.drawImage(
+      gunInvImg,
+      2 * bufferRatio,
+      canvas.height - 21 * bufferRatio,
+      20 * bufferRatio,
+      20 * bufferRatio,
+    );
+    c.drawImage(
+      flashLightInvImg,
+      24 * bufferRatio,
+      canvas.height - 21 * bufferRatio,
+      20 * bufferRatio,
+      20 * bufferRatio,
+    );
 
     c.globalAlpha = 0.5;
     c.fillStyle = "black";
     if (this.holding !== 1) {
-      c.fillRect(10, canvas.height - 110, 100, 100);
+      c.fillRect(
+        2 * bufferRatio,
+        canvas.height - 22 * bufferRatio,
+        20 * bufferRatio,
+        20 * bufferRatio,
+      );
     }
     if (this.holding !== 2) {
-      c.fillRect(120, canvas.height - 110, 100, 100);
+      c.fillRect(
+        24 * bufferRatio,
+        canvas.height - 22 * bufferRatio,
+        20 * bufferRatio,
+        20 * bufferRatio,
+      );
     }
 
     c.globalAlpha = 1;
@@ -519,10 +581,10 @@ export class Player {
       drawImage(
         c,
         ammoImg,
-        canvas.width - 70,
-        canvas.height - 200 - i * 40,
-        37,
-        84,
+        canvas.width - 13 * bufferRatio,
+        canvas.height - 35 * bufferRatio - i * 8 * bufferRatio,
+        7 * bufferRatio,
+        16 * bufferRatio,
         -90,
       );
     }
@@ -535,49 +597,55 @@ export class Player {
       c.fillStyle = "#b33939";
     }
     c.fillRect(
-      canvas.width - 310 + ((1000 - this.battery) / 10) * 3,
-      canvas.height - 120,
-      (this.battery / 10) * 3,
-      30,
+      canvas.width -
+        52 * bufferRatio +
+        ((1000 - this.battery) / 20) * bufferRatio,
+      canvas.height - 21 * bufferRatio,
+      (this.battery / 20) * bufferRatio,
+      5 * bufferRatio,
     );
   }
 
   private drawStaminaUi() {
     c.fillStyle = "#2ecc71";
     c.fillRect(
-      canvas.width - 310 + ((1000 - this.stamina) / 10) * 3,
-      canvas.height - 80,
-      (this.stamina / 10) * 3,
-      30,
+      canvas.width -
+        52 * bufferRatio +
+        ((1000 - this.stamina) / 20) * bufferRatio,
+      canvas.height - 14 * bufferRatio,
+      (this.stamina / 20) * bufferRatio,
+      5 * bufferRatio,
     );
   }
 
   private drawHealthUi() {
     c.fillStyle = "#e74c3c";
     c.fillRect(
-      canvas.width - 310 + ((1000 - this.health) / 10) * 3,
-      canvas.height - 40,
-      (this.health / 10) * 3,
-      30,
+      canvas.width -
+        52 * bufferRatio +
+        ((1000 - this.health) / 20) * bufferRatio,
+      canvas.height - 7 * bufferRatio,
+      (this.health / 20) * bufferRatio,
+      5 * bufferRatio,
     );
   }
 
-  private drawLevelUi(level: number) {
-    c.fillStyle = "#241d1d";
-    c.fillRect(0, 0, 100, 100);
+  // private drawLevelUi(level: number) {
+  //   c.fillStyle = "#241d1d";
+  //   c.fillRect(0, 0, 20 * bufferRatio, 20 * bufferRatio);
+  //
+  //   c.fillStyle = "red";
+  //   c.font = "bold 75px Arial";
+  //   c.fillText("" + level, 10 * bufferRatio, 10 * bufferRatio);
+  // }
 
-    c.fillStyle = "red";
-    c.font = "bold 75px Arial";
-    c.fillText("" + level, 50, 50);
-  }
-
-  drawUi(level: number) {
+  drawUi() {
     this.drawInvUi();
 
     this.drawAmmoUi();
     this.drawShootingUi();
 
-    this.drawLevelUi(level);
+    // this.drawLevelUi(level);
 
     this.drawBatteryUi();
     this.drawStaminaUi();
@@ -599,7 +667,7 @@ export class Player {
     if (keyMap.get("Space")) {
       if (this.holding === 2 && this.battery > 0 && this.flashlight) {
         this.viewDist = 64;
-        this.battery--;
+        this.battery -= 5;
       }
       if (this.holding === 1) {
         if (this.ammo > 0 && this.shootingCounter === 0) {

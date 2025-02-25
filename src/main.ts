@@ -10,7 +10,7 @@ const map = new Map([], 100, canvas.height);
 const sprites: sprite[] = [];
 const player = new Player(0, 0, 5, 0.04, 0.05);
 
-let level = 2;
+let level = 1;
 setLevel(level, player, map, sprites);
 
 function main(): void {
@@ -21,7 +21,7 @@ function drawFrame(): void {
   requestAnimationFrame(main);
   c.clearRect(0, 0, canvas.width, canvas.height);
   player.drawView(map.map, map.lightList, sprites);
-  player.drawUi(level);
+  player.drawUi();
 }
 
 function updateFrame(): void {
