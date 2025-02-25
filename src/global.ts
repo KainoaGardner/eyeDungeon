@@ -11,6 +11,9 @@ const targetFps = 30;
 canvas.width = 1280;
 canvas.height = 720;
 
+// canvas.width = 854;
+// canvas.height = 480;
+
 // canvas.width = 640;
 // canvas.height = 360;
 

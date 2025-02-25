@@ -60,10 +60,14 @@ export class Player {
   planeY: number = 1;
 
   radius: number;
+  walkSpeed: number;
   speed: number;
   turnSpeed: number;
   health: number = 1000;
   stamina: number = 1000;
+
+  private running: boolean = false;
+  private tired: boolean = false;
 
   private viewDist: number = 32;
 
@@ -87,6 +91,7 @@ export class Player {
     this.posX = x;
     this.posY = y;
     this.radius = radius;
+    this.walkSpeed = speed;
     this.speed = speed;
     this.turnSpeed = turnSpeed;
   }
@@ -261,7 +266,13 @@ export class Player {
       c.fill();
 
       c.beginPath();
-      c.arc(canvas.width / 2, canvas.height - 150, 125, 0, 2 * Math.PI);
+      c.arc(
+        canvas.width / 2,
+        canvas.height - 30 * bufferRatio,
+        25 * bufferRatio,
+        0,
+        2 * Math.PI,
+      );
       c.fill();
 
       c.globalAlpha = 1;
@@ -287,7 +298,8 @@ export class Player {
         this.viewDist === 64 ||
         (this.shootingCounter > 0 && this.shootingCounter < 15)
       ) {
-        alpha = brightness / 15;
+        const middle = Math.abs(x - bufferWidth / 2) / bufferWidth / 2;
+        alpha = brightness / 15 + middle * 3;
       } else {
         alpha = brightness / 4;
       }
@@ -465,11 +477,14 @@ export class Player {
     if (this.shootingCounter !== 0) {
       recoil = 1 - (100 / this.shootingCounter) * 3;
     }
+
+    let running = 0;
+    if (this.running) running = bufferRatio * 20;
     if (this.holding === 1) {
       c.drawImage(
         gunImg,
         canvas.width / 2 - 28 * bufferRatio,
-        canvas.height - 52 * bufferRatio + recoil,
+        canvas.height - 52 * bufferRatio + recoil + running,
         56 * bufferRatio,
         56 * bufferRatio,
       );
@@ -485,7 +500,7 @@ export class Player {
         c.drawImage(
           flashlightImg,
           canvas.width / 2 - 25 * bufferRatio,
-          canvas.height - 40 * bufferRatio,
+          canvas.height - 40 * bufferRatio + running,
           50 * bufferRatio,
           40 * bufferRatio,
         );
@@ -493,7 +508,7 @@ export class Player {
         c.drawImage(
           flashlightoffImg,
           canvas.width / 2 - 25 * bufferRatio,
-          canvas.height - 40 * bufferRatio,
+          canvas.height - 40 * bufferRatio + running,
           50 * bufferRatio,
           40 * bufferRatio,
         );
@@ -607,7 +622,12 @@ export class Player {
   }
 
   private drawStaminaUi() {
-    c.fillStyle = "#2ecc71";
+    if (this.tired) {
+      c.fillStyle = "#b33939";
+    } else {
+      c.fillStyle = "#2ecc71";
+    }
+
     c.fillRect(
       canvas.width -
         52 * bufferRatio +
@@ -630,6 +650,24 @@ export class Player {
     );
   }
 
+  private drawRunUi() {
+    if (this.running) {
+      c.globalAlpha = 0.75;
+      c.lineWidth = 100;
+      c.strokeStyle = "black";
+      c.beginPath();
+      c.moveTo(0, 0);
+      c.lineTo(canvas.width, 0);
+      c.stroke();
+
+      c.beginPath();
+      c.moveTo(0, canvas.height);
+      c.lineTo(canvas.width, canvas.height);
+      c.stroke();
+      c.globalAlpha = 1;
+    }
+  }
+
   // private drawLevelUi(level: number) {
   //   c.fillStyle = "#241d1d";
   //   c.fillRect(0, 0, 20 * bufferRatio, 20 * bufferRatio);
@@ -640,6 +678,7 @@ export class Player {
   // }
 
   drawUi() {
+    this.drawRunUi();
     this.drawInvUi();
 
     this.drawAmmoUi();
@@ -654,33 +693,42 @@ export class Player {
     this.drawHoldingUi();
   }
 
-  private batteryUpdate() {
-    if (this.battery <= 0) {
-      this.flashlight = false;
-    }
-    if (!this.flashlight && this.battery >= 1000) {
-      this.flashlight = true;
-    }
-  }
-
   private useUpdate() {
-    if (keyMap.get("Space")) {
-      if (this.holding === 2 && this.battery > 0 && this.flashlight) {
-        this.viewDist = 64;
-        this.battery -= 5;
-      }
-      if (this.holding === 1) {
-        if (this.ammo > 0 && this.shootingCounter === 0) {
-          shootSound.play();
-          this.ammo--;
-          this.shootingCounter = 1;
+    if (!this.running) {
+      if (keyMap.get("Space")) {
+        if (this.holding === 2 && this.battery > 0 && this.flashlight) {
+          this.viewDist = 64;
+          this.battery -= 5;
+        }
+        if (this.holding === 1) {
+          if (this.ammo > 0 && this.shootingCounter === 0) {
+            shootSound.play();
+            this.ammo--;
+            this.shootingCounter = 1;
+          }
         }
       }
     }
   }
 
   private moveUpdate(map: number[][]) {
-    if (keyMap.get("ArrowUp")) {
+    if (
+      keyMap.get("ShiftLeft") &&
+      (keyMap.get("ArrowUp") ||
+        keyMap.get("KeyW") ||
+        keyMap.get("ArrowDown") ||
+        keyMap.get("KeyS")) &&
+      !this.tired &&
+      this.stamina > 0
+    ) {
+      this.speed = this.walkSpeed * 2;
+      this.running = true;
+      this.stamina -= 10;
+
+      keyMap.set("Space", false);
+    }
+
+    if (keyMap.get("ArrowUp") || keyMap.get("KeyW")) {
       if (
         map[Math.floor(this.posX + this.dirX * this.speed * this.radius)][
           Math.floor(this.posY)
@@ -697,7 +745,7 @@ export class Player {
       }
     }
 
-    if (keyMap.get("ArrowDown")) {
+    if (keyMap.get("ArrowDown") || keyMap.get("KeyS")) {
       if (
         map[Math.floor(this.posX)][
           Math.floor(this.posY - this.dirY * this.speed * this.radius)
@@ -714,7 +762,7 @@ export class Player {
       }
     }
 
-    if (keyMap.get("ArrowRight")) {
+    if (keyMap.get("ArrowRight") || keyMap.get("KeyD")) {
       const oldDirX = this.dirX;
       this.dirX =
         this.dirX * Math.cos(-this.turnSpeed) -
@@ -732,7 +780,7 @@ export class Player {
         this.planeY * Math.cos(-this.turnSpeed);
     }
 
-    if (keyMap.get("ArrowLeft")) {
+    if (keyMap.get("ArrowLeft") || keyMap.get("KeyA")) {
       const oldDirX = this.dirX;
       this.dirX =
         this.dirX * Math.cos(this.turnSpeed) -
@@ -753,7 +801,7 @@ export class Player {
   private holdingUpdate() {
     if (keyMap.get("Digit1")) {
       this.holding = 1;
-      this.shootingCounter = 30;
+      this.shootingCounter = 40;
     } else if (keyMap.get("Digit2")) {
       this.holding = 2;
     }
@@ -778,6 +826,13 @@ export class Player {
   }
 
   private flashlightUpdate() {
+    if (this.battery <= 0) {
+      this.flashlight = false;
+    }
+    if (!this.flashlight && this.battery >= 1000) {
+      this.flashlight = true;
+    }
+
     if (
       !this.flashlight ||
       (this.holding === 2 && !keyMap.get("Space")) ||
@@ -790,13 +845,30 @@ export class Player {
     }
   }
 
+  private staminaUpdate() {
+    if (this.stamina <= 0) {
+      this.tired = true;
+    }
+    if (this.tired && this.stamina >= 1000) {
+      this.tired = false;
+    }
+
+    if (this.tired || !keyMap.get("ShiftLeft")) {
+      this.speed = this.walkSpeed;
+      this.running = false;
+      if (this.stamina < 1000) {
+        this.stamina += 3;
+      }
+    }
+  }
+
   update(map: number[][]): void {
-    this.batteryUpdate();
     this.useUpdate();
 
     this.gunUpdate();
     this.flashlightUpdate();
 
+    this.staminaUpdate();
     this.moveUpdate(map);
     this.holdingUpdate();
   }
