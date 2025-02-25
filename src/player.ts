@@ -24,6 +24,7 @@ import {
   bufferWidth,
   bufferHeight,
   bufferRatio,
+  UIRatio,
 } from "./global";
 
 function drawImage(
@@ -268,8 +269,8 @@ export class Player {
       c.beginPath();
       c.arc(
         canvas.width / 2,
-        canvas.height - 30 * bufferRatio,
-        25 * bufferRatio,
+        canvas.height - 30 * UIRatio,
+        25 * UIRatio,
         0,
         2 * Math.PI,
       );
@@ -479,38 +480,38 @@ export class Player {
     }
 
     let running = 0;
-    if (this.running) running = bufferRatio * 20;
+    if (this.running) running = UIRatio * 20;
     if (this.holding === 1) {
       c.drawImage(
         gunImg,
-        canvas.width / 2 - 28 * bufferRatio,
-        canvas.height - 52 * bufferRatio + recoil + running,
-        56 * bufferRatio,
-        56 * bufferRatio,
+        canvas.width / 2 - 28 * UIRatio,
+        canvas.height - 52 * UIRatio + recoil + running,
+        56 * UIRatio,
+        56 * UIRatio,
       );
       c.fillStyle = "#e74c3c";
       c.fillRect(
-        canvas.width / 2 - (50 * bufferRatio) / 5,
-        canvas.height - 5 * bufferRatio,
-        (this.shootingCounter * bufferRatio) / 5,
-        2 * bufferRatio,
+        canvas.width / 2 - (50 * UIRatio) / 5,
+        canvas.height - 5 * UIRatio,
+        (this.shootingCounter * UIRatio) / 5,
+        2 * UIRatio,
       );
     } else if (this.holding === 2) {
       if (this.viewDist === 64) {
         c.drawImage(
           flashlightImg,
-          canvas.width / 2 - 25 * bufferRatio,
-          canvas.height - 40 * bufferRatio + running,
-          50 * bufferRatio,
-          40 * bufferRatio,
+          canvas.width / 2 - 25 * UIRatio,
+          canvas.height - 40 * UIRatio + running,
+          50 * UIRatio,
+          40 * UIRatio,
         );
       } else {
         c.drawImage(
           flashlightoffImg,
-          canvas.width / 2 - 25 * bufferRatio,
-          canvas.height - 40 * bufferRatio + running,
-          50 * bufferRatio,
-          40 * bufferRatio,
+          canvas.width / 2 - 25 * UIRatio,
+          canvas.height - 40 * UIRatio + running,
+          50 * UIRatio,
+          40 * UIRatio,
         );
       }
     }
@@ -520,18 +521,18 @@ export class Player {
     if (this.shootingCounter > 0 && this.shootingCounter < 10) {
       c.drawImage(
         shootImgs[0],
-        canvas.width / 2 - 16 * bufferRatio,
-        canvas.height - 70 * bufferRatio,
-        32 * bufferRatio,
-        32 * bufferRatio,
+        canvas.width / 2 - 16 * UIRatio,
+        canvas.height - 70 * UIRatio,
+        32 * UIRatio,
+        32 * UIRatio,
       );
     } else if (this.shootingCounter > 9 && this.shootingCounter < 20) {
       c.drawImage(
         shootImgs[1],
-        canvas.width / 2 - 16 * bufferRatio,
-        canvas.height - 70 * bufferRatio,
-        32 * bufferRatio,
-        32 * bufferRatio,
+        canvas.width / 2 - 16 * UIRatio,
+        canvas.height - 70 * UIRatio,
+        32 * UIRatio,
+        32 * UIRatio,
       );
     }
   }
@@ -540,51 +541,51 @@ export class Player {
     c.globalAlpha = 0.5;
     c.fillStyle = "#7f8c8d";
     c.fillRect(
-      2 * bufferRatio,
-      canvas.height - 22 * bufferRatio,
-      20 * bufferRatio,
-      20 * bufferRatio,
+      2 * UIRatio,
+      canvas.height - 22 * UIRatio,
+      20 * UIRatio,
+      20 * UIRatio,
     );
     c.fillRect(
-      24 * bufferRatio,
-      canvas.height - 22 * bufferRatio,
-      20 * bufferRatio,
-      20 * bufferRatio,
+      24 * UIRatio,
+      canvas.height - 22 * UIRatio,
+      20 * UIRatio,
+      20 * UIRatio,
     );
     c.globalAlpha = 1;
     c.drawImage;
 
     c.drawImage(
       gunInvImg,
-      2 * bufferRatio,
-      canvas.height - 21 * bufferRatio,
-      20 * bufferRatio,
-      20 * bufferRatio,
+      2 * UIRatio,
+      canvas.height - 21 * UIRatio,
+      20 * UIRatio,
+      20 * UIRatio,
     );
     c.drawImage(
       flashLightInvImg,
-      24 * bufferRatio,
-      canvas.height - 21 * bufferRatio,
-      20 * bufferRatio,
-      20 * bufferRatio,
+      24 * UIRatio,
+      canvas.height - 21 * UIRatio,
+      20 * UIRatio,
+      20 * UIRatio,
     );
 
     c.globalAlpha = 0.5;
     c.fillStyle = "black";
     if (this.holding !== 1) {
       c.fillRect(
-        2 * bufferRatio,
-        canvas.height - 22 * bufferRatio,
-        20 * bufferRatio,
-        20 * bufferRatio,
+        2 * UIRatio,
+        canvas.height - 22 * UIRatio,
+        20 * UIRatio,
+        20 * UIRatio,
       );
     }
     if (this.holding !== 2) {
       c.fillRect(
-        24 * bufferRatio,
-        canvas.height - 22 * bufferRatio,
-        20 * bufferRatio,
-        20 * bufferRatio,
+        24 * UIRatio,
+        canvas.height - 22 * UIRatio,
+        20 * UIRatio,
+        20 * UIRatio,
       );
     }
 
@@ -596,10 +597,10 @@ export class Player {
       drawImage(
         c,
         ammoImg,
-        canvas.width - 13 * bufferRatio,
-        canvas.height - 35 * bufferRatio - i * 8 * bufferRatio,
-        7 * bufferRatio,
-        16 * bufferRatio,
+        canvas.width - 13 * UIRatio,
+        canvas.height - 35 * UIRatio - i * 8 * UIRatio,
+        7 * UIRatio,
+        16 * UIRatio,
         -90,
       );
     }
@@ -612,12 +613,10 @@ export class Player {
       c.fillStyle = "#b33939";
     }
     c.fillRect(
-      canvas.width -
-        52 * bufferRatio +
-        ((1000 - this.battery) / 20) * bufferRatio,
-      canvas.height - 21 * bufferRatio,
-      (this.battery / 20) * bufferRatio,
-      5 * bufferRatio,
+      canvas.width - 52 * UIRatio + ((1000 - this.battery) / 20) * UIRatio,
+      canvas.height - 21 * UIRatio,
+      (this.battery / 20) * UIRatio,
+      5 * UIRatio,
     );
   }
 
@@ -629,24 +628,20 @@ export class Player {
     }
 
     c.fillRect(
-      canvas.width -
-        52 * bufferRatio +
-        ((1000 - this.stamina) / 20) * bufferRatio,
-      canvas.height - 14 * bufferRatio,
-      (this.stamina / 20) * bufferRatio,
-      5 * bufferRatio,
+      canvas.width - 52 * UIRatio + ((1000 - this.stamina) / 20) * UIRatio,
+      canvas.height - 14 * UIRatio,
+      (this.stamina / 20) * UIRatio,
+      5 * UIRatio,
     );
   }
 
   private drawHealthUi() {
     c.fillStyle = "#e74c3c";
     c.fillRect(
-      canvas.width -
-        52 * bufferRatio +
-        ((1000 - this.health) / 20) * bufferRatio,
-      canvas.height - 7 * bufferRatio,
-      (this.health / 20) * bufferRatio,
-      5 * bufferRatio,
+      canvas.width - 52 * UIRatio + ((1000 - this.health) / 20) * UIRatio,
+      canvas.height - 7 * UIRatio,
+      (this.health / 20) * UIRatio,
+      5 * UIRatio,
     );
   }
 
@@ -670,11 +665,11 @@ export class Player {
 
   // private drawLevelUi(level: number) {
   //   c.fillStyle = "#241d1d";
-  //   c.fillRect(0, 0, 20 * bufferRatio, 20 * bufferRatio);
+  //   c.fillRect(0, 0, 20 * UIRatio, 20 * UIRatio);
   //
   //   c.fillStyle = "red";
   //   c.font = "bold 75px Arial";
-  //   c.fillText("" + level, 10 * bufferRatio, 10 * bufferRatio);
+  //   c.fillText("" + level, 10 * UIRatio, 10 * UIRatio);
   // }
 
   drawUi() {

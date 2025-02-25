@@ -10,7 +10,7 @@ const map = new Map([], 100, canvas.height);
 const sprites: sprite[] = [];
 const player = new Player(0, 0, 5, 0.04, 0.05);
 
-let level = 2;
+let level = 1;
 setLevel(level, player, map, sprites);
 
 function main(): void {

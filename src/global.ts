@@ -20,9 +20,13 @@ canvas.height = 720;
 // canvas.width = 256;
 // canvas.height = 144;
 
-const bufferWidth = 256;
-const bufferHeight = 144;
+const bufferWidth = 160;
+const bufferHeight = 90;
 
+// const bufferWidth = 256;
+// const bufferHeight = 144;
+
+const UIRatio = canvas.width / bufferWidth / 2;
 const bufferRatio = canvas.width / bufferWidth;
 
 const c = canvas.getContext("2d")!;
@@ -45,5 +49,6 @@ export {
   bufferWidth,
   bufferHeight,
   bufferRatio,
+  UIRatio,
   targetFps,
 };
