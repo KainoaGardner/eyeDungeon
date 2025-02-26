@@ -2,24 +2,27 @@ import { canvas, c } from "./global";
 
 export class Map {
   map: number[][];
-  lightList: string[];
+  lightList: string[] = [];
   size: number;
+  brightness: number = 1;
 
   constructor(
     map: Array<Array<number>>,
     mapSize: number,
     canvasHeight: number,
+    brightness: number,
   ) {
     this.map = map;
     this.size = canvasHeight / mapSize;
     this.lightList = this.getLightList(this.map);
+    this.brightness = brightness;
   }
 
-  private getLightList(map: number[][]): string[] {
+  getLightList(map: number[][]): string[] {
     const lights: string[] = [];
     for (let r = 0; r < map.length; r++) {
       for (let c = 0; c < map[0].length; c++) {
-        if (map[r][c] === 3) {
+        if (map[r][c] === 4) {
           const pos = `${r + 0.5},${c + 0.5}`;
           lights.push(pos);
         }

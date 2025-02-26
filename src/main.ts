@@ -6,11 +6,11 @@ import { setLevel } from "./levels";
 
 document.body.style.overflow = "hidden";
 
-const map = new Map([], 100, canvas.height);
+const map = new Map([], 100, canvas.height, 1);
 const sprites: sprite[] = [];
 const player = new Player(0, 0, 5, 0.04, 0.05);
 
-let level = 1;
+let level = 0;
 setLevel(level, player, map, sprites);
 
 function main(): void {
@@ -20,7 +20,7 @@ function main(): void {
 function drawFrame(): void {
   requestAnimationFrame(main);
   c.clearRect(0, 0, canvas.width, canvas.height);
-  player.drawView(map.map, map.lightList, sprites);
+  player.drawView(map.map, map.lightList, sprites, map.brightness);
   player.drawUi();
 }
 

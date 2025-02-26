@@ -15,6 +15,9 @@ export function setLevel(
     case 2:
       level2(player, map, sprites);
       break;
+    default:
+      level0(player, map, sprites);
+      break;
   }
 }
 
@@ -96,9 +99,21 @@ function level1(player: Player, map: Map, sprites: sprite[]) {
     ],
   ];
 
-  sprites = [{ x: 2.5, y: 2.5, texture: 1 }];
+  map.lightList = map.getLightList(map.map);
+  map.brightness = 0.3;
+  sprites = [{ x: 1.5, y: 10, texture: 1 }];
 }
-function level2(player: Player, map: Map, sprites: sprite[]) {
+function level2(player: Player, map: Map, sprites: sprite[]) {}
+function level3(player: Player, map: Map, sprites: sprite[]) {}
+function level4(player: Player, map: Map, sprites: sprite[]) {}
+function level5(player: Player, map: Map, sprites: sprite[]) {}
+function level6(player: Player, map: Map, sprites: sprite[]) {}
+function level7(player: Player, map: Map, sprites: sprite[]) {}
+function level8(player: Player, map: Map, sprites: sprite[]) {}
+function level9(player: Player, map: Map, sprites: sprite[]) {}
+function level10(player: Player, map: Map, sprites: sprite[]) {}
+
+function level0(player: Player, map: Map, sprites: sprite[]) {
   //player
   player.posX = 1.5;
   player.posY = 1.5;
@@ -120,13 +135,9 @@ function level2(player: Player, map: Map, sprites: sprite[]) {
     [1, 1, 1, 1, 1, 1, 1, 1],
   ];
 
-  // sprites = [{ x: 2.5, y: 2.5, texture: 1 }];
+  // map.lightList = map.getLightList(map.map);
+  map.lightList = ["1.5,6.5", "4.5,4.5"];
+  map.brightness = 1;
+
+  sprites = [{ x: 2.5, y: 2.5, texture: 1 }];
 }
-function level3(player: Player, map: Map, sprites: sprite[]) {}
-function level4(player: Player, map: Map, sprites: sprite[]) {}
-function level5(player: Player, map: Map, sprites: sprite[]) {}
-function level6(player: Player, map: Map, sprites: sprite[]) {}
-function level7(player: Player, map: Map, sprites: sprite[]) {}
-function level8(player: Player, map: Map, sprites: sprite[]) {}
-function level9(player: Player, map: Map, sprites: sprite[]) {}
-function level10(player: Player, map: Map, sprites: sprite[]) {}

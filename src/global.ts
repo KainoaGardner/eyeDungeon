@@ -20,13 +20,13 @@ canvas.height = 720;
 // canvas.width = 256;
 // canvas.height = 144;
 
-const bufferWidth = 160;
-const bufferHeight = 90;
+// const bufferWidth = 160;
+// const bufferHeight = 90;
 
-// const bufferWidth = 256;
-// const bufferHeight = 144;
+const bufferWidth = 256;
+const bufferHeight = 144;
 
-const UIRatio = canvas.width / bufferWidth / 2;
+const UIRatio = canvas.width / bufferWidth;
 const bufferRatio = canvas.width / bufferWidth;
 
 const c = canvas.getContext("2d")!;
@@ -40,6 +40,7 @@ const buffer = new Array(bufferHeight)
   .map(() => Array(bufferWidth).fill(undefined));
 
 const lightingBuffer = new Array(bufferWidth).fill(undefined);
+const zBuffer = new Array(bufferWidth).fill(undefined);
 
 export {
   canvas,
@@ -51,4 +52,5 @@ export {
   bufferRatio,
   UIRatio,
   targetFps,
+  zBuffer,
 };

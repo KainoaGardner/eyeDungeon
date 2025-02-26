@@ -25,6 +25,7 @@ import {
   bufferHeight,
   bufferRatio,
   UIRatio,
+  zBuffer,
 } from "./global";
 
 function drawImage(
@@ -217,7 +218,7 @@ export class Player {
 
   private drawSprites(sprites: sprite[]) {}
 
-  private drawBGLight() {
+  private drawBGLight(levelBrightness: number) {
     c.fillStyle = "black";
     for (let y = 0; y < bufferHeight / 2; y++) {
       let brightness: number;
@@ -225,9 +226,9 @@ export class Player {
         this.viewDist === 64 ||
         (this.shootingCounter > 0 && this.shootingCounter < 15)
       ) {
-        brightness = y / (bufferHeight / 2);
+        brightness = (y / (bufferHeight / 2)) * (levelBrightness * 8);
       } else {
-        brightness = (y - 5) / (bufferHeight / 2);
+        brightness = ((y - 5) / (bufferHeight / 2)) * (levelBrightness * 3);
       }
 
       c.globalAlpha = 1 - brightness;
@@ -280,9 +281,15 @@ export class Player {
     }
   }
 
-  private drawWalls(map: number[][], lights: string[]) {
+  private drawWalls(
+    map: number[][],
+    lights: string[],
+    levelBrightness: number,
+  ) {
     for (let x = 0; x < bufferWidth; x++) {
       const result = this.distance(x, map, canvas);
+      zBuffer[x] = result.distance;
+
       const height = Math.floor(bufferHeight / result.distance);
       let drawStart = Math.floor(-height / 2 + bufferHeight / 2);
       if (drawStart < 0) {
@@ -300,9 +307,10 @@ export class Player {
         (this.shootingCounter > 0 && this.shootingCounter < 15)
       ) {
         const middle = Math.abs(x - bufferWidth / 2) / bufferWidth / 2;
-        alpha = brightness / 15 + middle * 3;
+
+        alpha = brightness / 15 + (middle * 3) / (levelBrightness * 5);
       } else {
-        alpha = brightness / 4;
+        alpha = brightness / 4 / (levelBrightness * 5);
       }
 
       if (alpha > 1) {
@@ -336,15 +344,20 @@ export class Player {
     }
   }
 
-  drawView(map: number[][], lights: string[], sprites: sprite[]) {
+  drawView(
+    map: number[][],
+    lights: string[],
+    sprites: sprite[],
+    levelBrightness: number,
+  ) {
     this.clearBuffer();
     this.drawBG();
     this.drawBuffer();
-    this.drawBGLight();
+    this.drawBGLight(levelBrightness);
 
     this.clearBuffer();
     this.clearLightBuffer();
-    this.drawWalls(map, lights);
+    this.drawWalls(map, lights, levelBrightness);
     this.drawBuffer();
     this.drawLightBuffer();
 
@@ -356,25 +369,30 @@ export class Player {
   private getBrightness(result: distanceOutput, lights: string[]): number {
     let min = Infinity;
     const wallPos = result.pos.split(",");
+    const wallY = Number(wallPos[0]);
+    const wallX = Number(wallPos[1]);
 
     for (let i = 0; i < lights.length; i++) {
       const lightPos = lights[i].split(",");
+      const lightY = Number(lightPos[0]);
+      const lightX = Number(lightPos[1]);
+
       const distance = Math.sqrt(
-        Math.pow(Number(lightPos[0]) - Number(wallPos[0]), 2) +
-          Math.pow(Number(lightPos[1]) - Number(wallPos[1]), 2),
+        (wallY - lightY) * (wallY - lightY) +
+          (wallX - lightX) * (wallX - lightX),
       );
 
       if (distance < min) {
         min = distance;
       }
     }
-    const distance = Math.sqrt(
-      Math.pow(this.posX - Number(wallPos[0]), 2) +
-        Math.pow(this.posY - Number(wallPos[1]), 2),
+    const playerDistance = Math.sqrt(
+      (this.posX - wallY) * (this.posX - wallY) +
+        (this.posY - wallX) * (this.posY - wallX),
     );
 
-    if (distance < min) {
-      min = distance;
+    if (playerDistance < min) {
+      min = playerDistance;
     }
     return min;
   }
