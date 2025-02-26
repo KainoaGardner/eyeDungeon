@@ -2,16 +2,25 @@ import { canvas, c, targetFps } from "./global";
 import { Player } from "./player";
 import { Map } from "./map";
 import { sprite } from "./sprite";
-import { setLevel } from "./levels";
+import { setLevel, levelSettings } from "./levels";
+import { CloseBlock } from "./closeblock";
 
 document.body.style.overflow = "hidden";
 
-const map = new Map([], 100, canvas.height, 1);
 const sprites: sprite[] = [];
+const moveWall: CloseBlock[] = [];
+const map = new Map([], 100, canvas.height, 1);
 const player = new Player(0, 0, 5, 0.04, 0.05);
 
-let level = 0;
-setLevel(level, player, map, sprites);
+const ls = {
+  level: 0,
+  player: player,
+  map: map,
+  sprites: sprites,
+  moveWall: moveWall,
+};
+
+setLevel(ls);
 
 function main(): void {
   drawFrame();
@@ -20,14 +29,24 @@ function main(): void {
 function drawFrame(): void {
   requestAnimationFrame(main);
   c.clearRect(0, 0, canvas.width, canvas.height);
-  player.drawView(map.map, map.lightList, sprites, map.brightness);
-  player.drawUi();
+  ls.player.drawView(
+    ls.map.map,
+    ls.map.lightList,
+    ls.sprites,
+    ls.map.brightness,
+  );
+  ls.player.drawUi(ls.map.map);
 }
 
 function updateFrame(): void {
   clearInterval(interval);
-  showFps();
-  player.update(map.map);
+  // showFps();
+  ls.player.update(ls.map.map);
+
+  for (let i = 0; i < ls.moveWall.length; i++) {
+    ls.moveWall[i].update(ls.map);
+  }
+
   interval = setInterval(updateFrame, 1000 / targetFps);
 }
 

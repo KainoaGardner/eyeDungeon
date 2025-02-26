@@ -1,5 +1,9 @@
-const canvas = document.querySelector("canvas")!;
+interface pos {
+  x: number;
+  y: number;
+}
 
+const canvas = document.querySelector("canvas")!;
 const targetFps = 30;
 
 // canvas.width = 1920;
@@ -53,4 +57,5 @@ export {
   UIRatio,
   targetFps,
   zBuffer,
+  type pos,
 };

@@ -1,8 +1,8 @@
-import { canvas, c } from "./global";
+import { canvas, c, pos } from "./global";
 
 export class Map {
   map: number[][];
-  lightList: string[] = [];
+  lightList: pos[] = [];
   size: number;
   brightness: number = 1;
 
@@ -18,12 +18,12 @@ export class Map {
     this.brightness = brightness;
   }
 
-  getLightList(map: number[][]): string[] {
-    const lights: string[] = [];
+  getLightList(map: number[][]): pos[] {
+    const lights: pos[] = [];
     for (let r = 0; r < map.length; r++) {
       for (let c = 0; c < map[0].length; c++) {
         if (map[r][c] === 4) {
-          const pos = `${r + 0.5},${c + 0.5}`;
+          const pos = { x: r + 0.5, y: c + 0.5 };
           lights.push(pos);
         }
       }

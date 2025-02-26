@@ -39,9 +39,10 @@ if (ammoSound instanceof HTMLElement) ammoSound.volume = 0.3;
 const texWidth = 16;
 const texHeight = 16;
 
-const textures = new Array(6).fill(null).map(() => Array(texWidth).fill(0));
+const textures = new Array(7).fill(null).map(() => Array(texWidth).fill(0));
 
 function getTexture(tex: any, texList: number[][], index: number) {
+  c.clearRect(0, 0, texWidth, texHeight);
   c.drawImage(tex, 0, 0, texWidth, texHeight);
 
   let texData;
@@ -105,12 +106,25 @@ if (fireBallWallTex instanceof HTMLElement) {
   });
 }
 
-const spikeTexList = new Array(texWidth).fill(null).map(() => Array(3).fill(0));
-const spikeTex = new Image();
-if (spikeTex instanceof HTMLElement) {
-  spikeTex.src = "/img/walls/spikeWall.png";
-  spikeTex.addEventListener("load", function () {
-    getTexture(spikeTex, spikeTexList, 5);
+const moveWallTexList = new Array(texWidth)
+  .fill(null)
+  .map(() => Array(3).fill(0));
+const moveWallTex = new Image();
+if (moveWallTex instanceof HTMLElement) {
+  moveWallTex.src = "/img/walls/moveWall.png";
+  moveWallTex.addEventListener("load", function () {
+    getTexture(moveWallTex, moveWallTexList, 5);
+  });
+}
+
+const closeWallTexList = new Array(texWidth)
+  .fill(null)
+  .map(() => Array(3).fill(0));
+const closeWallTex = new Image();
+if (closeWallTex instanceof HTMLElement) {
+  closeWallTex.src = "/img/walls/closeWall.png";
+  closeWallTex.addEventListener("load", function () {
+    getTexture(closeWallTex, closeWallTexList, 6);
   });
 }
 
