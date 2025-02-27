@@ -9,9 +9,16 @@ if (flashlightoffImg instanceof HTMLElement)
 
 const gunImg = new Image();
 if (gunImg instanceof HTMLElement) gunImg.src = "/img/gun.png";
-
-const swordImg = new Image();
-if (swordImg instanceof HTMLElement) swordImg.src = "/img/sword.png";
+const sword0Img = new Image();
+if (sword0Img instanceof HTMLElement) sword0Img.src = "/img/sword0.png";
+const sword1Img = new Image();
+if (sword1Img instanceof HTMLElement) sword1Img.src = "/img/sword1.png";
+const sword2Img = new Image();
+if (sword2Img instanceof HTMLElement) sword2Img.src = "/img/sword2.png";
+const sword3Img = new Image();
+if (sword3Img instanceof HTMLElement) sword3Img.src = "/img/sword3.png";
+const swordInvImg = new Image();
+if (swordInvImg instanceof HTMLElement) swordInvImg.src = "/img/sword-inv.png";
 
 const flashLightInvImg = new Image();
 if (flashLightInvImg instanceof HTMLElement)
@@ -181,7 +188,11 @@ export {
   texHeight,
   textures,
   gunImg,
-  swordImg,
+  sword0Img,
+  sword1Img,
+  sword2Img,
+  sword3Img,
+  swordInvImg,
   flashlightImg,
   gunInvImg,
   flashLightInvImg,

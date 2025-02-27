@@ -38,7 +38,7 @@ function drawFrame(): void {
 function updateFrame(): void {
   clearInterval(interval);
   // showFps();
-  ls.player.update(ls.map.map);
+  ls.player.update(ls);
   spriteUpdate(ls);
 
   for (let i = 0; i < ls.moveWall.length; i++) {

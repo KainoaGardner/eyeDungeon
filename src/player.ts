@@ -1,6 +1,7 @@
 import { sprite, spriteDistance, sortSprites } from "./sprite";
 import { keyMap } from "./keypress";
 import { Fireball } from "./fireball";
+import { levelSettings } from "./levels";
 
 import {
   texWidth,
@@ -8,7 +9,11 @@ import {
   textures,
   gunImg,
   gunInvImg,
-  swordImg,
+  sword0Img,
+  sword1Img,
+  sword2Img,
+  sword3Img,
+  swordInvImg,
   flashlightImg,
   flashlightoffImg,
   flashLightInvImg,
@@ -76,12 +81,13 @@ export class Player {
   private battery: number = 1000;
   private flashlight: boolean = true;
 
-  private shootingCounter = 0;
+  private swordHit: boolean = false;
+  private useCounter = 0;
   ammo: number = 10;
   private ammoCounter = 0;
 
   private holding: number = 1;
-  //0 nothing 3 gun 1 flashlight
+  //0 nothing 3 gun 1 flashlight 2 sword
 
   constructor(
     x: number,
@@ -303,7 +309,7 @@ export class Player {
       let brightness: number;
       if (
         this.viewDist === 64 ||
-        (this.shootingCounter > 0 && this.shootingCounter < 15)
+        (this.useCounter > 0 && this.useCounter < 15 && this.holding === 3)
       ) {
         brightness = (y / (bufferHeight / 2)) * (levelBrightness * 5);
       } else {
@@ -384,7 +390,7 @@ export class Player {
       let alpha = 0;
       if (
         this.viewDist === 64 ||
-        (this.shootingCounter > 0 && this.shootingCounter < 15)
+        (this.useCounter > 0 && this.useCounter < 15 && this.holding === 3)
       ) {
         const middle = Math.abs(x - bufferWidth / 2) / bufferWidth / 2;
 
@@ -417,7 +423,7 @@ export class Player {
   }
 
   private drawShootingFlash() {
-    if (this.shootingCounter > 0 && this.shootingCounter < 10) {
+    if (this.useCounter > 0 && this.useCounter < 10 && this.holding === 3) {
       c.globalAlpha = 0.1;
       c.fillStyle = "#f39c12";
       c.fillRect(0, 0, canvas.width, canvas.height);
@@ -598,8 +604,8 @@ export class Player {
 
   private drawHoldingUi() {
     let recoil = 0;
-    if (this.shootingCounter !== 0) {
-      recoil = 1 - (100 / this.shootingCounter) * 3;
+    if (this.useCounter !== 0 && this.holding === 3) {
+      recoil = 1 - (100 / this.useCounter) * 3;
     }
 
     let running = 0;
@@ -611,13 +617,6 @@ export class Player {
         canvas.height - 52 * UIRatio + recoil + running,
         56 * UIRatio,
         56 * UIRatio,
-      );
-      c.fillStyle = "#e74c3c";
-      c.fillRect(
-        canvas.width / 2 - (50 * UIRatio) / 5,
-        canvas.height - 5 * UIRatio,
-        (this.shootingCounter * UIRatio) / 5,
-        2 * UIRatio,
       );
     } else if (this.holding === 1 && this.inventory.flashlight) {
       if (this.viewDist === 64) {
@@ -637,11 +636,47 @@ export class Player {
           40 * UIRatio,
         );
       }
+    } else if (this.holding === 2 && this.inventory.sword) {
+      if (this.useCounter > 0 && this.useCounter < 20) {
+        c.drawImage(
+          sword2Img,
+          canvas.width / 2 - 16 * UIRatio,
+          canvas.height - 120 * UIRatio + running,
+        );
+      } else if (this.useCounter > 20 && this.useCounter < 40) {
+        c.drawImage(
+          sword1Img,
+          canvas.width / 2 - 64 * UIRatio,
+          canvas.height - 128 * UIRatio + running,
+        );
+      } else if (this.useCounter > 39 && this.useCounter < 60) {
+        c.drawImage(
+          sword3Img,
+          canvas.width / 2 - 100 * UIRatio,
+          canvas.height - 128 * UIRatio + running,
+        );
+      } else {
+        c.drawImage(
+          sword0Img,
+          canvas.width / 2 - 64 * UIRatio,
+          canvas.height - 120 * UIRatio + running,
+        );
+      }
+    }
+
+    if (this.holding === 2 || this.holding === 3) {
+      c.fillStyle = "#e74c3c";
+      c.fillRect(
+        canvas.width / 2 - (50 * UIRatio) / 5,
+        canvas.height - 5 * UIRatio,
+        (this.useCounter * UIRatio) / 5,
+        2 * UIRatio,
+      );
     }
   }
 
   private drawShootingUi() {
-    if (this.shootingCounter > 0 && this.shootingCounter < 10) {
+    if (this.useCounter > 0 && this.useCounter < 20) {
       c.drawImage(
         shootImgs[0],
         canvas.width / 2 - 16 * UIRatio,
@@ -649,7 +684,7 @@ export class Player {
         32 * UIRatio,
         32 * UIRatio,
       );
-    } else if (this.shootingCounter > 9 && this.shootingCounter < 20) {
+    } else if (this.useCounter > 19 && this.useCounter < 30) {
       c.drawImage(
         shootImgs[1],
         canvas.width / 2 - 16 * UIRatio,
@@ -671,7 +706,7 @@ export class Player {
         20 * UIRatio,
       );
     }
-    if (this.inventory.gun) {
+    if (this.inventory.sword) {
       c.fillRect(
         24 * UIRatio,
         canvas.height - 22 * UIRatio,
@@ -679,6 +714,50 @@ export class Player {
         20 * UIRatio,
       );
     }
+
+    if (this.inventory.gun) {
+      c.fillRect(
+        46 * UIRatio,
+        canvas.height - 22 * UIRatio,
+        20 * UIRatio,
+        20 * UIRatio,
+      );
+    }
+
+    c.globalAlpha = 0.75;
+    c.fillStyle = "black";
+    if (this.inventory.flashlight) {
+      if (this.holding !== 1) {
+        c.fillRect(
+          2 * UIRatio,
+          canvas.height - 22 * UIRatio,
+          20 * UIRatio,
+          20 * UIRatio,
+        );
+      }
+    }
+    if (this.inventory.sword) {
+      if (this.holding !== 2) {
+        c.fillRect(
+          24 * UIRatio,
+          canvas.height - 22 * UIRatio,
+          20 * UIRatio,
+          20 * UIRatio,
+        );
+      }
+    }
+
+    if (this.inventory.gun) {
+      if (this.holding !== 3) {
+        c.fillRect(
+          46 * UIRatio,
+          canvas.height - 22 * UIRatio,
+          20 * UIRatio,
+          20 * UIRatio,
+        );
+      }
+    }
+
     c.globalAlpha = 1;
     c.drawImage;
 
@@ -691,10 +770,20 @@ export class Player {
         20 * UIRatio,
       );
     }
+    if (this.inventory.sword) {
+      c.drawImage(
+        swordInvImg,
+        24 * UIRatio,
+        canvas.height - 21 * UIRatio,
+        20 * UIRatio,
+        20 * UIRatio,
+      );
+    }
+
     if (this.inventory.gun) {
       c.drawImage(
         gunInvImg,
-        24 * UIRatio,
+        46 * UIRatio,
         canvas.height - 21 * UIRatio,
         20 * UIRatio,
         20 * UIRatio,
@@ -708,34 +797,46 @@ export class Player {
     if (this.inventory.flashlight) {
       c.fillText("1", 5 * UIRatio, canvas.height - 5 * UIRatio);
     }
-    if (this.inventory.gun) {
+
+    if (this.inventory.sword) {
       c.fillText("2", 27 * UIRatio, canvas.height - 5 * UIRatio);
     }
 
-    c.globalAlpha = 0.5;
-    c.fillStyle = "black";
-    if (this.inventory.flashlight) {
-      if (this.holding !== 1) {
-        c.fillRect(
-          2 * UIRatio,
-          canvas.height - 22 * UIRatio,
-          20 * UIRatio,
-          20 * UIRatio,
-        );
-      }
-    }
     if (this.inventory.gun) {
-      if (this.holding !== 3) {
-        c.fillRect(
-          24 * UIRatio,
-          canvas.height - 22 * UIRatio,
-          20 * UIRatio,
-          20 * UIRatio,
-        );
-      }
+      c.fillText("3", 48 * UIRatio, canvas.height - 5 * UIRatio);
     }
 
     c.globalAlpha = 1;
+    c.beginPath();
+    c.lineWidth = 3;
+    c.strokeStyle = "#e74c3c";
+    if (this.holding === 1 && this.inventory.flashlight) {
+      c.rect(
+        2 * UIRatio,
+        canvas.height - 22 * UIRatio,
+        20 * UIRatio,
+        20 * UIRatio,
+      );
+      c.stroke();
+    }
+    if (this.holding === 2 && this.inventory.sword) {
+      c.rect(
+        24 * UIRatio,
+        canvas.height - 22 * UIRatio,
+        20 * UIRatio,
+        20 * UIRatio,
+      );
+      c.stroke();
+    }
+    if (this.holding === 3 && this.inventory.gun) {
+      c.rect(
+        46 * UIRatio,
+        canvas.height - 22 * UIRatio,
+        20 * UIRatio,
+        20 * UIRatio,
+      );
+      c.stroke();
+    }
   }
 
   private drawAmmoUi() {
@@ -847,7 +948,7 @@ export class Player {
     this.drawInvUi();
 
     if (this.inventory.gun) this.drawAmmoUi();
-    this.drawShootingUi();
+    if (this.inventory.gun && this.holding === 3) this.drawShootingUi();
 
     // this.drawLevelUi(level);
 
@@ -865,11 +966,18 @@ export class Player {
           this.viewDist = 64;
           this.battery -= 5;
         }
+        if (this.holding === 2) {
+          if (this.useCounter === 0) {
+            // shootSound.play();
+            this.useCounter = 1;
+          }
+        }
+
         if (this.holding === 3) {
-          if (this.ammo > 0 && this.shootingCounter === 0) {
+          if (this.ammo > 0 && this.useCounter === 0) {
             shootSound.play();
             this.ammo--;
-            this.shootingCounter = 1;
+            this.useCounter = 1;
           }
         }
       }
@@ -966,9 +1074,13 @@ export class Player {
   private holdingUpdate() {
     if (keyMap.get("Digit1") && this.inventory.flashlight) {
       this.holding = 1;
+    } else if (keyMap.get("Digit2") && this.inventory.sword) {
+      this.holding = 2;
+      this.useCounter = 80;
+      this.swordHit = false;
     } else if (keyMap.get("Digit3") && this.inventory.gun) {
       this.holding = 3;
-      this.shootingCounter = 40;
+      this.useCounter = 80;
     }
   }
 
@@ -982,11 +1094,16 @@ export class Player {
     }
     this.ammoCounter += 1;
 
-    if (this.shootingCounter !== 0 && this.shootingCounter < 100) {
-      this.shootingCounter += 5;
+    if (this.useCounter !== 0 && this.useCounter < 100) {
+      if (this.holding === 2) {
+        this.useCounter += 7;
+      } else if (this.holding === 3) {
+        this.useCounter += 5;
+      }
     }
-    if (this.shootingCounter >= 100 && !keyMap.get("Space")) {
-      this.shootingCounter = 0;
+    if (this.useCounter >= 100 && !keyMap.get("Space")) {
+      this.swordHit = false;
+      this.useCounter = 0;
     }
   }
 
@@ -1046,15 +1163,49 @@ export class Player {
     return false;
   }
 
-  update(map: number[][]): void {
+  private swordUpdate(ls: levelSettings) {
+    if (
+      this.holding === 2 &&
+      this.useCounter > 0 &&
+      this.useCounter < 10 &&
+      !this.swordHit
+    ) {
+      for (let i = 0; i < ls.map.map[0].length; i++) {
+        for (let j = 0; j < ls.map.map.length; j++) {
+          const distance =
+            (i + 0.5 - this.posX) * (i + 0.5 - this.posX) +
+            (j + 0.5 - this.posY) * (j + 0.5 - this.posY);
+          if (ls.map.map[i][j] === 10 && distance < 2) {
+            this.swordHit = true;
+            ls.map.map[i][j] = 11;
+            break;
+          }
+          if (ls.map.map[i][j] === 11 && distance < 2) {
+            this.swordHit = true;
+            ls.map.map[i][j] = 12;
+            break;
+          }
+          if (ls.map.map[i][j] === 12 && distance < 2) {
+            this.swordHit = true;
+            ls.map.map[i][j] = 0;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  update(ls: levelSettings): void {
     this.useUpdate();
 
     if (this.inventory.gun) this.gunUpdate();
     this.flashlightUpdate();
 
+    if (this.inventory.sword) this.swordUpdate(ls);
+
     if (this.inventory.run) this.staminaUpdate();
-    this.moveUpdate(map);
+    this.moveUpdate(ls.map.map);
     this.holdingUpdate();
-    this.inblockUpdate(map);
+    this.inblockUpdate(ls.map.map);
   }
 }
