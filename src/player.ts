@@ -642,24 +642,32 @@ export class Player {
           sword2Img,
           canvas.width / 2 - 16 * UIRatio,
           canvas.height - 120 * UIRatio + running,
+          UIRatio * 128,
+          UIRatio * 128,
         );
       } else if (this.useCounter > 20 && this.useCounter < 40) {
         c.drawImage(
           sword1Img,
           canvas.width / 2 - 64 * UIRatio,
           canvas.height - 128 * UIRatio + running,
+          UIRatio * 128,
+          UIRatio * 128,
         );
       } else if (this.useCounter > 39 && this.useCounter < 60) {
         c.drawImage(
           sword3Img,
           canvas.width / 2 - 100 * UIRatio,
           canvas.height - 128 * UIRatio + running,
+          UIRatio * 128,
+          UIRatio * 128,
         );
       } else {
         c.drawImage(
           sword0Img,
           canvas.width / 2 - 64 * UIRatio,
           canvas.height - 120 * UIRatio + running,
+          UIRatio * 128,
+          UIRatio * 128,
         );
       }
     }
@@ -1198,7 +1206,9 @@ export class Player {
   update(ls: levelSettings): void {
     this.useUpdate();
 
-    if (this.inventory.gun) this.gunUpdate();
+    //seperate gun and sword update
+    // if (this.inventory.gun) this.gunUpdate();
+    this.gunUpdate();
     this.flashlightUpdate();
 
     if (this.inventory.sword) this.swordUpdate(ls);
