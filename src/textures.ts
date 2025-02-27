@@ -10,6 +10,9 @@ if (flashlightoffImg instanceof HTMLElement)
 const gunImg = new Image();
 if (gunImg instanceof HTMLElement) gunImg.src = "/img/gun.png";
 
+const swordImg = new Image();
+if (swordImg instanceof HTMLElement) swordImg.src = "/img/sword.png";
+
 const flashLightInvImg = new Image();
 if (flashLightInvImg instanceof HTMLElement)
   flashLightInvImg.src = "/img/flashlight-inv.png";
@@ -39,7 +42,7 @@ if (ammoSound instanceof HTMLElement) ammoSound.volume = 0.3;
 const texWidth = 16;
 const texHeight = 16;
 
-const textures = new Array(7).fill(null).map(() => Array(texWidth).fill(0));
+const textures = new Array(12).fill(null).map(() => Array(texWidth).fill(0));
 
 function getTexture(tex: any, texList: number[][], index: number) {
   c.clearRect(0, 0, texWidth, texHeight);
@@ -63,6 +66,7 @@ if (wallTex instanceof HTMLElement) {
   wallTex.src = "/img/walls/stone.png";
   wallTex.addEventListener("load", function () {
     getTexture(wallTex, wallTexList, 0);
+    getTexture(wallTex, wallTexList, 8);
   });
 }
 
@@ -128,11 +132,56 @@ if (closeWallTex instanceof HTMLElement) {
   });
 }
 
+const fireBallTexList = new Array(texWidth)
+  .fill(null)
+  .map(() => Array(3).fill(0));
+const fireBallTex = new Image();
+if (fireBallTex instanceof HTMLElement) {
+  fireBallTex.src = "/img/fireball.png";
+  fireBallTex.addEventListener("load", function () {
+    getTexture(fireBallTex, fireBallTexList, 7);
+  });
+}
+
+const break0TexList = new Array(texWidth)
+  .fill(null)
+  .map(() => Array(3).fill(0));
+const break0Tex = new Image();
+if (break0Tex instanceof HTMLElement) {
+  break0Tex.src = "/img/walls/break0.png";
+  break0Tex.addEventListener("load", function () {
+    getTexture(break0Tex, break0TexList, 9);
+  });
+}
+
+const break1TexList = new Array(texWidth)
+  .fill(null)
+  .map(() => Array(3).fill(0));
+const break1Tex = new Image();
+if (break1Tex instanceof HTMLElement) {
+  break1Tex.src = "/img/walls/break1.png";
+  break1Tex.addEventListener("load", function () {
+    getTexture(break1Tex, break1TexList, 10);
+  });
+}
+
+const break2TexList = new Array(texWidth)
+  .fill(null)
+  .map(() => Array(3).fill(0));
+const break2Tex = new Image();
+if (break2Tex instanceof HTMLElement) {
+  break2Tex.src = "/img/walls/break2.png";
+  break2Tex.addEventListener("load", function () {
+    getTexture(break2Tex, break2TexList, 11);
+  });
+}
+
 export {
   texWidth,
   texHeight,
   textures,
   gunImg,
+  swordImg,
   flashlightImg,
   gunInvImg,
   flashLightInvImg,

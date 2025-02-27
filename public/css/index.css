@@ -1,11 +1,16 @@
 body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  /* display: flex; */
+  /* justify-content: center; */
+  /* align-items: middle; */
   margin: 0px 0px;
   padding: 0px 0px;
+  height: 100%;
+  background-color: "black";
 }
 
 canvas {
-  background-color: #bdc3c7;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

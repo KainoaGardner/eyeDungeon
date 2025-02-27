@@ -1,4 +1,4 @@
-import { canvas, c, pos } from "./global";
+import { c, pos } from "./global";
 
 export class Map {
   map: number[][];

@@ -1,5 +1,6 @@
 import { sprite, spriteDistance, sortSprites } from "./sprite";
 import { keyMap } from "./keypress";
+import { Fireball } from "./fireball";
 
 import {
   texWidth,
@@ -7,6 +8,7 @@ import {
   textures,
   gunImg,
   gunInvImg,
+  swordImg,
   flashlightImg,
   flashlightoffImg,
   flashLightInvImg,
@@ -79,7 +81,7 @@ export class Player {
   private ammoCounter = 0;
 
   private holding: number = 1;
-  //0 nothing 2 gun 1 flashlight
+  //0 nothing 3 gun 1 flashlight
 
   constructor(
     x: number,
@@ -224,7 +226,7 @@ export class Player {
     }
   }
 
-  private drawSprites(sprites: sprite[], levelBrightness: number) {
+  private drawSprites(sprites: sprite[]) {
     for (let i = 0; i < sprites.length; i++) {
       spriteDistance[i] = { index: 0, distance: 0 };
       spriteDistance[i].index = i;
@@ -236,6 +238,9 @@ export class Player {
 
     const invDet = 1 / (this.planeX * this.dirY - this.dirX * this.planeY); //fix dont need to do every loop
     for (let i = sprites.length - 1; i > -1; i--) {
+      if (sprites[spriteDistance[i].index] === undefined) {
+        continue;
+      }
       const spriteX = sprites[spriteDistance[i].index].x - this.posX;
       const spriteY = sprites[spriteDistance[i].index].y - this.posY;
 
@@ -266,23 +271,6 @@ export class Player {
           x < bufferWidth &&
           transformY < zBuffer[x]
         ) {
-          lightingBuffer[x][0] = (bufferHeight / transformY) * bufferRatio;
-          let alpha: number;
-          if (
-            this.viewDist === 64 ||
-            (this.shootingCounter > 0 && this.shootingCounter < 15)
-          ) {
-            const middle = Math.abs(x - bufferWidth / 2) / bufferWidth / 2;
-
-            alpha = (transformY / 15 + middle * 3) / (levelBrightness * 8);
-          } else {
-            alpha = transformY / 4 / (levelBrightness * 5);
-          }
-          if (alpha > 1) {
-            alpha = 1;
-          }
-
-          lightingBuffer[x][1] = alpha;
           const texX = Math.floor(
             (256 * (x - (-spriteWidth / 2 + spriteScreenX)) * texWidth) /
               spriteWidth /
@@ -372,9 +360,14 @@ export class Player {
     }
   }
 
-  private drawWalls(map: number[][], lights: pos[], levelBrightness: number) {
+  private drawWalls(
+    map: number[][],
+    lights: pos[],
+    levelBrightness: number,
+    sprites: sprite[],
+  ) {
     for (let x = 0; x < bufferWidth; x++) {
-      const result = this.distance(x, map, canvas);
+      const result = this.distance(x, map);
       zBuffer[x] = result.distance;
 
       const height = Math.floor(bufferHeight / result.distance);
@@ -387,7 +380,7 @@ export class Player {
         drawEnd = bufferHeight - 1;
       }
 
-      let brightness = this.getBrightness(result, lights);
+      let brightness = this.getBrightness(result, lights, sprites);
       let alpha = 0;
       if (
         this.viewDist === 64 ||
@@ -444,16 +437,23 @@ export class Player {
 
     this.clearBuffer();
     this.clearLightBuffer();
-    this.drawWalls(map, lights, levelBrightness);
-    this.drawSprites(sprites, levelBrightness);
+    this.drawWalls(map, lights, levelBrightness, sprites);
     this.drawBuffer();
     this.drawLightBuffer();
+
+    this.clearBuffer();
+    this.drawSprites(sprites);
+    this.drawBuffer();
 
     this.drawShootingFlash();
     this.drawFlashBeam();
   }
 
-  private getBrightness(result: distanceOutput, lights: pos[]): number {
+  private getBrightness(
+    result: distanceOutput,
+    lights: pos[],
+    sprites: sprite[],
+  ): number {
     let min = Infinity;
     //on purpose switch x y
     const wallY = result.pos.x;
@@ -472,6 +472,23 @@ export class Player {
         min = distance;
       }
     }
+
+    for (let i = 0; i < sprites.length; i++) {
+      if (sprites[i].type instanceof Fireball) {
+        const spriteY = sprites[i].type.x;
+        const spriteX = sprites[i].type.y;
+
+        const distance = Math.sqrt(
+          (wallY - spriteY) * (wallY - spriteY) +
+            (wallX - spriteX) * (wallX - spriteX),
+        );
+
+        if (distance < min) {
+          min = distance;
+        }
+      }
+    }
+
     const playerDistance = Math.sqrt(
       (this.posX - wallY) * (this.posX - wallY) +
         (this.posY - wallX) * (this.posY - wallX),
@@ -483,7 +500,7 @@ export class Player {
     return min;
   }
 
-  private distance(x: number, map: number[][], canvas: any): distanceOutput {
+  private distance(x: number, map: number[][]): distanceOutput {
     const result: distanceOutput = {
       distance: -1,
       texX: -1,
@@ -587,7 +604,7 @@ export class Player {
 
     let running = 0;
     if (this.running) running = UIRatio * 20;
-    if (this.holding === 2 && this.inventory.gun) {
+    if (this.holding === 3 && this.inventory.gun) {
       c.drawImage(
         gunImg,
         canvas.width / 2 - 28 * UIRatio,
@@ -708,7 +725,7 @@ export class Player {
       }
     }
     if (this.inventory.gun) {
-      if (this.holding !== 2) {
+      if (this.holding !== 3) {
         c.fillRect(
           24 * UIRatio,
           canvas.height - 22 * UIRatio,
@@ -848,7 +865,7 @@ export class Player {
           this.viewDist = 64;
           this.battery -= 5;
         }
-        if (this.holding === 2) {
+        if (this.holding === 3) {
           if (this.ammo > 0 && this.shootingCounter === 0) {
             shootSound.play();
             this.ammo--;
@@ -863,10 +880,7 @@ export class Player {
     if (
       this.inventory.run &&
       keyMap.get("ShiftLeft") &&
-      (keyMap.get("ArrowUp") ||
-        keyMap.get("KeyW") ||
-        keyMap.get("ArrowDown") ||
-        keyMap.get("KeyS")) &&
+      (keyMap.get("ArrowUp") || keyMap.get("KeyW")) &&
       !this.tired &&
       this.stamina > 0
     ) {
@@ -883,8 +897,8 @@ export class Player {
           Math.floor(this.posY)
         ];
       const forwardY =
-        map[Math.floor(this.posX + this.dirX * this.speed * this.radius)][
-          Math.floor(this.posY)
+        map[Math.floor(this.posX)][
+          Math.floor(this.posY + this.dirY * this.speed * this.radius)
         ];
 
       if (forwardX === 0 || forwardX === 4) {
@@ -908,7 +922,7 @@ export class Player {
       if (backwardX === 0 || backwardX === 4) {
         this.posY -= this.dirY * this.speed;
       }
-      if (backwardY === 0 || backwardX === 1) {
+      if (backwardY === 0 || backwardY === 4) {
         this.posX -= this.dirX * this.speed;
       }
     }
@@ -952,8 +966,8 @@ export class Player {
   private holdingUpdate() {
     if (keyMap.get("Digit1") && this.inventory.flashlight) {
       this.holding = 1;
-    } else if (keyMap.get("Digit2") && this.inventory.gun) {
-      this.holding = 2;
+    } else if (keyMap.get("Digit3") && this.inventory.gun) {
+      this.holding = 3;
       this.shootingCounter = 40;
     }
   }
@@ -1020,6 +1034,16 @@ export class Player {
     if (map[blockY][blockX] === 7) {
       this.health -= 5;
     }
+  }
+
+  goal(map: number[][]): boolean {
+    const blockX = Math.floor(this.posY);
+    const blockY = Math.floor(this.posX);
+
+    if (map[blockY][blockX] === 4) {
+      return true;
+    }
+    return false;
   }
 
   update(map: number[][]): void {

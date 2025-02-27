@@ -2,6 +2,7 @@ import { Player } from "./player";
 import { Map } from "./map";
 import { sprite } from "./sprite";
 import { CloseBlock } from "./closeblock";
+import { FireballWall } from "./fireball";
 // import { pos } from "./global";
 
 interface levelSettings {
@@ -10,6 +11,7 @@ interface levelSettings {
   map: Map;
   sprites: sprite[];
   moveWall: CloseBlock[];
+  fireWall: FireballWall[];
 }
 
 function setLevel(ls: levelSettings) {
@@ -58,15 +60,15 @@ function level1(ls: levelSettings) {
     ],
     [
       1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0,
-      1, 6, 0, 0, 1, 0, 1,
+      1, 6, 0, 0, 1, 0, 5,
     ],
     [
       1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0,
-      1, 6, 0, 0, 1, 0, 1,
+      1, 6, 0, 0, 1, 0, 5,
     ],
     [
       1, 1, 1, 6, 1, 6, 1, 6, 1, 6, 1, 6, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0,
-      1, 6, 0, 1, 5, 0, 1,
+      1, 6, 0, 1, 1, 0, 5,
     ],
     [
       1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 6, 0, 1, 0, 0,
@@ -109,7 +111,7 @@ function level1(ls: levelSettings) {
       0, 0, 0, 0, 0, 0, 5,
     ],
     [
-      1, 5, 1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1, 1, 1, 5, 1, 1, 1, 1, 5,
+      1, 5, 1, 1, 5, 5, 5, 5, 5, 1, 5, 5, 5, 5, 5, 1, 1, 1, 1, 5, 1, 1, 1, 1, 5,
       1, 1, 1, 1, 1, 1, 1,
     ],
   ];
@@ -117,68 +119,151 @@ function level1(ls: levelSettings) {
   // ls.map.lightList = ls.map.getLightList(ls.map.map);
 
   ls.moveWall = [
-    new CloseBlock(3, 5, 50, 30),
+    new CloseBlock(5, 3, 50, 30),
     new CloseBlock(5, 5, 50, 30),
-    new CloseBlock(7, 5, 50, 30),
-    new CloseBlock(9, 5, 50, 30),
-    new CloseBlock(11, 5, 50, 30),
+    new CloseBlock(5, 7, 50, 30),
+    new CloseBlock(5, 9, 50, 30),
+    new CloseBlock(5, 11, 50, 30),
 
-    new CloseBlock(4, 6, 50, 30),
+    new CloseBlock(6, 4, 50, 30),
     new CloseBlock(6, 6, 50, 30),
-    new CloseBlock(8, 6, 50, 30),
-    new CloseBlock(10, 6, 50, 30),
-    new CloseBlock(12, 6, 50, 30),
+    new CloseBlock(6, 8, 50, 30),
+    new CloseBlock(6, 10, 50, 30),
+    new CloseBlock(6, 12, 50, 30),
 
-    new CloseBlock(4, 9, 100, 20),
-    new CloseBlock(5, 9, 100, 20),
-    new CloseBlock(6, 9, 100, 20, 60),
-    new CloseBlock(7, 9, 100, 20, 60),
-    new CloseBlock(8, 9, 100, 20),
+    new CloseBlock(9, 4, 100, 20),
+    new CloseBlock(9, 5, 100, 20),
+    new CloseBlock(9, 6, 100, 20, 60),
+    new CloseBlock(9, 7, 100, 20, 60),
+    new CloseBlock(9, 8, 100, 20),
     new CloseBlock(9, 9, 100, 20),
-    new CloseBlock(10, 9, 100, 20, 60),
-    new CloseBlock(11, 9, 100, 20, 60),
-    new CloseBlock(12, 9, 100, 20),
-    new CloseBlock(13, 9, 100, 20),
+    new CloseBlock(9, 10, 100, 20, 60),
+    new CloseBlock(9, 11, 100, 20, 60),
+    new CloseBlock(9, 12, 100, 20),
+    new CloseBlock(9, 13, 100, 20),
 
-    new CloseBlock(15, 9, 50, 30),
-    new CloseBlock(16, 10, 50, 30),
-    new CloseBlock(20, 10, 50, 30),
-    new CloseBlock(21, 9, 50, 30),
+    new CloseBlock(9, 15, 50, 30),
+    new CloseBlock(10, 16, 50, 30),
+    new CloseBlock(10, 20, 50, 30),
+    new CloseBlock(9, 21, 50, 30),
 
-    new CloseBlock(20, 4, 50, 30),
-    new CloseBlock(19, 5, 50, 30),
-    new CloseBlock(21, 5, 50, 30),
+    new CloseBlock(4, 20, 50, 30),
+    new CloseBlock(5, 19, 50, 30),
+    new CloseBlock(5, 21, 50, 30),
 
-    new CloseBlock(16, 6, 50, 30),
-    new CloseBlock(17, 7, 50, 30),
+    new CloseBlock(6, 16, 50, 30),
+    new CloseBlock(7, 17, 50, 30),
 
-    new CloseBlock(16, 3, 50, 30),
-    new CloseBlock(17, 2, 50, 30),
-    new CloseBlock(18, 1, 50, 30),
+    new CloseBlock(3, 16, 50, 30),
+    new CloseBlock(2, 17, 50, 30),
+    new CloseBlock(1, 18, 50, 30),
 
-    new CloseBlock(20, 1, 50, 30),
-    new CloseBlock(21, 2, 50, 30),
-    new CloseBlock(22, 1, 50, 30),
+    new CloseBlock(1, 20, 50, 30),
+    new CloseBlock(2, 21, 50, 30),
+    new CloseBlock(1, 22, 50, 30),
 
-    new CloseBlock(24, 5, 50, 30),
-    new CloseBlock(23, 6, 50, 30),
-    new CloseBlock(23, 7, 50, 30),
-    new CloseBlock(25, 6, 50, 30),
-    new CloseBlock(25, 7, 50, 30),
+    new CloseBlock(5, 24, 50, 30),
+    new CloseBlock(6, 23, 50, 30),
+    new CloseBlock(7, 23, 50, 30),
+    new CloseBlock(6, 25, 50, 30),
+    new CloseBlock(7, 25, 50, 30),
 
-    new CloseBlock(26, 7, 50, 30),
-    new CloseBlock(27, 6, 50, 30),
+    new CloseBlock(7, 26, 50, 30),
+    new CloseBlock(6, 27, 50, 30),
 
-    new CloseBlock(26, 5, 50, 30),
-    new CloseBlock(27, 4, 50, 30),
-    new CloseBlock(27, 3, 50, 30),
-    new CloseBlock(27, 2, 50, 30),
-    new CloseBlock(27, 1, 50, 30),
+    new CloseBlock(5, 26, 50, 30),
+    new CloseBlock(4, 27, 50, 30),
+    new CloseBlock(3, 27, 50, 30),
+    new CloseBlock(2, 27, 50, 30),
+    new CloseBlock(1, 27, 50, 30),
   ];
-  ls.map.brightness = 0.3;
+
+  ls.fireWall = [
+    new FireballWall(1.5, 15.5, 0, -0.1, 100),
+    new FireballWall(2.5, 15.5, 0, -0.1, 100, 50),
+
+    new FireballWall(15.5, 1.5, -0.1, 0, 100),
+
+    new FireballWall(15.5, 4.5, -0.1, 0, 100, 100),
+    new FireballWall(15.5, 5.5, -0.1, 0, 100, 80),
+    new FireballWall(15.5, 6.5, -0.1, 0, 100, 60),
+    new FireballWall(15.5, 7.5, -0.1, 0, 100, 40),
+    new FireballWall(15.5, 8.5, -0.1, 0, 100, 20),
+
+    new FireballWall(15.5, 10.5, -0.1, 0, 100, 0),
+    new FireballWall(15.5, 11.5, -0.1, 0, 100, 80),
+    new FireballWall(15.5, 12.5, -0.1, 0, 100, 60),
+    new FireballWall(15.5, 13.5, -0.1, 0, 100, 40),
+    new FireballWall(15.5, 14.5, -0.1, 0, 100, 20),
+
+    new FireballWall(15.5, 19.5, -0.1, 0, 50),
+
+    new FireballWall(15.5, 24.5, -0.1, 0, 150),
+
+    new FireballWall(9.5, 23, 0, 0.1, 150),
+
+    new FireballWall(14.5, 31.5, 0, -0.1, 150),
+
+    new FireballWall(8.5, 30.5, -0.1, 0, 150),
+    new FireballWall(8.5, 30.5, 0, -0.1, 150),
+    new FireballWall(8.5, 30.5, 0.1, 0, 150),
+
+    new FireballWall(2.5, 31.5, 0, -0.1, 150, 0),
+    new FireballWall(3.5, 31.5, 0, -0.1, 150, 50),
+    new FireballWall(4.5, 31.5, 0, -0.1, 150, 100),
+  ];
+
+  ls.map.brightness = 0.2;
   // ls.sprites = [{ x: 1.5, y: 10, texture: 6 }];
 }
-function level2(ls: levelSettings) {}
+function level2(ls: levelSettings) {
+  //player
+  ls.player.posX = 1.5;
+  ls.player.posY = 1.5;
+  ls.player.dirX = 1;
+  ls.player.dirY = 0;
+  ls.player.planeX = 0;
+  ls.player.planeY = -1;
+
+  ls.player.inventory = {
+    flashlight: true,
+    gun: false,
+    run: false,
+    horn: false,
+    sword: true,
+    sheild: false,
+    dash: false,
+  };
+
+  //map
+
+  ls.map.map = [
+    [1, 1, 1, 1, 6, 6, 6, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5],
+    [1, 0, 1, 1, 1, 1, 1, 10, 1, 1, 1, 1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 6, 1, 10, 1, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 5, 1, 0, 1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 1, 6, 0, 1, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 1, 0, 0, 0, 1],
+    [1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+    [5, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 5, 5, 1],
+    [1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 1, 6, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 10, 0, 0, 1, 5, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 10, 0, 0, 1, 5, 0, 0, 0, 4, 1],
+    [1, 1, 1, 1, 1, 6, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  ];
+
+  ls.map.lightList = [{ x: 6.5, y: 0.5 }];
+  ls.map.brightness = 0.5;
+
+  ls.moveWall = [];
+  ls.fireWall = [new FireballWall(4.5, 7.5, 0, -0.1, 150)];
+
+  ls.sprites = [];
+}
 function level3(ls: levelSettings) {}
 function level4(ls: levelSettings) {}
 function level5(ls: levelSettings) {}
@@ -210,22 +295,23 @@ function level0(ls: levelSettings) {
   //map
 
   ls.map.map = [
-    [1, 1, 1, 1, 1, 1, 4, 1],
+    [1, 4, 1, 1, 1, 1, 1, 1],
     [1, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 1],
-    [1, 5, 0, 0, 0, 0, 6, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 0, 1],
+    [1, 5, 6, 2, 9, 10, 1, 1],
   ];
 
   ls.map.lightList = [{ x: 6.5, y: 0.5 }];
   ls.map.brightness = 0.5;
 
-  ls.moveWall = [new CloseBlock(5, 6, 50, 30), new CloseBlock(6, 5, 50, 30)];
+  ls.moveWall = [new CloseBlock(6, 2, 50, 30)];
+  ls.fireWall = [new FireballWall(7.5, 1.5, -0.1, 0, 100)];
 
-  // ls.sprites = [{ x: 2.5, y: 2.5, texture: 6 }];
+  ls.sprites = [];
 }
 
 export { type levelSettings, setLevel };

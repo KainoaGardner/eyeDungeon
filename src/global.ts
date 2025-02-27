@@ -2,6 +2,7 @@ interface pos {
   x: number;
   y: number;
 }
+document.body.style.backgroundColor = "#000000";
 
 const canvas = document.querySelector("canvas")!;
 const targetFps = 30;

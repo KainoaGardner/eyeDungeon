@@ -1,23 +1,20 @@
 import { canvas, c, targetFps } from "./global";
 import { Player } from "./player";
 import { Map } from "./map";
-import { sprite } from "./sprite";
-import { setLevel, levelSettings } from "./levels";
+import { spriteUpdate, sprite } from "./sprite";
 import { CloseBlock } from "./closeblock";
+import { setLevel } from "./levels";
+import { FireballWall } from "./fireball";
 
 document.body.style.overflow = "hidden";
 
-const sprites: sprite[] = [];
-const moveWall: CloseBlock[] = [];
-const map = new Map([], 100, canvas.height, 1);
-const player = new Player(0, 0, 5, 0.04, 0.05);
-
 const ls = {
   level: 0,
-  player: player,
-  map: map,
-  sprites: sprites,
-  moveWall: moveWall,
+  player: new Player(0, 0, 5, 0.04, 0.05),
+  map: new Map([], 100, canvas.height, 1),
+  sprites: new Array<sprite>(),
+  moveWall: new Array<CloseBlock>(),
+  fireWall: new Array<FireballWall>(),
 };
 
 setLevel(ls);
@@ -42,9 +39,19 @@ function updateFrame(): void {
   clearInterval(interval);
   // showFps();
   ls.player.update(ls.map.map);
+  spriteUpdate(ls);
 
   for (let i = 0; i < ls.moveWall.length; i++) {
     ls.moveWall[i].update(ls.map);
+  }
+
+  for (let i = 0; i < ls.fireWall.length; i++) {
+    ls.fireWall[i].update(ls);
+  }
+
+  if (ls.player.goal(ls.map.map)) {
+    ls.level++;
+    setLevel(ls);
   }
 
   interval = setInterval(updateFrame, 1000 / targetFps);

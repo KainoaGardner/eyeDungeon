@@ -1,5 +1,4 @@
 import { Map } from "./map";
-import { ammoSound } from "./textures";
 
 export class CloseBlock {
   x: number;
@@ -15,8 +14,8 @@ export class CloseBlock {
     stay: number,
     counter: number = 0,
   ) {
-    this.x = Math.floor(x);
-    this.y = Math.floor(y);
+    this.x = Math.floor(y);
+    this.y = Math.floor(x);
     this.speed = speed;
     this.stay = stay;
     this.counter = counter;
