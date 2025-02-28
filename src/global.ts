@@ -7,11 +7,11 @@ document.body.style.backgroundColor = "#000000";
 const canvas = document.querySelector("canvas")!;
 const targetFps = 30;
 
-canvas.width = 1920;
-canvas.height = 1080;
+// canvas.width = 1920;
+// canvas.height = 1080;
 
-// canvas.width = 1366;
-// canvas.height = 768;
+canvas.width = 1366;
+canvas.height = 768;
 
 // canvas.width = 1280;
 // canvas.height = 720;

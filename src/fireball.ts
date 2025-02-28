@@ -6,6 +6,7 @@ export class Fireball {
   velX: number;
   velY: number;
   alive: boolean = true;
+  reflect: boolean = false;
 
   constructor(x: number, y: number, velX: number, velY: number) {
     this.x = x;
@@ -61,7 +62,7 @@ export class FireballWall {
   update(ls: levelSettings) {
     if (this.counter == this.timer) {
       const fireball = new Fireball(this.x, this.y, this.velX, this.velY);
-      const sprite = { x: this.x, y: this.y, texture: 7, type: fireball };
+      const sprite = { x: this.x, y: this.y, texture: 0, type: fireball };
       ls.sprites.push(sprite);
       this.counter = 0;
     }

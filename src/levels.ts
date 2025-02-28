@@ -1,5 +1,6 @@
 import { Player } from "./player";
 import { Map } from "./map";
+import { makeMap } from "./maze";
 import { sprite } from "./sprite";
 import { CloseBlock } from "./closeblock";
 import { FireballWall } from "./fireball";
@@ -22,6 +23,10 @@ function setLevel(ls: levelSettings) {
     case 2:
       level2(ls);
       break;
+    case 4:
+      level4(ls);
+      break;
+
     default:
       level0(ls);
       break;
@@ -115,8 +120,6 @@ function level1(ls: levelSettings) {
       1, 1, 1, 1, 1, 1, 1,
     ],
   ];
-
-  // ls.map.lightList = ls.map.getLightList(ls.map.map);
 
   ls.moveWall = [
     new CloseBlock(5, 3, 50, 30),
@@ -238,34 +241,78 @@ function level2(ls: levelSettings) {
   //map
 
   ls.map.map = [
-    [1, 1, 1, 1, 6, 6, 6, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5],
-    [1, 0, 1, 1, 1, 1, 1, 10, 1, 1, 1, 1, 0, 0, 0, 1],
+    [1, 0, 1, 10, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 6, 1, 10, 1, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 5, 1, 0, 1, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 1, 6, 0, 1, 0, 0, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 1, 0, 0, 0, 1],
-    [1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+    [1, 5, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
     [5, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 5, 5, 1],
-    [1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 1, 6, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 10, 0, 0, 1, 5, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 10, 0, 0, 1, 5, 0, 0, 0, 4, 1],
-    [1, 1, 1, 1, 1, 6, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1],
+    [1, 0, 0, 0, 0, 1, 1, 6, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 5],
+    [1, 0, 0, 0, 1, 6, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 10, 0, 1, 0, 0, 0, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 10, 0, 9, 0, 0, 0, 0, 1, 4, 1],
+    [1, 1, 1, 1, 1, 6, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1],
   ];
 
-  ls.map.lightList = [{ x: 6.5, y: 0.5 }];
-  ls.map.brightness = 0.5;
+  ls.map.lightList = [];
+  ls.map.brightness = 0.3;
 
-  ls.moveWall = [];
-  ls.fireWall = [new FireballWall(4.5, 7.5, 0, -0.1, 150)];
+  ls.moveWall = [
+    new CloseBlock(3, 10, 50, 50),
+    new CloseBlock(5, 10, 50, 50, 50),
+    new CloseBlock(13, 5, 50, 50),
+    new CloseBlock(14, 5, 50, 50),
+    new CloseBlock(11, 7, 75, 25),
+  ];
+  ls.fireWall = [
+    new FireballWall(4.5, 7.5, 0, -0.1, 150),
+    new FireballWall(1.5, 15.5, 0, -0.1, 100),
+    new FireballWall(8.5, 0.5, 0, 0.1, 100),
+    new FireballWall(7.5, 1.5, 0.1, 0, 100),
+    new FireballWall(15.5, 7.5, -0.1, 0, 150),
+    new FireballWall(11.5, 15.5, 0, -0.1, 150),
+  ];
 
   ls.sprites = [];
 }
 function level3(ls: levelSettings) {}
-function level4(ls: levelSettings) {}
+function level4(ls: levelSettings) {
+  //player
+  ls.player.posX = 1.5;
+  ls.player.posY = 1.5;
+  ls.player.dirX = 1;
+  ls.player.dirY = 0;
+  ls.player.planeX = 0;
+  ls.player.planeY = -1;
+
+  ls.player.inventory = {
+    flashlight: true,
+    gun: false,
+    run: true,
+    horn: false,
+    sword: true,
+    sheild: false,
+    dash: false,
+  };
+
+  //map
+
+  ls.map.map = makeMap(16, 5, 0);
+  console.log(ls.map.map);
+
+  ls.map.lightList = [{ x: 15, y: 15 }];
+  ls.map.brightness = 0.15;
+
+  ls.moveWall = [];
+  ls.fireWall = [];
+
+  ls.sprites = [];
+}
 function level5(ls: levelSettings) {}
 function level6(ls: levelSettings) {}
 function level7(ls: levelSettings) {}
@@ -301,15 +348,15 @@ function level0(ls: levelSettings) {
     [1, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 10, 0, 1],
-    [1, 5, 6, 2, 9, 1, 1, 1],
+    [1, 0, 0, 0, 9, 10, 0, 1],
+    [1, 5, 6, 2, 1, 1, 1, 1],
   ];
 
-  ls.map.lightList = [{ x: 6.5, y: 0.5 }];
+  ls.map.lightList = [];
   ls.map.brightness = 0.5;
 
   ls.moveWall = [new CloseBlock(6, 2, 50, 30)];
-  ls.fireWall = [new FireballWall(7.5, 1.5, -0.1, 0, 100)];
+  ls.fireWall = [new FireballWall(7.5, 1.5, -0.1, 0, 50)];
 
   ls.sprites = [];
 }

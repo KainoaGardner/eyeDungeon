@@ -135,10 +135,14 @@ function makeFinalMaze(
     finalRow.push(1);
   }
   finalMaze.push(finalRow);
-  finalMaze[size * 2 - 1][size * 2 - 1] = 2;
-
-  finalMaze = removeWalls(finalMaze, size * 2 + 1, removeAmount);
-  finalMaze = addTorches(finalMaze, size * 2 + 1, torchAmount);
+  finalMaze[size * 2 - 1][size * 2 - 1] = 0;
+  finalMaze[size * 2 - 1][size * 2] = 4;
+  if (removeAmount !== 0) {
+    finalMaze = removeWalls(finalMaze, size * 2 + 1, removeAmount);
+  }
+  if (torchAmount !== 0) {
+    finalMaze = addTorches(finalMaze, size * 2 + 1, torchAmount);
+  }
   return finalMaze;
 }
 
