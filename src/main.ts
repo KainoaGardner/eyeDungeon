@@ -9,7 +9,7 @@ import { FireballWall } from "./fireball";
 document.body.style.overflow = "hidden";
 
 const ls = {
-  level: 4,
+  level: 0,
   player: new Player(0, 0, 5, 0.04, 0.05),
   map: new Map([], 100, canvas.height, 1),
   sprites: new Array<sprite>(),
