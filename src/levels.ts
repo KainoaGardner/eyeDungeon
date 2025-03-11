@@ -4,7 +4,7 @@ import { makeMap } from "./maze";
 import { sprite } from "./sprite";
 import { CloseBlock } from "./closeblock";
 import { FireballWall } from "./fireball";
-import { Slime, Mage } from "./enemy";
+import { Slime, Mage, Ghost } from "./enemy";
 import { SpikeBall } from "./spikeball";
 
 interface direction {
@@ -51,11 +51,12 @@ function setLevel(ls: levelSettings) {
     case 3:
       level3(ls);
       break;
-
     case 4:
       level4(ls);
       break;
-
+    case 5:
+      level5(ls);
+      break;
     default:
       level0(ls);
       break;
@@ -629,9 +630,174 @@ function level4(ls: levelSettings) {
   ls.floorTex = 2;
   ls.ceilingTex = 1;
 
-  ls.sprites = [];
+  ls.sprites = [
+    { x: 16, y: 16, texture: 14, type: new Ghost(16, 16, 0.01, 1, 100) },
+  ];
 }
-function level5(ls: levelSettings) {}
+function level5(ls: levelSettings) {
+  //player
+  const direction = getPlayerDirection(180);
+  ls.player.posX = 13.5;
+  ls.player.posY = 12;
+  ls.player.dirX = direction.dirX;
+  ls.player.dirY = direction.dirY;
+  ls.player.planeX = direction.planeX;
+  ls.player.planeY = direction.planeY;
+  ls.player.holding = 3;
+  ls.player.ammo = 3;
+
+  ls.player.inventory = {
+    flashlight: true,
+    gun: true,
+    run: true,
+    horn: false,
+    sword: true,
+    sheild: false,
+    dash: false,
+    teleport: false,
+  };
+
+  //map
+
+  ls.map.map = [
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 1, 0, 0, 0, 1],
+    [1, 0, 0, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 1, 1, 5, 0, 0, 0, 5],
+    [6, 0, 0, 6, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 0, 1, 0, 5, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 0, 1, 0, 5, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 0, 1, 0, 1, 1, 10, 1, 1, 1, 10, 10, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 10, 1, 1, 1, 1, 5, 0, 0, 0, 5],
+    [1, 0, 0, 1, 0, 1, 0, 0, 0, 5, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 0, 1, 0, 1, 0, 0, 0, 5, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 6, 1, 6, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [6, 0, 0, 6, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 0, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  ];
+
+  ls.moveWall = [
+    new CloseBlock(19, 10, 30, 30, 30),
+    new CloseBlock(19, 12, 30, 30),
+
+    new CloseBlock(4, 1, 50, 25),
+    new CloseBlock(4, 2, 50, 25),
+    new CloseBlock(4, 4, 50, 25),
+
+    new CloseBlock(19, 1, 50, 25),
+    new CloseBlock(19, 2, 50, 25),
+    new CloseBlock(19, 4, 50, 25),
+  ];
+
+  ls.fireWall = [
+    new FireballWall(5.5, 5.5, 0, 0.1, 100),
+    new FireballWall(5.5, 5.5, 0, -0.1, 100),
+    new FireballWall(8.5, 5.5, 0, 0.1, 100),
+    new FireballWall(8.5, 5.5, 0, -0.1, 100),
+
+    new FireballWall(15.5, 9.5, 0, -0.1, 50, 25),
+    new FireballWall(16.5, 9.5, 0, -0.1, 50),
+
+    new FireballWall(1.5, 18.5, 0, -0.1, 100, 50),
+    new FireballWall(2.5, 18.5, 0, -0.1, 100),
+
+    new FireballWall(21.5, 23.5, 0, -0.1, 100),
+    new FireballWall(22.5, 23.5, 0, -0.1, 100, 50),
+
+    new FireballWall(14.5, 19.5, 0, 0.1, 75),
+    new FireballWall(14.5, 23.5, 0, -0.1, 75),
+
+    new FireballWall(3.5, 19.5, 0, 0.1, 75),
+    new FireballWall(3.5, 23.5, 0, -0.1, 75),
+  ];
+
+  ls.map.brightness = 0.7;
+  ls.floorTex = 0;
+  ls.ceilingTex = 5;
+  ls.sprites = [
+    { x: 4, y: 10, texture: 5, type: new Slime(4, 10, 100, 2, 8) },
+    { x: 6, y: 7, texture: 5, type: new Slime(6, 7, 50, 3, 8) },
+    { x: 8, y: 12, texture: 5, type: new Slime(8, 12, 50, 2, 8) },
+
+    { x: 13, y: 6, texture: 5, type: new Slime(13, 6, 100, 3, 8) },
+    { x: 13, y: 8, texture: 5, type: new Slime(13, 8, 100, 3, 8) },
+
+    { x: 19, y: 7, texture: 3, type: new Mage(19, 7, 10, 0.15, 50, 20) },
+
+    { x: 8, y: 14.5, texture: 5, type: new Slime(8, 14.5, 50, 2, 8) },
+    { x: 11, y: 16.5, texture: 5, type: new Slime(11, 16.5, 100, 3, 8) },
+    { x: 11, y: 16.5, texture: 5, type: new Slime(4.5, 16.5, 100, 3, 8) },
+    { x: 8, y: 18.5, texture: 3, type: new Slime(8, 18.5, 50, 2, 8) },
+
+    {
+      x: 4.5,
+      y: 18.5,
+      texture: 3,
+      type: new Mage(4.5, 18.5, 10, 0.15, 100, 20),
+    },
+    {
+      x: 4.5,
+      y: 14.5,
+      texture: 3,
+      type: new Mage(4.5, 14.5, 10, 0.15, 100, 20, 50),
+    },
+
+    { x: 8, y: 2, texture: 5, type: new Slime(8, 2, 100, 2, 6) },
+    { x: 10, y: 1.5, texture: 5, type: new Slime(10, 1.5, 100, 2, 6) },
+    { x: 10, y: 2.5, texture: 5, type: new Slime(10, 2.5, 100, 2, 6) },
+    { x: 12, y: 1.5, texture: 5, type: new Slime(12, 1.5, 100, 2, 6) },
+    { x: 12, y: 2.5, texture: 5, type: new Slime(12, 2.5, 100, 2, 6) },
+    { x: 14, y: 1.5, texture: 5, type: new Slime(14, 1.5, 100, 2, 6) },
+    { x: 14, y: 2.5, texture: 5, type: new Slime(14, 2.5, 100, 2, 6) },
+
+    { x: 18.5, y: 22.5, texture: 5, type: new Slime(18.5, 22.5, 50, 2, 6) },
+    { x: 18.5, y: 20.5, texture: 5, type: new Slime(18.5, 20.5, 50, 2, 6) },
+
+    { x: 14, y: 22.5, texture: 5, type: new Slime(14, 22.5, 50, 2, 6) },
+    { x: 14, y: 21.5, texture: 5, type: new Slime(14, 22.5, 100, 2, 6) },
+    { x: 14, y: 20.5, texture: 5, type: new Slime(14, 20.5, 50, 2, 6) },
+
+    { x: 10, y: 21.5, texture: 5, type: new Slime(10, 22.5, 100, 2, 6) },
+
+    { x: 2, y: 21.5, texture: 5, type: new Slime(2, 21.5, 50, 2, 6) },
+
+    {
+      x: 1.5,
+      y: 22.5,
+      texture: 3,
+      type: new Mage(1.5, 22.5, 10, 0.15, 100, 20, 50),
+    },
+    {
+      x: 1.5,
+      y: 20.5,
+      texture: 3,
+      type: new Mage(1.5, 20.5, 10, 0.15, 100, 20, 50),
+    },
+
+    {
+      x: 17.5,
+      y: 16.5,
+      texture: 13,
+      type: new SpikeBall(1, -0.15, { x: 17.5, y: 16.5 }),
+    },
+    {
+      x: 17.5,
+      y: 16.5,
+      texture: 13,
+      type: new SpikeBall(2.1, -0.15, { x: 17.5, y: 16.5 }),
+    },
+  ];
+}
 function level6(ls: levelSettings) {}
 function level7(ls: levelSettings) {}
 function level8(ls: levelSettings) {}
@@ -679,7 +845,7 @@ function level0(ls: levelSettings) {
   ls.floorTex = 3;
   ls.ceilingTex = 1;
 
-  ls.sprites = [{ x: 3, y: 3, texture: 14, type: undefined }];
+  ls.sprites = [];
 }
 
 export { type levelSettings, setLevel };

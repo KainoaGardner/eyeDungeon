@@ -12,7 +12,7 @@ const wallTextures = new Array(12)
 
 const bgTextures = new Array(5).fill(null).map(() => Array(texWidth).fill(0));
 
-const spriteTextures = new Array(16)
+const spriteTextures = new Array(18)
   .fill(null)
   .map(() => Array(spriteTexWidth).fill(0));
 
@@ -62,6 +62,7 @@ addTexture("/img/bg/roof1.png", 1, texWidth, texHeight, bgTextures);
 addTexture("/img/bg/floor0.png", 3, texWidth, texHeight, bgTextures);
 addTexture("/img/bg/floor1.png", 2, texWidth, texHeight, bgTextures);
 addTexture("/img/bg/floor2.png", 4, texWidth, texHeight, bgTextures);
+addTexture("/img/bg/roof2.png", 5, texWidth, texHeight, bgTextures);
 
 //walls
 addTexture("/img/walls/stone.png", 0, texWidth, texHeight, wallTextures);
@@ -202,6 +203,22 @@ addTexture(
 addTexture(
   "/img/sprites/ghost1.png",
   15,
+  spriteTexWidth,
+  spriteTexHeight,
+  spriteTextures,
+);
+
+addTexture(
+  "/img/sprites/ghost2.png",
+  16,
+  spriteTexWidth,
+  spriteTexHeight,
+  spriteTextures,
+);
+
+addTexture(
+  "/img/sprites/ghost3.png",
+  17,
   spriteTexWidth,
   spriteTexHeight,
   spriteTextures,

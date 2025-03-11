@@ -3,7 +3,8 @@ import { keyMap } from "./keypress";
 import { Fireball } from "./fireball";
 import { Map } from "./map";
 import { levelSettings } from "./levels";
-import { Slime, Mage } from "./enemy";
+import { Slime, Mage, Ghost } from "./enemy";
+import { SpikeBall } from "./spikeball";
 
 import {
   texWidth,
@@ -554,7 +555,10 @@ export class Player {
     }
 
     for (let i = 0; i < sprites.length; i++) {
-      if (sprites[i].type instanceof Fireball) {
+      if (
+        sprites[i].type instanceof Fireball ||
+        sprites[i].type instanceof Ghost
+      ) {
         const spriteY = sprites[i].type.x;
         const spriteX = sprites[i].type.y;
 
@@ -1278,8 +1282,8 @@ export class Player {
   }
   private drawHitUi() {
     if (this.hit > 0) {
-      c.globalAlpha = 0.5;
-      c.fillStyle = "#e67e22";
+      c.globalAlpha = 0.1;
+      c.fillStyle = "red";
       c.fillRect(0, 0, canvas.width, canvas.height);
       c.globalAlpha = 1;
     }
@@ -1481,7 +1485,7 @@ export class Player {
       }
       this.ammoCounter = 0;
     }
-    this.ammoCounter += 1;
+    // this.ammoCounter += 1;
 
     if (this.gunCounter !== 0 && this.gunCounter < 100) {
       this.gunCounter += 5;
@@ -1536,7 +1540,7 @@ export class Player {
     const blockY = Math.floor(this.posX);
 
     if (map[blockY][blockX] === 7) {
-      this.takeDamage(10);
+      this.takeDamage(5);
     }
   }
 
@@ -1615,10 +1619,6 @@ export class Player {
 
     if (reflect) {
       reflectSound.play();
-      if (this.inventory.gun && this.ammo < 10) {
-        ammoSound.play();
-        this.ammo++;
-      }
     }
   }
 
@@ -1748,19 +1748,44 @@ export class Player {
     }
   }
 
-  private fireballCollisonUpdate(sprites: sprite[]) {
-    for (let i = 0; i < sprites.length; i++) {
-      if (sprites[i].type instanceof Fireball) {
-        const fireball = sprites[i].type;
-        const distance = Math.sqrt(
-          (this.posX - fireball.x) * (this.posX - fireball.x) +
-            (this.posY - fireball.y) * (this.posY - fireball.y),
-        );
-        if (distance < this.radius / 2) {
-          this.fireballHit = 5;
-          fireball.alive = false;
-          hitSound.play();
-          this.takeDamage(200);
+  private spriteCollisonUpdate(ls: levelSettings) {
+    if (this.hit === 0) {
+      for (let i = 0; i < ls.sprites.length; i++) {
+        if (ls.sprites[i].type !== undefined) {
+          const sprite = ls.sprites[i].type;
+          const distance = Math.sqrt(
+            (this.posX - sprite.x) * (this.posX - sprite.x) +
+              (this.posY - sprite.y) * (this.posY - sprite.y),
+          );
+          let hit = distance < this.radius / 2;
+
+          if (hit) {
+            if (sprite instanceof Fireball) {
+              this.fireballHit = 5;
+              sprite.alive = false;
+              this.takeDamage(200);
+            } else if (sprite instanceof Slime) {
+              if (sprite.deadCounter === 0) {
+                this.takeDamage(50);
+              } else {
+                hit = false;
+              }
+            } else if (sprite instanceof Ghost) {
+              if (sprite.deadCounter === 0) {
+                this.takeDamage(100);
+                sprite.killed(ls);
+              } else {
+                hit = false;
+              }
+            } else if (sprite instanceof SpikeBall) {
+              this.takeDamage(300);
+            } else {
+              hit = false;
+            }
+            if (hit) {
+              hitSound.play();
+            }
+          }
         }
       }
     }
@@ -1777,6 +1802,7 @@ export class Player {
   }
 
   private takeDamage(damage: number) {
+    this.hit = 30;
     let sheild = 1;
     if (this.sheild) {
       sheild = 0.5;
@@ -1828,7 +1854,11 @@ export class Player {
       const transformY =
         invDet * (-this.planeY * spriteX + this.planeX * spriteY);
 
-      if (sprite instanceof Slime || sprite instanceof Mage) {
+      if (
+        sprite instanceof Slime ||
+        sprite instanceof Mage ||
+        sprite instanceof Ghost
+      ) {
         if (sprite.deadCounter !== 0) {
           continue;
         }
@@ -1855,6 +1885,10 @@ export class Player {
           sprite.takeDamage(10);
         }
       }
+      if (this.ammo < 10 && sprite.health <= 0) {
+        ammoSound.play();
+        this.ammo++;
+      }
     }
   }
 
@@ -1872,7 +1906,7 @@ export class Player {
     if (this.inventory.sheild) this.sheildUpdate();
     if (this.inventory.teleport) this.teleportUpdate(ls);
 
-    this.fireballCollisonUpdate(ls.sprites);
+    this.spriteCollisonUpdate(ls);
     this.hitUpdate();
 
     this.moveUpdate(ls.map.map);

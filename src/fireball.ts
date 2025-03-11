@@ -1,6 +1,8 @@
 import { levelSettings } from "./levels";
 import { sprite } from "./sprite";
 import { Slime, Mage } from "./enemy";
+import { ammoSound } from "./sounds";
+
 export class Fireball {
   x: number;
   y: number;
@@ -34,10 +36,10 @@ export class Fireball {
     }
   }
 
-  reflectDamage(sprites: sprite[]) {
+  reflectDamage(ls: levelSettings) {
     if (this.reflect) {
-      for (let i = 0; i < sprites.length; i++) {
-        const sprite = sprites[i];
+      for (let i = 0; i < ls.sprites.length; i++) {
+        const sprite = ls.sprites[i];
         if (sprite.type instanceof Mage || sprite.type instanceof Slime) {
           const distance = Math.sqrt(
             (this.x - sprite.x) * (this.x - sprite.x) +
@@ -45,6 +47,10 @@ export class Fireball {
           );
           if (distance < 1) {
             sprite.type.takeDamage(50);
+            if (ls.player.ammo < 10 && sprite.type.health <= 0) {
+              ammoSound.play();
+              ls.player.ammo++;
+            }
             this.alive = false;
             break;
           }

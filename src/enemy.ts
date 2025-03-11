@@ -273,26 +273,60 @@ export class Mage extends Enemy {
   }
 }
 
-export class Ghost {
-  x: number;
-  y: number;
-  speed: number;
+export class Ghost extends Enemy {
+  timeLimit: number;
+  timeCounter = 0;
 
-  constructor(x: number, y: number, speed: number) {
-    this.x = x;
-    this.y = y;
-    this.speed = speed;
+  constructor(
+    x: number,
+    y: number,
+    speed: number,
+    health: number,
+    agroDist: number,
+    timeLimit: number = 0,
+  ) {
+    super(x, y, health, speed, agroDist);
+    this.timeLimit = timeLimit;
   }
 
-  update(ls: levelSettings) {}
+  update(ls: levelSettings) {
+    const xDif = ls.player.posX - this.x;
+    const yDif = ls.player.posY - this.y;
+    const angle = Math.atan2(yDif, xDif);
 
-  // takeDamage(damage: number) {
-  //   this.health -= damage;
-  //   this.hurtCounter = 1;
-  //   if (this.health <= 0) {
-  //     this.deadCounter = 1;
-  //   }
-  // }
+    this.x += this.speed * Math.cos(angle);
+    this.y += this.speed * Math.sin(angle);
+
+    if (this.timeLimit !== 0) {
+      this.timeCounter++;
+    }
+  }
+
+  killed(ls: levelSettings) {
+    this.alive = true;
+    this.deadCounter = 0;
+    const height = ls.map.map.length;
+    const width = ls.map.map[0].length;
+    let side = Math.floor(Math.random() * 4);
+    switch (side) {
+      case 0:
+        this.x = Math.floor(Math.random() * height);
+        this.y = 0;
+        break;
+      case 1:
+        this.x = Math.floor(Math.random() * height);
+        this.y = width;
+        break;
+      case 2:
+        this.x = 0;
+        this.y = Math.floor(Math.random() * width);
+        break;
+      case 3:
+        this.x = height;
+        this.y = Math.floor(Math.random() * width);
+        break;
+    }
+  }
 }
 
 // export class Tank {

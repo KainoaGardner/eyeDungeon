@@ -1,7 +1,7 @@
 import { Fireball } from "./fireball";
 import { levelSettings } from "./levels";
 import { Teleport } from "./player";
-import { Slime, Mage } from "./enemy";
+import { Slime, Mage, Ghost } from "./enemy";
 import { SpikeBall } from "./spikeball";
 
 interface sprite {
@@ -35,7 +35,7 @@ function spriteUpdate(ls: levelSettings) {
     const sprite = ls.sprites[i];
     if (ls.sprites[i].type instanceof Fireball) {
       sprite.type.update(ls.map.map);
-      sprite.type.reflectDamage(ls.sprites);
+      sprite.type.reflectDamage(ls);
       sprite.x = sprite.type.x;
       sprite.y = sprite.type.y;
 
@@ -99,6 +99,31 @@ function spriteUpdate(ls: levelSettings) {
       sprite.type.update();
       sprite.x = sprite.type.x;
       sprite.y = sprite.type.y;
+    } else if (ls.sprites[i].type instanceof Ghost) {
+      if (sprite.type.deadCounter === 0) {
+        sprite.x = sprite.type.x;
+        sprite.y = sprite.type.y;
+
+        sprite.type.update(ls);
+      }
+
+      sprite.type.hurtUpdate();
+      if (sprite.type.deadCounter > 0 && sprite.type.deadCounter < 10) {
+        sprite.texture = 16;
+      } else if (sprite.type.deadCounter > 9) {
+        sprite.texture = 17;
+      } else if (sprite.type.walkCounter > 15) {
+        sprite.texture = 14;
+      } else {
+        sprite.texture = 14;
+      }
+      if (!sprite.type.alive) {
+        sprite.type.killed(ls);
+      }
+
+      if (sprite.type.timeCounter > sprite.type.timeLimit) {
+        ls.sprites.splice(i, 1);
+      }
     }
   }
 }
