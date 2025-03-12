@@ -1045,6 +1045,15 @@ export class Player {
       );
     }
 
+    if (this.tired) {
+      c.fillRect(
+        canvas.width - 82 * UIRatio,
+        canvas.height - 22 * UIRatio + 20 * UIRatio * (this.stamina / 1000),
+        20 * UIRatio,
+        20 * UIRatio - UIRatio * (this.stamina / 1000) * 20,
+      );
+    }
+
     c.globalAlpha = 1;
     c.fillStyle = "#e74c3c";
     c.font = "bold 35px Arial";
@@ -1152,6 +1161,26 @@ export class Player {
         20 * UIRatio,
       );
     }
+
+    if (this.tired) {
+      c.drawImage(
+        errorImg,
+        canvas.width - 82 * UIRatio,
+        canvas.height - 22 * UIRatio,
+        20 * UIRatio,
+        20 * UIRatio,
+      );
+    }
+
+    if (this.tired) {
+      c.drawImage(
+        errorImg,
+        canvas.width - 82 * UIRatio,
+        canvas.height - 22 * UIRatio,
+        20 * UIRatio,
+        20 * UIRatio,
+      );
+    }
   }
 
   private drawAmmoUi() {
@@ -1236,7 +1265,7 @@ export class Player {
       c.globalAlpha = 0.75;
       c.fillRect(0, 0, canvas.width, canvas.height);
     }
-    if (map[blockY][blockX] === 3) {
+    if (map[blockY][blockX] === 3 || map[blockY][blockX] === 2) {
       c.fillStyle = "black";
       c.globalAlpha = 0.75;
       c.fillRect(0, 0, canvas.width, canvas.height);
@@ -1312,10 +1341,10 @@ export class Player {
     this.drawInvUi();
   }
 
-  private useUpdate() {
+  private useUpdate(ls: levelSettings) {
     if (keyMap.get("Space")) {
       if (!this.running) {
-        if (this.holding === 1 && this.battery > 0 && this.flashlight) {
+        if (this.holding === 1 && this.battery > 1 && this.flashlight) {
           this.viewDist = 64;
           this.battery -= 5;
         }
@@ -1333,6 +1362,21 @@ export class Player {
             shootSound.play();
             this.ammo--;
             this.gunCounter = 1;
+            const speed = 1;
+            const bullet = new Bullet(
+              this.posX,
+              this.posY,
+              this.dirX * speed,
+              this.dirY * speed,
+            );
+
+            const sprite = {
+              x: this.posX,
+              y: this.posY,
+              texture: 18,
+              type: bullet,
+            };
+            ls.sprites.push(sprite);
           }
         }
       }
@@ -1868,12 +1912,9 @@ export class Player {
           this.swordCounter < 50
         ) {
           if (Math.abs(transformX) < 0.5 && transformY > 0 && transformY < 1) {
-            sprite.takeDamage(3);
-          }
-        }
-        if (this.holding === 3 && this.gunCounter > 0 && this.gunCounter < 10) {
-          if (Math.abs(transformX) < 0.5 && transformY > 0) {
-            sprite.takeDamage(50);
+            sprite.takeDamage(10);
+            sprite.x += this.dirX * 0.1;
+            sprite.y += this.dirY * 0.1;
           }
         }
         if (
@@ -1893,7 +1934,7 @@ export class Player {
   }
 
   update(ls: levelSettings): void {
-    this.useUpdate();
+    this.useUpdate(ls);
 
     //seperate gun and sword update
     this.gunUpdate();
@@ -1913,5 +1954,76 @@ export class Player {
     this.holdingUpdate();
     this.inblockUpdate(ls.map.map);
     this.damageEnemy(ls);
+  }
+}
+
+export class Bullet {
+  x: number;
+  y: number;
+  velX: number;
+  velY: number;
+  alive: boolean = true;
+
+  constructor(x: number, y: number, velX: number, velY: number) {
+    this.x = x;
+    this.y = y;
+    this.velX = velX;
+    this.velY = velY;
+  }
+
+  update(ls: levelSettings) {
+    const blockY = Math.floor(this.x);
+    const blockX = Math.floor(this.y);
+
+    const map = ls.map.map;
+    if (
+      this.x >= 0 &&
+      this.x < map.length &&
+      this.y >= 0 &&
+      this.y < map[0].length
+    ) {
+      if (map[blockY][blockX] === 0) {
+        this.x += this.velX;
+        this.y += this.velY;
+      } else if (
+        map[blockY][blockX] === 10 ||
+        map[blockY][blockX] === 11 ||
+        map[blockY][blockX] === 12
+      ) {
+        ls.map.map[blockY][blockX] = 0;
+        this.alive = false;
+      } else {
+        this.alive = false;
+      }
+    } else {
+      this.alive = false;
+    }
+  }
+
+  hitEnemy(ls: levelSettings) {
+    for (let i = 0; i < ls.sprites.length; i++) {
+      const sprite = ls.sprites[i].type;
+      if (
+        sprite instanceof Ghost ||
+        sprite instanceof Slime ||
+        sprite instanceof Mage
+      ) {
+        const distance = Math.sqrt(
+          (sprite.x - this.x) * (sprite.x - this.x) +
+            (sprite.y - this.y) * (sprite.y - this.y),
+        );
+
+        if (distance < 0.6) {
+          sprite.takeDamage(100);
+          this.alive = false;
+
+          if (ls.player.ammo < 10 && sprite.health <= 0) {
+            ammoSound.play();
+            ls.player.ammo++;
+          }
+          break;
+        }
+      }
+    }
   }
 }

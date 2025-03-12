@@ -341,8 +341,8 @@ function level2(ls: levelSettings) {
 }
 function level3(ls: levelSettings) {
   //player
-  ls.player.posX = 30.5;
-  ls.player.posY = 14.5;
+  ls.player.posX = 1.5;
+  ls.player.posY = 1.5;
   const direction = getPlayerDirection(-90);
   ls.player.dirX = direction.dirX;
   ls.player.dirY = direction.dirY;
@@ -472,8 +472,8 @@ function level3(ls: levelSettings) {
       0, 0, 0, 0, 0, 0, 1,
     ],
     [
-      6, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 1,
+      6, 0, 1, 0, 0, 1, 0, 0, 0, 13, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 1,
     ],
     [
       6, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -497,7 +497,6 @@ function level3(ls: levelSettings) {
   ls.map.brightness = 0.5;
 
   ls.moveWall = [
-    new CloseBlock(1, 3, 100, 20, 100),
     new CloseBlock(1, 4, 100, 20, 90),
     new CloseBlock(1, 5, 100, 20, 80),
     new CloseBlock(1, 6, 100, 20, 70),
@@ -581,19 +580,74 @@ function level3(ls: levelSettings) {
       x: 27.5,
       y: 9.5,
       texture: 13,
-      type: new SpikeBall(1, 0.1, { x: 27.5, y: 9.5 }),
+      type: new SpikeBall(1, 0.04, { x: 27.5, y: 9.5 }),
     },
     {
       x: 27.5,
       y: 9.5,
       texture: 13,
-      type: new SpikeBall(2, 0.1, { x: 27.5, y: 9.5 }),
+      type: new SpikeBall(2, 0.04, { x: 27.5, y: 9.5 }),
     },
     {
       x: 27.5,
       y: 9.5,
       texture: 13,
-      type: new SpikeBall(3, 0.1, { x: 27.5, y: 9.5 }),
+      type: new SpikeBall(3.1, 0.04, { x: 27.5, y: 9.5 }),
+    },
+    {
+      x: 27.5,
+      y: 9.5,
+      texture: 13,
+      type: new SpikeBall(-1, 0.04, { x: 27.5, y: 9.5 }),
+    },
+    {
+      x: 27.5,
+      y: 9.5,
+      texture: 13,
+      type: new SpikeBall(-2, 0.04, { x: 27.5, y: 9.5 }),
+    },
+    {
+      x: 27.5,
+      y: 9.5,
+      texture: 13,
+      type: new SpikeBall(-3.1, 0.04, { x: 27.5, y: 9.5 }),
+    },
+
+    {
+      x: 27.5,
+      y: 9.5,
+      texture: 13,
+      type: new SpikeBall(1, 0.04, { x: 27.5, y: 9.5 }, 90),
+    },
+    {
+      x: 27.5,
+      y: 9.5,
+      texture: 13,
+      type: new SpikeBall(2, 0.04, { x: 27.5, y: 9.5 }, 90),
+    },
+    {
+      x: 27.5,
+      y: 9.5,
+      texture: 13,
+      type: new SpikeBall(3.1, 0.04, { x: 27.5, y: 9.5 }, 90),
+    },
+    {
+      x: 27.5,
+      y: 9.5,
+      texture: 13,
+      type: new SpikeBall(-1, 0.04, { x: 27.5, y: 9.5 }, 90),
+    },
+    {
+      x: 27.5,
+      y: 9.5,
+      texture: 13,
+      type: new SpikeBall(-2, 0.04, { x: 27.5, y: 9.5 }, 90),
+    },
+    {
+      x: 27.5,
+      y: 9.5,
+      texture: 13,
+      type: new SpikeBall(-3.1, 0.04, { x: 27.5, y: 9.5 }, 90),
     },
   ];
 }
@@ -680,7 +734,7 @@ function level5(ls: levelSettings) {
     [1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1],
     [1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 6, 1, 6, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
     [6, 0, 0, 6, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-    [1, 0, 0, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1],
+    [1, 0, 0, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 1, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -752,7 +806,6 @@ function level5(ls: levelSettings) {
       type: new Mage(4.5, 14.5, 10, 0.15, 100, 20, 50),
     },
 
-    { x: 8, y: 2, texture: 5, type: new Slime(8, 2, 100, 2, 6) },
     { x: 10, y: 1.5, texture: 5, type: new Slime(10, 1.5, 100, 2, 6) },
     { x: 10, y: 2.5, texture: 5, type: new Slime(10, 2.5, 100, 2, 6) },
     { x: 12, y: 1.5, texture: 5, type: new Slime(12, 1.5, 100, 2, 6) },
@@ -764,10 +817,10 @@ function level5(ls: levelSettings) {
     { x: 18.5, y: 20.5, texture: 5, type: new Slime(18.5, 20.5, 50, 2, 6) },
 
     { x: 14, y: 22.5, texture: 5, type: new Slime(14, 22.5, 50, 2, 6) },
-    { x: 14, y: 21.5, texture: 5, type: new Slime(14, 22.5, 100, 2, 6) },
+    { x: 14, y: 21.5, texture: 5, type: new Slime(14, 21.5, 100, 2, 6) },
     { x: 14, y: 20.5, texture: 5, type: new Slime(14, 20.5, 50, 2, 6) },
 
-    { x: 10, y: 21.5, texture: 5, type: new Slime(10, 22.5, 100, 2, 6) },
+    { x: 10, y: 21.5, texture: 5, type: new Slime(10, 21.5, 100, 2, 6) },
 
     { x: 2, y: 21.5, texture: 5, type: new Slime(2, 21.5, 50, 2, 6) },
 
@@ -788,13 +841,50 @@ function level5(ls: levelSettings) {
       x: 17.5,
       y: 16.5,
       texture: 13,
-      type: new SpikeBall(1, -0.15, { x: 17.5, y: 16.5 }),
+      type: new SpikeBall(1, -0.05, { x: 17.5, y: 16.5 }),
     },
     {
       x: 17.5,
       y: 16.5,
       texture: 13,
-      type: new SpikeBall(2.1, -0.15, { x: 17.5, y: 16.5 }),
+      type: new SpikeBall(2.1, -0.05, { x: 17.5, y: 16.5 }),
+    },
+    {
+      x: 17.5,
+      y: 16.5,
+      texture: 13,
+      type: new SpikeBall(-1, -0.05, { x: 17.5, y: 16.5 }),
+    },
+    {
+      x: 17.5,
+      y: 16.5,
+      texture: 13,
+      type: new SpikeBall(-2.1, -0.05, { x: 17.5, y: 16.5 }),
+    },
+
+    {
+      x: 17.5,
+      y: 16.5,
+      texture: 13,
+      type: new SpikeBall(1, -0.05, { x: 17.5, y: 16.5 }, 90),
+    },
+    {
+      x: 17.5,
+      y: 16.5,
+      texture: 13,
+      type: new SpikeBall(2.1, -0.05, { x: 17.5, y: 16.5 }, 90),
+    },
+    {
+      x: 17.5,
+      y: 16.5,
+      texture: 13,
+      type: new SpikeBall(-1, -0.05, { x: 17.5, y: 16.5 }, 90),
+    },
+    {
+      x: 17.5,
+      y: 16.5,
+      texture: 13,
+      type: new SpikeBall(-2.1, -0.05, { x: 17.5, y: 16.5 }, 90),
     },
   ];
 }
@@ -812,6 +902,7 @@ function level0(ls: levelSettings) {
   ls.player.dirY = 0;
   ls.player.planeX = 0;
   ls.player.planeY = -1;
+  ls.player.ammo = 10;
 
   ls.player.inventory = {
     flashlight: true,

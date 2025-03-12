@@ -6,13 +6,13 @@ const texHeight = 16;
 const spriteTexWidth = 32;
 const spriteTexHeight = 32;
 
-const wallTextures = new Array(12)
+const wallTextures = new Array(13)
   .fill(null)
   .map(() => Array(texWidth).fill(0));
 
-const bgTextures = new Array(5).fill(null).map(() => Array(texWidth).fill(0));
+const bgTextures = new Array(6).fill(null).map(() => Array(texWidth).fill(0));
 
-const spriteTextures = new Array(18)
+const spriteTextures = new Array(19)
   .fill(null)
   .map(() => Array(spriteTexWidth).fill(0));
 
@@ -78,6 +78,13 @@ addTexture("/img/walls/closeWall.png", 6, texWidth, texHeight, wallTextures);
 addTexture("/img/walls/break0.png", 9, texWidth, texHeight, wallTextures);
 addTexture("/img/walls/break1.png", 10, texWidth, texHeight, wallTextures);
 addTexture("/img/walls/break2.png", 11, texWidth, texHeight, wallTextures);
+addTexture(
+  "/img/walls/spikeballWall.png",
+  12,
+  texWidth,
+  texHeight,
+  wallTextures,
+);
 
 //sprites
 addTexture(
@@ -219,6 +226,14 @@ addTexture(
 addTexture(
   "/img/sprites/ghost3.png",
   17,
+  spriteTexWidth,
+  spriteTexHeight,
+  spriteTextures,
+);
+
+addTexture(
+  "/img/sprites/bullet.png",
+  18,
   spriteTexWidth,
   spriteTexHeight,
   spriteTextures,

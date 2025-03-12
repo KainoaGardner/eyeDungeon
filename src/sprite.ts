@@ -3,6 +3,7 @@ import { levelSettings } from "./levels";
 import { Teleport } from "./player";
 import { Slime, Mage, Ghost } from "./enemy";
 import { SpikeBall } from "./spikeball";
+import { Bullet } from "./player";
 
 interface sprite {
   x: number;
@@ -36,6 +37,15 @@ function spriteUpdate(ls: levelSettings) {
     if (ls.sprites[i].type instanceof Fireball) {
       sprite.type.update(ls.map.map);
       sprite.type.reflectDamage(ls);
+      sprite.x = sprite.type.x;
+      sprite.y = sprite.type.y;
+
+      if (!sprite.type.alive) {
+        ls.sprites.splice(i, 1);
+      }
+    } else if (ls.sprites[i].type instanceof Bullet) {
+      sprite.type.update(ls);
+      sprite.type.hitEnemy(ls);
       sprite.x = sprite.type.x;
       sprite.y = sprite.type.y;
 
