@@ -29,13 +29,13 @@ canvas.height = 720;
 // const bufferHeight = 288;
 // const UIRatio = (canvas.width / bufferWidth) * 2;
 
-const bufferWidth = 256;
-const bufferHeight = 144;
-const UIRatio = canvas.width / bufferWidth;
+// const bufferWidth = 256;
+// const bufferHeight = 144;
+// const UIRatio = canvas.width / bufferWidth;
 
-// const bufferWidth = 192;
-// const bufferHeight = 108;
-// const UIRatio = (canvas.width / bufferWidth) * 0.75;
+const bufferWidth = 192;
+const bufferHeight = 108;
+const UIRatio = (canvas.width / bufferWidth) * 0.75;
 
 // const bufferWidth = 128;
 // const bufferHeight = 72;

@@ -1045,7 +1045,7 @@ export class Player {
       );
     }
 
-    if (this.tired) {
+    if (this.inventory.dash && this.tired) {
       c.fillRect(
         canvas.width - 82 * UIRatio,
         canvas.height - 22 * UIRatio + 20 * UIRatio * (this.stamina / 1000),
@@ -1143,7 +1143,7 @@ export class Player {
       );
       c.stroke();
     }
-    if (!this.flashlight) {
+    if (this.inventory.flashlight && !this.flashlight) {
       c.drawImage(
         errorImg,
         2 * UIRatio,
@@ -1152,7 +1152,7 @@ export class Player {
         20 * UIRatio,
       );
     }
-    if (this.sheildBreak) {
+    if (this.inventory.sheild && this.sheildBreak) {
       c.drawImage(
         errorImg,
         62 * UIRatio,
@@ -1162,17 +1162,7 @@ export class Player {
       );
     }
 
-    if (this.tired) {
-      c.drawImage(
-        errorImg,
-        canvas.width - 82 * UIRatio,
-        canvas.height - 22 * UIRatio,
-        20 * UIRatio,
-        20 * UIRatio,
-      );
-    }
-
-    if (this.tired) {
+    if (this.inventory.dash && this.tired) {
       c.drawImage(
         errorImg,
         canvas.width - 82 * UIRatio,
