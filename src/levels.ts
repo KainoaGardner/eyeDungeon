@@ -6,6 +6,7 @@ import { CloseBlock } from "./closeblock";
 import { FireballWall } from "./fireball";
 import { Slime, Mage, Ghost } from "./enemy";
 import { SpikeBall } from "./spikeball";
+import { level7Update } from "./level7";
 
 interface direction {
   dirX: number;
@@ -59,6 +60,9 @@ function setLevel(ls: levelSettings) {
       break;
     case 6:
       level6(ls);
+      break;
+    case 7:
+      level7(ls);
       break;
 
     default:
@@ -1185,7 +1189,182 @@ function level6(ls: levelSettings) {
     },
   ];
 }
-function level7(ls: levelSettings) {}
+function level7(ls: levelSettings) {
+  //player
+  ls.player.posX = 19.5;
+  ls.player.posY = 9.5;
+  const direction = getPlayerDirection(-90);
+  ls.player.dirX = direction.dirX;
+  ls.player.dirY = direction.dirY;
+  ls.player.planeX = direction.planeX;
+  ls.player.planeY = direction.planeY;
+
+  ls.player.inventory = {
+    flashlight: true,
+    gun: true,
+    run: true,
+    horn: false,
+    sword: true,
+    sheild: false,
+    dash: false,
+    teleport: false,
+  };
+
+  //map
+
+  ls.map.map = [
+    [
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1,
+    ],
+    [
+      1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 1,
+    ],
+    [
+      1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 1,
+    ],
+    [
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 2, 2, 1,
+    ],
+    [
+      14, 7, 7, 7, 7, 6, 1, 0, 0, 2, 0, 1, 1, 5, 5, 5, 5, 5, 5, 14, 10, 0, 0, 0,
+      0, 0, 0, 0, 1, 0, 0, 1,
+    ],
+    [
+      6, 7, 7, 7, 7, 6, 1, 0, 0, 1, 0, 1, 5, 0, 0, 0, 0, 0, 0, 5, 1, 0, 0, 0, 0,
+      0, 0, 0, 1, 0, 0, 1,
+    ],
+    [
+      6, 7, 7, 7, 7, 6, 1, 0, 0, 1, 0, 1, 5, 0, 0, 0, 0, 0, 0, 5, 1, 0, 0, 0, 0,
+      0, 0, 0, 1, 0, 0, 1,
+    ],
+    [
+      6, 7, 7, 7, 7, 6, 1, 0, 0, 1, 0, 1, 5, 0, 0, 0, 0, 0, 0, 5, 1, 0, 0, 0, 0,
+      0, 0, 0, 1, 0, 0, 1,
+    ],
+    [
+      6, 7, 7, 7, 7, 6, 1, 0, 0, 1, 0, 1, 5, 0, 0, 0, 0, 0, 0, 5, 1, 0, 0, 0, 0,
+      0, 0, 0, 1, 0, 0, 1,
+    ],
+    [
+      6, 7, 7, 7, 7, 6, 1, 0, 0, 1, 0, 1, 5, 0, 0, 0, 0, 0, 0, 5, 1, 0, 0, 0, 0,
+      0, 0, 0, 1, 0, 0, 1,
+    ],
+    [
+      6, 7, 7, 7, 7, 6, 1, 0, 0, 1, 0, 1, 5, 0, 0, 0, 0, 0, 0, 5, 1, 0, 0, 0, 0,
+      0, 0, 0, 1, 0, 0, 1,
+    ],
+    [
+      6, 7, 7, 7, 7, 6, 1, 0, 0, 1, 14, 1, 1, 5, 5, 5, 5, 5, 5, 1, 1, 0, 0, 0,
+      0, 0, 0, 0, 1, 0, 0, 1,
+    ],
+    [
+      6, 7, 7, 7, 7, 6, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 0, 0, 1,
+    ],
+    [
+      6, 7, 7, 7, 7, 6, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 2, 0, 0, 1,
+    ],
+    [
+      1, 0, 0, 0, 0, 1, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 2, 0, 0, 1,
+    ],
+    [
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1,
+    ],
+    [
+      1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 14, 1, 0, 0, 0, 0, 0, 0, 0, 0, 10, 14,
+      1, 1, 0, 0, 0, 0, 0, 13,
+    ],
+    [
+      1, 0, 8, 0, 8, 0, 8, 0, 1, 0, 0, 0, 14, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+      1, 0, 0, 0, 0, 0, 0, 13,
+    ],
+    [
+      1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 14, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+      0, 0, 0, 0, 0, 0, 0, 13,
+    ],
+    [
+      1, 0, 8, 0, 8, 0, 8, 0, 1, 0, 0, 0, 14, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+      0, 0, 0, 0, 0, 0, 0, 13,
+    ],
+    [
+      1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 14, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+      0, 0, 0, 0, 0, 0, 0, 13,
+    ],
+    [
+      1, 0, 8, 0, 8, 0, 8, 0, 1, 0, 0, 0, 14, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+      0, 0, 0, 0, 0, 0, 0, 13,
+    ],
+    [
+      1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 14, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+      0, 0, 0, 0, 0, 0, 0, 13,
+    ],
+    [
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      13, 13, 13, 13, 13, 13, 13, 1,
+    ],
+  ];
+
+  ls.map.lightList = [
+    { x: 12.5, y: 23.5 },
+    { x: 12.5, y: 21.5 },
+    { x: 12.5, y: 19.5 },
+    { x: 12.5, y: 17.5 },
+  ];
+  ls.map.brightness = 0.5;
+
+  ls.moveWall = [
+    new CloseBlock(13, 4, 150, 300, 50),
+    new CloseBlock(12, 4, 150, 300),
+    new CloseBlock(11, 4, 150, 300, 400),
+    new CloseBlock(10, 4, 150, 300, 350),
+    new CloseBlock(10, 3, 150, 300, 300),
+    new CloseBlock(11, 3, 150, 300, 250),
+    new CloseBlock(12, 3, 150, 300, 200),
+    new CloseBlock(12, 2, 150, 300, 150),
+    new CloseBlock(11, 2, 150, 300, 100),
+    new CloseBlock(11, 1, 150, 300, 50),
+    new CloseBlock(10, 1, 150, 300),
+    new CloseBlock(9, 1, 150, 300, 400),
+    new CloseBlock(8, 1, 150, 300, 350),
+    new CloseBlock(7, 1, 150, 300, 300),
+    new CloseBlock(6, 1, 150, 300, 250),
+    new CloseBlock(6, 2, 150, 300, 200),
+    new CloseBlock(7, 2, 150, 300, 150),
+    new CloseBlock(8, 2, 150, 300, 100),
+    new CloseBlock(8, 3, 150, 300, 50),
+    new CloseBlock(8, 4, 150, 300),
+    new CloseBlock(7, 4, 150, 300, 400),
+    new CloseBlock(6, 4, 150, 300, 350),
+    new CloseBlock(5, 4, 150, 300, 300),
+    new CloseBlock(5, 3, 150, 300, 250),
+    new CloseBlock(4, 3, 150, 300, 200),
+    new CloseBlock(4, 2, 150, 300, 150),
+    new CloseBlock(4, 1, 150, 300, 100),
+  ];
+
+  ls.fireWall = [];
+  ls.floorTex = 3;
+  ls.ceilingTex = 1;
+
+  ls.sprites = [
+    { x: 16.5, y: 14.5, texture: 5, type: new Slime(16.5, 14.5, 50, 3, 10) },
+
+    { x: 17.5, y: 16.5, texture: 5, type: new Slime(17.5, 16.5, 50, 3, 10) },
+    { x: 21.5, y: 19.5, texture: 5, type: new Slime(21.5, 19.5, 50, 3, 10) },
+    { x: 17.5, y: 19.5, texture: 5, type: new Slime(17.5, 19.5, 50, 3, 10) },
+    { x: 21.5, y: 21.5, texture: 5, type: new Slime(21.5, 21.5, 50, 3, 10) },
+    { x: 17.5, y: 21.5, texture: 5, type: new Slime(17.5, 21.5, 50, 3, 10) },
+
+    { x: 16.5, y: 20.5, texture: 5, type: new Slime(16.5, 20.5, 50, 3, 10) },
+  ];
+}
 function level8(ls: levelSettings) {}
 function level9(ls: levelSettings) {}
 function level10(ls: levelSettings) {}
@@ -1235,4 +1414,10 @@ function level0(ls: levelSettings) {
   ls.sprites = [];
 }
 
-export { type levelSettings, setLevel };
+function levelUpdate(ls: levelSettings) {
+  if (ls.level === 7) {
+    level7Update(ls);
+  }
+}
+
+export { type levelSettings, setLevel, levelUpdate, getPlayerDirection };

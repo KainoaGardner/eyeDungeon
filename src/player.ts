@@ -5,6 +5,7 @@ import { Map } from "./map";
 import { levelSettings } from "./levels";
 import { Slime, Mage, Ghost } from "./enemy";
 import { SpikeBall } from "./spikeball";
+import { level7BlockHit } from "./level7";
 
 import {
   texWidth,
@@ -1424,10 +1425,20 @@ export class Player {
           Math.floor(this.posY + this.dirY * this.speed * this.radius)
         ];
 
-      if (forwardX === 0 || forwardX === 4 || forwardX === 3) {
+      if (
+        forwardX === 0 ||
+        forwardX === 4 ||
+        forwardX === 3 ||
+        forwardX === 14
+      ) {
         this.posX += this.dirX * this.speed;
       }
-      if (forwardY === 0 || forwardY === 4 || forwardY === 3) {
+      if (
+        forwardY === 0 ||
+        forwardY === 4 ||
+        forwardY === 3 ||
+        forwardY === 14
+      ) {
         this.posY += this.dirY * this.speed;
       }
     }
@@ -1442,10 +1453,20 @@ export class Player {
       ];
 
     if (keyMap.get("ArrowDown") || keyMap.get("KeyS")) {
-      if (backwardX === 0 || backwardX === 4 || backwardX === 3) {
+      if (
+        backwardX === 0 ||
+        backwardX === 4 ||
+        backwardX === 3 ||
+        backwardX === 14
+      ) {
         this.posY -= this.dirY * this.speed;
       }
-      if (backwardY === 0 || backwardY === 4 || backwardY === 3) {
+      if (
+        backwardY === 0 ||
+        backwardY === 4 ||
+        backwardY === 3 ||
+        backwardY === 14
+      ) {
         this.posX -= this.dirX * this.speed;
       }
     }
@@ -1588,35 +1609,37 @@ export class Player {
     return false;
   }
 
-  private breakBlock(map: Map) {
+  private breakBlock(ls: levelSettings) {
     let mine = false;
-    const block =
-      map.map[Math.floor(this.posX + this.dirX * 1)][
-        Math.floor(this.posY + this.dirY * 1)
-      ];
+    const map = ls.map;
+    const xHit = Math.floor(this.posX + this.dirX * 1);
+    const yHit = Math.floor(this.posY + this.dirY * 1);
+    const block = map.map[xHit][yHit];
 
     if (block === 10) {
       this.swordHit = true;
-      map.map[Math.floor(this.posX + this.dirX * 1)][
-        Math.floor(this.posY + this.dirY * 1)
-      ] = 11;
+      map.map[xHit][yHit] = 11;
       mine = true;
     }
     if (block === 11) {
       this.swordHit = true;
-      map.map[Math.floor(this.posX + this.dirX * 1)][
-        Math.floor(this.posY + this.dirY * 1)
-      ] = 12;
+      map.map[xHit][yHit] = 12;
 
       mine = true;
     }
     if (block === 12) {
       this.swordHit = true;
-      map.map[Math.floor(this.posX + this.dirX * 1)][
-        Math.floor(this.posY + this.dirY * 1)
-      ] = 0;
+      map.map[xHit][yHit] = 0;
 
       mine = true;
+    }
+
+    if (block === 8 || block === 9) {
+      mine = true;
+      this.swordHit = true;
+      if (ls.level === 7) {
+        level7BlockHit(xHit, yHit, ls);
+      }
     }
 
     if (mine) {
@@ -1663,7 +1686,7 @@ export class Player {
       this.swordCounter < 10 &&
       !this.swordHit
     ) {
-      this.breakBlock(ls.map);
+      this.breakBlock(ls);
       this.reflectProjectile(ls.sprites);
     }
 
@@ -1981,6 +2004,12 @@ export class Bullet {
         map[blockY][blockX] === 12
       ) {
         ls.map.map[blockY][blockX] = 0;
+        this.alive = false;
+      } else if (
+        (ls.level === 7 && map[blockY][blockX] === 8) ||
+        map[blockY][blockX] === 9
+      ) {
+        level7BlockHit(blockY, blockX, ls);
         this.alive = false;
       } else {
         this.alive = false;

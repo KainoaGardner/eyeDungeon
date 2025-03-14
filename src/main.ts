@@ -3,13 +3,13 @@ import { Player } from "./player";
 import { Map } from "./map";
 import { spriteUpdate, sprite } from "./sprite";
 import { CloseBlock } from "./closeblock";
-import { setLevel } from "./levels";
+import { setLevel, levelUpdate } from "./levels";
 import { FireballWall } from "./fireball";
 
 document.body.style.overflow = "hidden";
 
 const ls = {
-  level: 6,
+  level: 7,
   player: new Player(0, 0, 1, 0.04, 0.05, {
     flashlight: false,
     gun: false,
@@ -46,6 +46,7 @@ function updateFrame(): void {
   // showFps();
   ls.player.update(ls);
   spriteUpdate(ls);
+  levelUpdate(ls);
 
   for (let i = 0; i < ls.moveWall.length; i++) {
     ls.moveWall[i].update(ls.map);

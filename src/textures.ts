@@ -6,7 +6,7 @@ const texHeight = 16;
 const spriteTexWidth = 32;
 const spriteTexHeight = 32;
 
-const wallTextures = new Array(13)
+const wallTextures = new Array(14)
   .fill(null)
   .map(() => Array(texWidth).fill(0));
 
@@ -75,6 +75,9 @@ addTexture("/img/walls/moveWall.png", 5, texWidth, texHeight, wallTextures);
 
 addTexture("/img/walls/closeWall.png", 6, texWidth, texHeight, wallTextures);
 
+addTexture("/img/walls/lamp0.png", 7, texWidth, texHeight, wallTextures);
+addTexture("/img/walls/lamp1.png", 8, texWidth, texHeight, wallTextures);
+
 addTexture("/img/walls/break0.png", 9, texWidth, texHeight, wallTextures);
 addTexture("/img/walls/break1.png", 10, texWidth, texHeight, wallTextures);
 addTexture("/img/walls/break2.png", 11, texWidth, texHeight, wallTextures);
@@ -85,6 +88,8 @@ addTexture(
   texHeight,
   wallTextures,
 );
+
+addTexture("/img/walls/goal.png", 13, texWidth, texHeight, wallTextures);
 
 //sprites
 addTexture(
