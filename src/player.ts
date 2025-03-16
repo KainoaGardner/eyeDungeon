@@ -1585,7 +1585,7 @@ export class Player {
       this.speed = this.walkSpeed;
       this.running = false;
       if (this.stamina < 1000) {
-        this.stamina += 3;
+        this.stamina += 5;
       }
     }
   }
@@ -2027,6 +2027,9 @@ export class Bullet {
         sprite instanceof Slime ||
         sprite instanceof Mage
       ) {
+        if (!sprite.alive || sprite.deadCounter !== 0) {
+          continue;
+        }
         const distance = Math.sqrt(
           (sprite.x - this.x) * (sprite.x - this.x) +
             (sprite.y - this.y) * (sprite.y - this.y),
