@@ -12,7 +12,7 @@ const wallTextures = new Array(14)
 
 const bgTextures = new Array(6).fill(null).map(() => Array(texWidth).fill(0));
 
-const spriteTextures = new Array(19)
+const spriteTextures = new Array(29)
   .fill(null)
   .map(() => Array(spriteTexWidth).fill(0));
 
@@ -239,6 +239,83 @@ addTexture(
 addTexture(
   "/img/sprites/bullet.png",
   18,
+  spriteTexWidth,
+  spriteTexHeight,
+  spriteTextures,
+);
+
+addTexture(
+  "/img/sprites/skeleton0.png",
+  19,
+  spriteTexWidth,
+  spriteTexHeight,
+  spriteTextures,
+);
+
+addTexture(
+  "/img/sprites/skeleton1.png",
+  20,
+  spriteTexWidth,
+  spriteTexHeight,
+  spriteTextures,
+);
+
+addTexture(
+  "/img/sprites/skeleton2.png",
+  21,
+  spriteTexWidth,
+  spriteTexHeight,
+  spriteTextures,
+);
+
+addTexture(
+  "/img/sprites/skeleton3.png",
+  22,
+  spriteTexWidth,
+  spriteTexHeight,
+  spriteTextures,
+);
+
+addTexture(
+  "/img/sprites/skeleton4.png",
+  23,
+  spriteTexWidth,
+  spriteTexHeight,
+  spriteTextures,
+);
+
+addTexture(
+  "/img/sprites/boss0.png",
+  24,
+  spriteTexWidth,
+  spriteTexHeight,
+  spriteTextures,
+);
+
+addTexture(
+  "/img/sprites/boss1.png",
+  25,
+  spriteTexWidth,
+  spriteTexHeight,
+  spriteTextures,
+);
+addTexture(
+  "/img/sprites/boss2.png",
+  26,
+  spriteTexWidth,
+  spriteTexHeight,
+  spriteTextures,
+);
+addTexture(
+  "/img/sprites/boss3.png",
+  27,
+  spriteTexWidth,
+  spriteTexHeight,
+  spriteTextures,
+);
+addTexture(
+  "/img/sprites/boss4.png",
+  28,
   spriteTexWidth,
   spriteTexHeight,
   spriteTextures,

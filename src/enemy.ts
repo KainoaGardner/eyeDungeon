@@ -329,30 +329,22 @@ export class Ghost extends Enemy {
   }
 }
 
-// export class Tank {
-//   x: number;
-//   y: number;
-//
-//   alive: boolean = true;
-//
-//   constructor(x: number, y: number) {
-//     this.x = x;
-//     this.y = y;
-//   }
-//
-//   update(map: number[][]) {
-//     const blockY = Math.floor(this.x);
-//     const blockX = Math.floor(this.y);
-//
-//     if (
-//       this.x >= 0 &&
-//       this.x < map.length &&
-//       this.y >= 0 &&
-//       this.y < map[0].length &&
-//       (map[blockY][blockX] === 0 || map[blockY][blockX] === 5)
-//     ) {
-//     } else {
-//       this.alive = false;
-//     }
-//   }
-// }
+export class Skeleton extends Enemy {
+  walkCounter = 0;
+  constructor(
+    x: number,
+    y: number,
+    health: number,
+    speed: number,
+    agroDist: number,
+  ) {
+    super(x, y, health, speed, agroDist);
+  }
+
+  walkCounterUpdate() {
+    if (this.walkCounter >= 30) {
+      this.walkCounter = 0;
+    }
+    this.walkCounter++;
+  }
+}

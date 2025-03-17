@@ -9,7 +9,7 @@ import { FireballWall } from "./fireball";
 document.body.style.overflow = "hidden";
 
 const ls = {
-  level: 9,
+  level: 11,
   player: new Player(0, 0, 1, 0.04, 0.05, {
     flashlight: false,
     gun: false,

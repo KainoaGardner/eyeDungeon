@@ -1,7 +1,7 @@
 import { Fireball } from "./fireball";
 import { levelSettings } from "./levels";
 import { Teleport } from "./player";
-import { Slime, Mage, Ghost } from "./enemy";
+import { Slime, Mage, Ghost, Skeleton } from "./enemy";
 import { SpikeBall } from "./spikeball";
 import { Bullet } from "./player";
 
@@ -132,6 +132,33 @@ function spriteUpdate(ls: levelSettings) {
       }
 
       if (sprite.type.timeCounter > sprite.type.timeLimit) {
+        ls.sprites.splice(i, 1);
+      }
+    } else if (ls.sprites[i].type instanceof Skeleton) {
+      if (sprite.type.deadCounter === 0) {
+        sprite.x = sprite.type.x;
+        sprite.y = sprite.type.y;
+
+        sprite.type.walkCounterUpdate();
+        sprite.type.moveUpdate(
+          { x: ls.player.posX, y: ls.player.posY },
+          ls.map.map,
+        );
+      }
+
+      sprite.type.hurtUpdate();
+      if (sprite.type.deadCounter > 0 && sprite.type.deadCounter < 10) {
+        sprite.texture = 23;
+      } else if (sprite.type.deadCounter > 9) {
+        sprite.texture = 22;
+      } else if (sprite.type.hurtCounter > 0) {
+        sprite.texture = 21;
+      } else if (sprite.type.walkCounter > 15) {
+        sprite.texture = 19;
+      } else {
+        sprite.texture = 20;
+      }
+      if (!sprite.type.alive) {
         ls.sprites.splice(i, 1);
       }
     }

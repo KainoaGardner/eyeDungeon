@@ -4,7 +4,7 @@ import { makeMap } from "./maze";
 import { sprite } from "./sprite";
 import { CloseBlock } from "./closeblock";
 import { FireballWall } from "./fireball";
-import { Slime, Mage, Ghost } from "./enemy";
+import { Slime, Mage, Ghost, Skeleton } from "./enemy";
 import { SpikeBall } from "./spikeball";
 import { level7Update } from "./level7";
 import { level8Update } from "./level8";
@@ -43,6 +43,8 @@ interface levelSettings {
 }
 
 function setLevel(ls: levelSettings) {
+  ls.player.health = 1000;
+  ls.player.stamina = 1000;
   switch (ls.level) {
     case 1:
       level1(ls);
@@ -70,6 +72,12 @@ function setLevel(ls: levelSettings) {
       break;
     case 9:
       level9(ls);
+      break;
+    case 10:
+      level10(ls);
+      break;
+    case 11:
+      level11(ls);
       break;
 
     default:
@@ -714,6 +722,7 @@ function level5(ls: levelSettings) {
   ls.player.planeY = direction.planeY;
   ls.player.holding = 3;
   ls.player.ammo = 3;
+  ls.player.reloadTimer = 1000;
 
   ls.player.inventory = {
     flashlight: true,
@@ -930,6 +939,7 @@ function level6(ls: levelSettings) {
     teleport: false,
   };
   ls.player.ammo = 3;
+  ls.player.reloadTimer = 1000;
 
   //map
 
@@ -1206,6 +1216,7 @@ function level7(ls: levelSettings) {
   ls.player.planeX = direction.planeX;
   ls.player.planeY = direction.planeY;
   ls.player.ammo = 3;
+  ls.player.reloadTimer = 1000;
 
   ls.player.inventory = {
     flashlight: true,
@@ -1407,6 +1418,7 @@ function level8(ls: levelSettings) {
   ls.player.planeY = -1;
   ls.player.holding = 2;
   ls.player.ammo = 5;
+  ls.player.reloadTimer = 1000;
 
   ls.player.inventory = {
     flashlight: true,
@@ -1576,14 +1588,17 @@ function level8(ls: levelSettings) {
 }
 function level9(ls: levelSettings) {
   //player
-  ls.player.posX = 1.5;
-  ls.player.posY = 1.5;
-  ls.player.dirX = 1;
-  ls.player.dirY = 0;
-  ls.player.planeX = 0;
-  ls.player.planeY = -1;
+  ls.player.posX = 2;
+  ls.player.posY = 2;
+  const direction = getPlayerDirection(-90);
+  ls.player.dirX = direction.dirX;
+  ls.player.dirY = direction.dirY;
+  ls.player.planeX = direction.planeX;
+  ls.player.planeY = direction.planeY;
+
   ls.player.holding = 4;
-  ls.player.ammo = 10;
+  ls.player.ammo = 8;
+  ls.player.reloadTimer = 1000;
 
   ls.player.inventory = {
     flashlight: true,
@@ -1600,42 +1615,230 @@ function level9(ls: levelSettings) {
 
   ls.map.map = [
     [1, 1, 1, 6, 6, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5],
-    [1, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5],
+    [1, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5],
+    [1, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5],
     [1, 1, 1, 6, 6, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 10, 10, 1, 1],
-    [1, 1, 1, 1, 1, 5, 5, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+    [1, 1, 1, 5, 5, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 8, 8, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 8, 8, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+    [1, 0, 0, 13, 13, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+    [1, 0, 0, 13, 13, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
     [1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
     [1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 10, 1, 1, 1, 1, 10, 10, 1, 1],
     [1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
     [1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
     [1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [6, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [6, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+    [6, 0, 0, 6, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+    [6, 0, 0, 6, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
     [1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
     [1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [6, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [6, 0, 0, 1, 1, 0, 0, 1, 6, 0, 0, 6, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [6, 0, 0, 1, 1, 0, 0, 1, 1, 5, 5, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1],
+    [6, 0, 0, 6, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+    [6, 0, 0, 6, 1, 0, 0, 1, 1, 5, 5, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+    [6, 0, 0, 6, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1],
     [1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 5, 5, 1, 1],
+    [1, 4, 4, 1, 1, 1, 1, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 5, 5, 1, 1],
   ];
 
   ls.map.lightList = [];
   ls.map.brightness = 0.5;
 
-  ls.moveWall = [];
-  ls.fireWall = [];
+  ls.moveWall = [
+    new CloseBlock(1, 3, 25, 20),
+    new CloseBlock(2, 3, 25, 20),
+    new CloseBlock(1, 4, 25, 20),
+    new CloseBlock(2, 4, 25, 20),
+
+    new CloseBlock(22, 18, 40, 10),
+    new CloseBlock(22, 17, 40, 10, 40),
+    new CloseBlock(22, 16, 40, 10, 30),
+    new CloseBlock(22, 15, 40, 10, 20),
+    new CloseBlock(22, 14, 40, 10, 10),
+    new CloseBlock(22, 13, 40, 10),
+    new CloseBlock(22, 12, 40, 10, 40),
+    new CloseBlock(22, 11, 40, 10, 30),
+    new CloseBlock(22, 10, 40, 10, 20),
+    new CloseBlock(22, 9, 40, 10, 10),
+    new CloseBlock(22, 8, 40, 10),
+    new CloseBlock(22, 7, 40, 10, 40),
+
+    new CloseBlock(15, 1, 20, 20),
+    new CloseBlock(15, 2, 20, 20),
+    new CloseBlock(16, 1, 20, 20),
+    new CloseBlock(16, 2, 20, 20),
+
+    new CloseBlock(19, 1, 40, 20),
+    new CloseBlock(20, 1, 40, 20),
+    new CloseBlock(21, 2, 40, 20),
+    new CloseBlock(19, 2, 40, 20),
+    new CloseBlock(20, 2, 40, 20),
+    new CloseBlock(21, 2, 40, 20),
+  ];
+  ls.fireWall = [
+    new FireballWall(20.5, 9.5, -0.1, 0, 50, 5),
+    new FireballWall(20.5, 10.5, -0.1, 0, 50, 5),
+
+    new FireballWall(20.5, 9.5, -0.1, 0, 50, 10),
+    new FireballWall(20.5, 10.5, -0.1, 0, 50, 10),
+
+    new FireballWall(20.5, 9.5, -0.1, 0, 50),
+    new FireballWall(20.5, 10.5, -0.1, 0, 50),
+
+    new FireballWall(1.5, 23.5, 0, -0.1, 100),
+    new FireballWall(2.5, 23.5, 0, -0.1, 100, 50),
+
+    new FireballWall(23.5, 20.5, -0.1, 0, 300),
+    new FireballWall(23.5, 21.5, -0.1, 0, 300, 150),
+
+    new FireballWall(4.5, 3.5, 0.1, 0, 200),
+    new FireballWall(4.5, 4.5, 0.1, 0, 200),
+  ];
   ls.floorTex = 2;
   ls.ceilingTex = 5;
+  ls.sprites = [
+    {
+      x: 12.5,
+      y: 15.5,
+      texture: 19,
+      type: new Skeleton(12.5, 15.5, 300, 3, 10),
+    },
 
-  ls.sprites = [];
+    {
+      x: 2.5,
+      y: 15.5,
+      texture: 19,
+      type: new Skeleton(2.5, 15.5, 300, 3, 10),
+    },
+
+    {
+      x: 5.5,
+      y: 13.5,
+      texture: 3,
+      type: new Mage(5.5, 13.5, 10, 0.15, 100, 20),
+    },
+
+    {
+      x: 5.5,
+      y: 17.5,
+      texture: 3,
+      type: new Mage(5.5, 17.5, 10, 0.15, 100, 20),
+    },
+
+    { x: 9.5, y: 19.5, texture: 5, type: new Slime(9.5, 19.5, 50, 1, 20) },
+    { x: 9.5, y: 22.5, texture: 5, type: new Slime(9.5, 22.5, 50, 1, 20) },
+    { x: 5.5, y: 21, texture: 5, type: new Slime(5.5, 21, 50, 1, 20) },
+
+    {
+      x: 21,
+      y: 21,
+      texture: 19,
+      type: new Skeleton(21, 21, 300, 4, 20),
+    },
+
+    {
+      x: 9,
+      y: 4,
+      texture: 13,
+      type: new SpikeBall(1, -0.1, { x: 9, y: 4 }),
+    },
+    {
+      x: 9,
+      y: 4,
+      texture: 13,
+      type: new SpikeBall(2, -0.1, { x: 9, y: 4 }),
+    },
+    {
+      x: 9,
+      y: 4,
+      texture: 13,
+      type: new SpikeBall(3, -0.1, { x: 9, y: 4 }),
+    },
+
+    {
+      x: 20.5,
+      y: 7.5,
+      texture: 13,
+      type: new SpikeBall(1.2, 0.2, { x: 20.5, y: 7.5 }),
+    },
+    {
+      x: 20.5,
+      y: 7.5,
+      texture: 13,
+      type: new SpikeBall(1.2, 0.2, { x: 20.5, y: 7.5 }, 180),
+    },
+    {
+      x: 20.5,
+      y: 4.5,
+      texture: 13,
+      type: new SpikeBall(1.2, -0.2, { x: 20.5, y: 4.5 }, 180),
+    },
+    {
+      x: 20.5,
+      y: 4.5,
+      texture: 13,
+      type: new SpikeBall(1.2, -0.2, { x: 20.5, y: 4.5 }),
+    },
+  ];
 }
 function level10(ls: levelSettings) {}
+
+function level11(ls: levelSettings) {
+  const direction = getPlayerDirection(-90);
+  ls.player.dirX = direction.dirX;
+  ls.player.dirY = direction.dirY;
+  ls.player.planeX = direction.planeX;
+  ls.player.planeY = direction.planeY;
+
+  ls.player.posX = 8.5;
+  ls.player.posY = 1.5;
+  ls.player.ammo = 10;
+
+  ls.player.holding = 1;
+  ls.player.reloadTimer = 100;
+
+  ls.player.inventory = {
+    flashlight: true,
+    gun: true,
+    run: true,
+    horn: false,
+    sword: true,
+    sheild: true,
+    dash: true,
+    teleport: true,
+  };
+
+  //map
+
+  ls.map.map = [
+    [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0],
+    [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+    [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+    [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+    [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+    [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+    [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+    [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+    [0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+  ];
+
+  ls.map.lightList = [];
+  ls.map.brightness = 0.8;
+
+  ls.moveWall = [];
+  ls.fireWall = [];
+  ls.floorTex = 5;
+  ls.ceilingTex = 5;
+
+  ls.sprites = [{ x: 8.5, y: 8.5, texture: 24, type: undefined }];
+}
 
 function level0(ls: levelSettings) {
   //player

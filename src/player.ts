@@ -2,8 +2,8 @@ import { sprite, spriteDistance, sortSprites } from "./sprite";
 import { keyMap } from "./keypress";
 import { Fireball } from "./fireball";
 import { Map } from "./map";
-import { levelSettings } from "./levels";
-import { Slime, Mage, Ghost } from "./enemy";
+import { setLevel, levelSettings } from "./levels";
+import { Slime, Mage, Ghost, Skeleton } from "./enemy";
 import { SpikeBall } from "./spikeball";
 import { level7BlockHit } from "./level7";
 
@@ -99,6 +99,8 @@ export class Player {
   turnSpeed: number;
   health: number = 1000;
   stamina: number = 1000;
+
+  reloadTimer = 1000;
 
   inventory: playerInv;
 
@@ -1533,14 +1535,14 @@ export class Player {
   }
 
   private gunUpdate() {
-    if (this.ammoCounter === 100) {
+    if (this.ammoCounter === this.reloadTimer) {
       if (this.ammo < 10) {
         ammoSound.play();
         this.ammo += 1;
       }
       this.ammoCounter = 0;
     }
-    // this.ammoCounter += 1;
+    this.ammoCounter += 1;
 
     if (this.gunCounter !== 0 && this.gunCounter < 100) {
       this.gunCounter += 5;
@@ -1776,7 +1778,7 @@ export class Player {
     }
     if (this.sheild) {
       if (this.health < 1000) {
-        this.health++;
+        this.health += 2;
       }
     }
 
@@ -1831,6 +1833,12 @@ export class Player {
               if (sprite.deadCounter === 0) {
                 this.takeDamage(100);
                 sprite.killed(ls);
+              } else {
+                hit = false;
+              }
+            } else if (sprite instanceof Skeleton) {
+              if (sprite.deadCounter === 0) {
+                this.takeDamage(150);
               } else {
                 hit = false;
               }
@@ -1914,7 +1922,8 @@ export class Player {
       if (
         sprite instanceof Slime ||
         sprite instanceof Mage ||
-        sprite instanceof Ghost
+        sprite instanceof Ghost ||
+        sprite instanceof Skeleton
       ) {
         if (sprite.deadCounter !== 0) {
           continue;
@@ -1946,8 +1955,15 @@ export class Player {
     }
   }
 
+  private healthUpdate(ls: levelSettings) {
+    if (this.health <= 0) {
+      setLevel(ls);
+    }
+  }
+
   update(ls: levelSettings): void {
     this.useUpdate(ls);
+    this.healthUpdate(ls);
 
     //seperate gun and sword update
     this.gunUpdate();
@@ -2025,7 +2041,8 @@ export class Bullet {
       if (
         sprite instanceof Ghost ||
         sprite instanceof Slime ||
-        sprite instanceof Mage
+        sprite instanceof Mage ||
+        sprite instanceof Skeleton
       ) {
         if (!sprite.alive || sprite.deadCounter !== 0) {
           continue;
@@ -2039,10 +2056,10 @@ export class Bullet {
           sprite.takeDamage(100);
           this.alive = false;
 
-          if (ls.player.ammo < 10 && sprite.health <= 0) {
-            ammoSound.play();
-            ls.player.ammo++;
-          }
+          // if (ls.player.ammo < 10 && sprite.health <= 0) {
+          //   ammoSound.play();
+          //   ls.player.ammo++;
+          // }
           break;
         }
       }

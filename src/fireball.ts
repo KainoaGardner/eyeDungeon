@@ -1,6 +1,6 @@
 import { levelSettings } from "./levels";
 import { sprite } from "./sprite";
-import { Slime, Mage } from "./enemy";
+import { Slime, Mage, Ghost, Skeleton } from "./enemy";
 import { ammoSound } from "./sounds";
 
 export class Fireball {
@@ -40,7 +40,12 @@ export class Fireball {
     if (this.reflect) {
       for (let i = 0; i < ls.sprites.length; i++) {
         const sprite = ls.sprites[i];
-        if (sprite.type instanceof Mage || sprite.type instanceof Slime) {
+        if (
+          sprite.type instanceof Mage ||
+          sprite.type instanceof Slime ||
+          sprite.type instanceof Ghost ||
+          sprite.type instanceof Skeleton
+        ) {
           const distance = Math.sqrt(
             (this.x - sprite.x) * (this.x - sprite.x) +
               (this.y - sprite.y) * (this.y - sprite.y),
