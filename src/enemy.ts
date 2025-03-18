@@ -9,7 +9,7 @@ const dir: pos[] = [
   { x: 1, y: 0 },
 ];
 
-class Enemy {
+export class Enemy {
   x: number;
   y: number;
   health: number;
@@ -31,7 +31,7 @@ class Enemy {
     this.x = x;
     this.y = y;
     this.speed = speed;
-    this.movePos = { x: x, y: x };
+    this.movePos = { x: x, y: y };
     this.health = health;
     this.agroDist = agroDist;
   }
@@ -76,7 +76,7 @@ class Enemy {
     }
   }
 
-  getNextPos(playerPos: pos, map: number[][]) {
+  private getNextPos(playerPos: pos, map: number[][]): pos {
     const m = map.length;
     const n = map[0].length;
     const parent: pos[][] = new Array(m)

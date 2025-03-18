@@ -4,6 +4,7 @@ import { Fireball } from "./fireball";
 import { Map } from "./map";
 import { setLevel, levelSettings } from "./levels";
 import { Slime, Mage, Ghost, Skeleton } from "./enemy";
+import { Boss } from "./boss";
 import { SpikeBall } from "./spikeball";
 import { level7BlockHit } from "./level7";
 
@@ -1842,6 +1843,12 @@ export class Player {
               } else {
                 hit = false;
               }
+            } else if (sprite instanceof Boss) {
+              if (sprite.deadCounter === 0) {
+                this.takeDamage(150);
+              } else {
+                hit = false;
+              }
             } else if (sprite instanceof SpikeBall) {
               this.takeDamage(300);
             } else {
@@ -1923,7 +1930,8 @@ export class Player {
         sprite instanceof Slime ||
         sprite instanceof Mage ||
         sprite instanceof Ghost ||
-        sprite instanceof Skeleton
+        sprite instanceof Skeleton ||
+        sprite instanceof Boss
       ) {
         if (sprite.deadCounter !== 0) {
           continue;
@@ -1933,10 +1941,19 @@ export class Player {
           this.swordCounter > 0 &&
           this.swordCounter < 50
         ) {
-          if (Math.abs(transformX) < 0.5 && transformY > 0 && transformY < 1) {
+          if (
+            Math.abs(transformX) < 0.5 &&
+            transformY > 0 &&
+            transformY < 1.5
+          ) {
             sprite.takeDamage(10);
-            sprite.x += this.dirX * 0.1;
-            sprite.y += this.dirY * 0.1;
+            if (sprite instanceof Boss) {
+              sprite.x += this.dirX * 0.02;
+              sprite.y += this.dirY * 0.02;
+            } else {
+              sprite.x += this.dirX * 0.1;
+              sprite.y += this.dirY * 0.1;
+            }
           }
         }
         if (
@@ -2042,7 +2059,8 @@ export class Bullet {
         sprite instanceof Ghost ||
         sprite instanceof Slime ||
         sprite instanceof Mage ||
-        sprite instanceof Skeleton
+        sprite instanceof Skeleton ||
+        sprite instanceof Boss
       ) {
         if (!sprite.alive || sprite.deadCounter !== 0) {
           continue;

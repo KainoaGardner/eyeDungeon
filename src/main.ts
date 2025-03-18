@@ -5,6 +5,7 @@ import { spriteUpdate, sprite } from "./sprite";
 import { CloseBlock } from "./closeblock";
 import { setLevel, levelUpdate } from "./levels";
 import { FireballWall } from "./fireball";
+import { Boss } from "./boss";
 
 document.body.style.overflow = "hidden";
 
@@ -39,6 +40,12 @@ function drawFrame(): void {
   c.clearRect(0, 0, canvas.width, canvas.height);
   ls.player.drawView(ls);
   ls.player.drawUi(ls.map.map);
+
+  for (let i = 0; i < ls.sprites.length; i++) {
+    if (ls.sprites[i].type instanceof Boss) {
+      ls.sprites[i].type.drawHealthBar();
+    }
+  }
 }
 
 function updateFrame(): void {

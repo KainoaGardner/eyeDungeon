@@ -2,6 +2,7 @@ import { Fireball } from "./fireball";
 import { levelSettings } from "./levels";
 import { Teleport } from "./player";
 import { Slime, Mage, Ghost, Skeleton } from "./enemy";
+import { Boss } from "./boss";
 import { SpikeBall } from "./spikeball";
 import { Bullet } from "./player";
 
@@ -157,6 +158,54 @@ function spriteUpdate(ls: levelSettings) {
         sprite.texture = 19;
       } else {
         sprite.texture = 20;
+      }
+      if (!sprite.type.alive) {
+        ls.sprites.splice(i, 1);
+      }
+    } else if (ls.sprites[i].type instanceof Boss) {
+      if (sprite.type.deadCounter === 0) {
+        sprite.x = sprite.type.x;
+        sprite.y = sprite.type.y;
+
+        sprite.type.update(ls);
+      }
+
+      sprite.type.hurtUpdate();
+      if (sprite.type.deadCounter > 0 && sprite.type.deadCounter < 20) {
+        sprite.texture = 31;
+      } else if (sprite.type.deadCounter > 19 && sprite.type.deadCounter < 40) {
+        sprite.texture = 32;
+      } else if (sprite.type.deadCounter > 39) {
+        sprite.texture = 33;
+      } else if (sprite.type.hurtCounter > 0) {
+        sprite.texture = 30;
+      } else {
+        switch (sprite.type.attack) {
+          case 1:
+          case 2:
+            sprite.texture = 25;
+            break;
+          case 3:
+          case 4:
+            sprite.texture = 26;
+            break;
+          case 5:
+          case 6:
+            sprite.texture = 27;
+            break;
+          case 7:
+          case 8:
+            sprite.texture = 28;
+            break;
+          case 9:
+          case 10:
+            sprite.texture = 29;
+            break;
+
+          default:
+            sprite.texture = 24;
+            break;
+        }
       }
       if (!sprite.type.alive) {
         ls.sprites.splice(i, 1);

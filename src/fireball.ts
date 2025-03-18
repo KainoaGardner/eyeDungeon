@@ -1,6 +1,6 @@
 import { levelSettings } from "./levels";
-import { sprite } from "./sprite";
 import { Slime, Mage, Ghost, Skeleton } from "./enemy";
+import { Boss } from "./boss";
 import { ammoSound } from "./sounds";
 
 export class Fireball {
@@ -44,7 +44,8 @@ export class Fireball {
           sprite.type instanceof Mage ||
           sprite.type instanceof Slime ||
           sprite.type instanceof Ghost ||
-          sprite.type instanceof Skeleton
+          sprite.type instanceof Skeleton ||
+          sprite.type instanceof Boss
         ) {
           const distance = Math.sqrt(
             (this.x - sprite.x) * (this.x - sprite.x) +
