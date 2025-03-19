@@ -12,7 +12,7 @@ const wallTextures = new Array(14)
 
 const bgTextures = new Array(6).fill(null).map(() => Array(texWidth).fill(0));
 
-const spriteTextures = new Array(34)
+const spriteTextures = new Array(38)
   .fill(null)
   .map(() => Array(spriteTexWidth).fill(0));
 
@@ -50,7 +50,7 @@ function addTexture(
   const tex = new Image();
   if (tex instanceof HTMLElement) {
     tex.src = path;
-    tex.addEventListener("load", function () {
+    tex.addEventListener("load", function() {
       getTexture(tex, texList, index, texWidth, texHeight, textures);
     });
   }
@@ -353,6 +353,37 @@ addTexture(
 addTexture(
   "/img/sprites/boss9.png",
   33,
+  spriteTexWidth,
+  spriteTexHeight,
+  spriteTextures,
+);
+
+addTexture(
+  "/img/sprites/boss10.png",
+  34,
+  spriteTexWidth,
+  spriteTexHeight,
+  spriteTextures,
+);
+addTexture(
+  "/img/sprites/boss11.png",
+  35,
+  spriteTexWidth,
+  spriteTexHeight,
+  spriteTextures,
+);
+
+addTexture(
+  "/img/sprites/boss12.png",
+  36,
+  spriteTexWidth,
+  spriteTexHeight,
+  spriteTextures,
+);
+
+addTexture(
+  "/img/sprites/boss13.png",
+  36,
   spriteTexWidth,
   spriteTexHeight,
   spriteTextures,

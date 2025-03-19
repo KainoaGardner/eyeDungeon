@@ -134,6 +134,7 @@ function spriteUpdate(ls: levelSettings) {
 
       if (sprite.type.timeCounter > sprite.type.timeLimit) {
         ls.sprites.splice(i, 1);
+        console.log("killed ghost")
       }
     } else if (ls.sprites[i].type instanceof Skeleton) {
       if (sprite.type.deadCounter === 0) {
@@ -168,17 +169,37 @@ function spriteUpdate(ls: levelSettings) {
         sprite.y = sprite.type.y;
 
         sprite.type.update(ls);
+      } else if (sprite.type.deadCounter === 1) {
+        ls.moveWall = [];
+        for (let i = 0; i < ls.map.map.length; i++) {
+          for (let j = 0; j < ls.map.map[0].length; j++) {
+            if (ls.map.map[i][j] === 7) {
+              ls.map.map[i][j] = 0;
+            }
+          }
+        }
+        for (let i = ls.sprites.length - 1; i > -1; i--) {
+          const sprite = ls.sprites[i].type;
+          if (
+            sprite instanceof Slime ||
+            sprite instanceof Mage ||
+            sprite instanceof Ghost ||
+            sprite instanceof Skeleton ||
+            sprite instanceof SpikeBall) {
+            ls.sprites.splice(i, 1);
+          }
+        }
       }
 
       sprite.type.hurtUpdate();
       if (sprite.type.deadCounter > 0 && sprite.type.deadCounter < 20) {
-        sprite.texture = 31;
+        sprite.texture = 35;
       } else if (sprite.type.deadCounter > 19 && sprite.type.deadCounter < 40) {
-        sprite.texture = 32;
+        sprite.texture = 36;
       } else if (sprite.type.deadCounter > 39) {
-        sprite.texture = 33;
-      } else if (sprite.type.hurtCounter > 0) {
-        sprite.texture = 30;
+        sprite.texture = 37;
+      } else if (sprite.type.hurtCounter > 0 && sprite.type.hurtCounter < 5) {
+        sprite.texture = 34;
       } else {
         switch (sprite.type.attack) {
           case 1:
@@ -190,15 +211,26 @@ function spriteUpdate(ls: levelSettings) {
             sprite.texture = 26;
             break;
           case 5:
-          case 6:
             sprite.texture = 27;
             break;
+          case 6:
+            sprite.texture = 30;
+            break;
           case 7:
+            sprite.texture = 31;
+            break;
           case 8:
-            sprite.texture = 28;
+            sprite.texture = 32;
             break;
           case 9:
+            sprite.texture = 33;
+            break;
           case 10:
+          case 11:
+            sprite.texture = 28;
+            break;
+          case 12:
+          case 13:
             sprite.texture = 29;
             break;
 

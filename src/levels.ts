@@ -578,19 +578,19 @@ function level3(ls: levelSettings) {
   ls.ceilingTex = 5;
 
   ls.sprites = [
-    { x: 13, y: 28, texture: 5, type: new Slime(13, 28, 50, 2, 10) },
-    { x: 14, y: 24, texture: 5, type: new Slime(14, 24, 100, 2, 10) },
-    { x: 15, y: 16, texture: 5, type: new Slime(15, 16, 100, 2, 10) },
-    { x: 12, y: 17, texture: 5, type: new Slime(12, 17, 100, 1, 10) },
-    { x: 12, y: 20, texture: 5, type: new Slime(12, 20, 50, 3, 10) },
+    { x: 13, y: 28, texture: 8, type: new Slime(13, 28, 50, 2, 10) },
+    { x: 14, y: 24, texture: 8, type: new Slime(14, 24, 100, 2, 10) },
+    { x: 15, y: 16, texture: 8, type: new Slime(15, 16, 100, 2, 10) },
+    { x: 12, y: 17, texture: 8, type: new Slime(12, 17, 100, 1, 10) },
+    { x: 12, y: 20, texture: 8, type: new Slime(12, 20, 50, 3, 10) },
 
-    { x: 22, y: 16, texture: 5, type: new Slime(22, 16, 100, 2, 10) },
-    { x: 22, y: 18, texture: 5, type: new Slime(22, 18, 100, 2, 10) },
-    { x: 22, y: 24, texture: 5, type: new Slime(22, 24, 100, 1, 6) },
-    { x: 18, y: 26, texture: 5, type: new Slime(18, 26, 50, 3, 6) },
+    { x: 22, y: 16, texture: 8, type: new Slime(22, 16, 100, 2, 10) },
+    { x: 22, y: 18, texture: 8, type: new Slime(22, 18, 100, 2, 10) },
+    { x: 22, y: 24, texture: 8, type: new Slime(22, 24, 100, 1, 6) },
+    { x: 18, y: 26, texture: 8, type: new Slime(18, 26, 50, 3, 6) },
 
-    { x: 18, y: 26, texture: 5, type: new Slime(18, 26, 100, 3, 6) },
-    { x: 22, y: 26, texture: 5, type: new Slime(22, 26, 100, 3, 6) },
+    { x: 18, y: 26, texture: 8, type: new Slime(18, 26, 100, 3, 6) },
+    { x: 22, y: 26, texture: 8, type: new Slime(22, 26, 100, 3, 6) },
     { x: 20, y: 29, texture: 3, type: new Mage(20, 29, 10, 0.2, 50, 20) },
 
     {

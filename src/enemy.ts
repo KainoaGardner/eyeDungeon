@@ -60,7 +60,7 @@ export class Enemy {
 
     const distance = Math.sqrt(
       (this.x - this.movePos.y) * (this.x - this.movePos.y) +
-        (this.y - this.movePos.x) * (this.y - this.movePos.x),
+      (this.y - this.movePos.x) * (this.y - this.movePos.x),
     );
     if (distance < moveSpeed) {
       this.x = this.movePos.y;
@@ -250,7 +250,7 @@ export class Mage extends Enemy {
   update(ls: levelSettings) {
     const distance = Math.sqrt(
       (this.x - ls.player.posX) * (this.x - ls.player.posX) +
-        (this.y - ls.player.posY) * (this.y - ls.player.posY),
+      (this.y - ls.player.posY) * (this.y - ls.player.posY),
     );
 
     if (distance < this.agroDist) {
