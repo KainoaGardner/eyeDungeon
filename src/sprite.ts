@@ -134,7 +134,6 @@ function spriteUpdate(ls: levelSettings) {
 
       if (sprite.type.timeCounter > sprite.type.timeLimit) {
         ls.sprites.splice(i, 1);
-        console.log("killed ghost")
       }
     } else if (ls.sprites[i].type instanceof Skeleton) {
       if (sprite.type.deadCounter === 0) {

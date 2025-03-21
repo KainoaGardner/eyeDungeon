@@ -2104,7 +2104,7 @@ function level11(ls: levelSettings) {
   ls.ceilingTex = 5;
 
   ls.sprites = [
-    { x: 8.5, y: 8.5, texture: 24, type: new Boss(8.5, 8.5, 3000, 10) },
+    { x: 8.5, y: 8.5, texture: 24, type: new Boss(8.5, 8.5, 5000, 10) },
   ];
 }
 

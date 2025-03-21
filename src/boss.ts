@@ -10,6 +10,7 @@ export class Boss {
   x: number;
   y: number;
   health: number;
+  private startHealth: number;
   speed: number;
   deadCounter = 0;
   alive: boolean = true;
@@ -20,6 +21,8 @@ export class Boss {
   attack = 0;
   private attackCounter = 0;
   private wallChoice = 0;
+  private chaseCounter = 0;
+
 
   constructor(x: number, y: number, health: number, speed: number, attack: number = 0,) {
     this.x = x;
@@ -27,15 +30,14 @@ export class Boss {
     this.speed = speed;
     this.movePos = { x: x, y: y };
     this.health = health;
+    this.startHealth = health;
     this.attack = attack;
   }
 
   private chooseAttack(): number {
     this.attackCounter = 1;
 
-    // const attack = Math.floor(Math.random() * 11);
-    // const attack = Math.floor(Math.random() * 3) + 2;
-    const attack = 13;
+    const attack = Math.floor(Math.random() * 17);
     this.attack = attack;
 
     return attack;
@@ -746,7 +748,7 @@ export class Boss {
   }
 
   private attack5() {
-    if (this.health / 3000 > 0.7 || this.attackCounter === 50) {
+    if (this.health / this.startHealth > 0.7 || this.attackCounter === 50) {
       this.attackCounter = 0;
     } else {
       this.health += 5;
@@ -842,57 +844,72 @@ export class Boss {
   }
 
   private attack11(ls: levelSettings) {
-    if (this.attackCounter === 150) {
+    if (this.attackCounter === 30) {
+      this.movePos = { x: ls.player.posY, y: ls.player.posX }
+    }
+
+    if (this.attackCounter < 30) {
+      return;
+    }
+
+    if (this.chaseCounter == 30) {
+      this.movePos = { x: ls.player.posY, y: ls.player.posX }
+      this.chaseCounter = 0;
+    }
+
+    if (this.chaseCounter !== 0) {
+      this.chaseCounter++
+      return;
+    }
+
+
+    const moveSpeed = this.speed / 75;
+    const distance = Math.sqrt((this.x - this.movePos.y) * (this.x - this.movePos.y) +
+      (this.y - this.movePos.x) * (this.y - this.movePos.x));
+    if (distance < moveSpeed) {
+      this.x = this.movePos.y;
+      this.y = this.movePos.x;
+      this.chaseCounter = 1;
+    } else {
+      const xDif = this.x - this.movePos.y;
+      const yDif = this.y - this.movePos.x;
+      const angle = Math.atan2(yDif, xDif);
+      const moveX = moveSpeed * Math.cos(angle);
+      const moveY = moveSpeed * Math.sin(angle);
+      this.x -= moveX;
+      this.y -= moveY;
+    }
+
+    if (this.attackCounter >= 200) {
       this.attackCounter = 0;
     }
+
   }
 
   private attack12(ls: levelSettings) {
-    if (this.attackCounter === 30) {
+    if (this.attackCounter === 30 ||
+      this.attackCounter === 46 ||
+      this.attackCounter === 61 ||
+      this.attackCounter === 77) {
       ls.sprites.push(
         { x: this.x, y: this.y, texture: 13, type: new SpikeBall(1, 0.1, { x: this.x, y: this.y }) },
       )
     }
-    if (this.attackCounter === 50) {
+
+    if (this.attackCounter === 30 ||
+      this.attackCounter === 38 ||
+      this.attackCounter === 46 ||
+      this.attackCounter === 53 ||
+      this.attackCounter === 60 ||
+      this.attackCounter === 68 ||
+      this.attackCounter === 76 ||
+      this.attackCounter === 84
+    ) {
       ls.sprites.push(
-        {
-          x: this.x, y: this.y, texture: 13,
-          type: new SpikeBall(2, 0.1, { x: this.x, y: this.y }, 0.1 * 180 / Math.PI * 20)
-        },
+        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(2, -0.1, { x: this.x, y: this.y }) },
       )
     }
-    if (this.attackCounter === 70) {
-      ls.sprites.push(
-        {
-          x: this.x, y: this.y, texture: 13,
-          type: new SpikeBall(3, 0.1, { x: this.x, y: this.y }, 0.1 * 180 / Math.PI * 40)
-        },
-      )
-    }
-    if (this.attackCounter === 90) {
-      ls.sprites.push(
-        {
-          x: this.x, y: this.y, texture: 13,
-          type: new SpikeBall(4, 0.1, { x: this.x, y: this.y }, 0.1 * 180 / Math.PI * 60)
-        },
-      )
-    }
-    if (this.attackCounter === 110) {
-      ls.sprites.push(
-        {
-          x: this.x, y: this.y, texture: 13,
-          type: new SpikeBall(5, 0.1, { x: this.x, y: this.y }, 0.1 * 180 / Math.PI * 80)
-        },
-      )
-    }
-    if (this.attackCounter === 130) {
-      ls.sprites.push(
-        {
-          x: this.x, y: this.y, texture: 13,
-          type: new SpikeBall(6, 0.1, { x: this.x, y: this.y }, 0.1 * 180 / Math.PI * 100)
-        },
-      )
-    }
+
 
     if (this.attackCounter === 150) {
       this.attackCounter = 0;
@@ -907,37 +924,61 @@ export class Boss {
   private attack13(ls: levelSettings) {
     if (this.attackCounter === 30) {
       ls.sprites.push(
-        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(1, 0.05, { x: this.x, y: this.y }) },
-        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(1, 0.05, { x: this.x, y: this.y }, 180) },
+        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(1, 0.03, { x: this.x, y: this.y }) },
+        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(1, 0.03, { x: this.x, y: this.y }, 180) },
       )
     }
     if (this.attackCounter === 40) {
       ls.sprites.push(
-        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(2, 0.05, { x: this.x, y: this.y }, 0.05 * 180 / Math.PI * 10) },
-        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(2, 0.05, { x: this.x, y: this.y }, 0.05 * 180 / Math.PI * 10 + 180) },
+        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(2, 0.03, { x: this.x, y: this.y }, 0.03 * 180 / Math.PI * 10) },
+        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(2, 0.03, { x: this.x, y: this.y }, 0.03 * 180 / Math.PI * 10 + 180) },
       )
     }
 
     if (this.attackCounter === 50) {
       ls.sprites.push(
-        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(3, 0.05, { x: this.x, y: this.y }, 0.05 * 180 / Math.PI * 20) },
-        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(3, 0.05, { x: this.x, y: this.y }, 0.05 * 180 / Math.PI * 20 + 180) },
+        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(3, 0.03, { x: this.x, y: this.y }, 0.03 * 180 / Math.PI * 20) },
+        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(3, 0.03, { x: this.x, y: this.y }, 0.03 * 180 / Math.PI * 20 + 180) },
       )
     }
 
     if (this.attackCounter === 60) {
       ls.sprites.push(
-        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(4, 0.05, { x: this.x, y: this.y }, 0.05 * 180 / Math.PI * 30) },
-        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(4, 0.05, { x: this.x, y: this.y }, 0.05 * 180 / Math.PI * 30 + 180) },
+        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(4, 0.03, { x: this.x, y: this.y }, 0.03 * 180 / Math.PI * 30) },
+        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(4, 0.03, { x: this.x, y: this.y }, 0.03 * 180 / Math.PI * 30 + 180) },
       )
     }
 
     if (this.attackCounter === 70) {
       ls.sprites.push(
-        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(5, 0.05, { x: this.x, y: this.y }, 0.05 * 180 / Math.PI * 40) },
-        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(5, 0.05, { x: this.x, y: this.y }, 0.05 * 180 / Math.PI * 40 + 180) },
+        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(5, 0.03, { x: this.x, y: this.y }, 0.03 * 180 / Math.PI * 40) },
+        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(5, 0.03, { x: this.x, y: this.y }, 0.03 * 180 / Math.PI * 40 + 180) },
       )
     }
+
+    if (this.attackCounter === 80) {
+      ls.sprites.push(
+        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(6, 0.03, { x: this.x, y: this.y }, 0.03 * 180 / Math.PI * 50) },
+        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(6, 0.03, { x: this.x, y: this.y }, 0.03 * 180 / Math.PI * 50 + 180) },
+      )
+    }
+
+    if (this.attackCounter === 90) {
+      ls.sprites.push(
+        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(7, 0.03, { x: this.x, y: this.y }, 0.03 * 180 / Math.PI * 60) },
+        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(7, 0.03, { x: this.x, y: this.y }, 0.03 * 180 / Math.PI * 60 + 180) },
+      )
+    }
+
+    if (this.attackCounter === 100) {
+      ls.sprites.push(
+        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(8, 0.03, { x: this.x, y: this.y }, 0.03 * 180 / Math.PI * 70) },
+        { x: this.x, y: this.y, texture: 13, type: new SpikeBall(8, 0.03, { x: this.x, y: this.y }, 0.03 * 180 / Math.PI * 70 + 180) },
+      )
+    }
+
+
+
 
 
     if (this.attackCounter === 300) {
@@ -950,24 +991,12 @@ export class Boss {
     }
   }
 
-
-  private temp() {
-    if (this.attackCounter === 100) {
-      this.attackCounter = 0;
-    }
-  }
-
   update(ls: levelSettings) {
-    console.log(this.attack);
     if (this.attackCounter === 0) {
       this.attack = this.chooseAttack();
     }
 
     switch (this.attack) {
-      case 0:
-        this.moveUpdate(ls.map.map);
-        break;
-
       case 1:
         this.attack1(ls);
         break;
@@ -1009,7 +1038,7 @@ export class Boss {
         break;
 
       default:
-        this.temp();
+        this.moveUpdate(ls.map.map);
         break;
     }
     if (this.attackCounter !== 0) {
@@ -1019,7 +1048,6 @@ export class Boss {
 
   moveUpdate(map: number[][]) {
     const moveSpeed = this.speed / 100;
-
     const distance = Math.sqrt((this.x - this.movePos.y) * (this.x - this.movePos.y) +
       (this.y - this.movePos.x) * (this.y - this.movePos.x));
     if (distance < moveSpeed) {
@@ -1073,7 +1101,7 @@ export class Boss {
   drawHealthBar() {
     if (this.deadCounter === 0) {
       c.fillStyle = "#e74c3c";
-      c.fillRect(canvas.width / 2 - (this.health * UIRatio) / 3 / 20, UIRatio, (this.health * UIRatio) / 3 / 10, 5 * UIRatio);
+      c.fillRect(canvas.width / 2 - (this.health * UIRatio) / (this.startHealth / 1000) / 20, UIRatio, (this.health * UIRatio) / (this.startHealth / 1000) / 10, 5 * UIRatio);
     }
   }
 }

@@ -320,8 +320,8 @@ export class Player {
         ) {
           const texX = Math.floor(
             (256 * (x - (-spriteWidth / 2 + spriteScreenX)) * spriteTexWidth) /
-              spriteWidth /
-              256,
+            spriteWidth /
+            256,
           );
 
           zBuffer[x] = transformY;
@@ -330,7 +330,7 @@ export class Player {
             const texY = Math.floor((d * spriteTexHeight) / spriteHeight / 256);
             const color =
               spriteTextures[sprites[spriteDistance[i].index].texture][
-                spriteTexWidth * texY + texX
+              spriteTexWidth * texY + texX
               ];
             if (
               color !== undefined &&
@@ -550,7 +550,7 @@ export class Player {
 
       const distance = Math.sqrt(
         (wallY - lightY) * (wallY - lightY) +
-          (wallX - lightX) * (wallX - lightX),
+        (wallX - lightX) * (wallX - lightX),
       );
 
       if (distance < min) {
@@ -568,7 +568,7 @@ export class Player {
 
         const distance = Math.sqrt(
           (wallY - spriteY) * (wallY - spriteY) +
-            (wallX - spriteX) * (wallX - spriteX),
+          (wallX - spriteX) * (wallX - spriteX),
         );
 
         if (distance < min) {
@@ -579,7 +579,7 @@ export class Player {
 
     const playerDistance = Math.sqrt(
       (this.posX - wallY) * (this.posX - wallY) +
-        (this.posY - wallX) * (this.posY - wallX),
+      (this.posY - wallX) * (this.posY - wallX),
     );
 
     if (playerDistance < min) {
@@ -1034,8 +1034,8 @@ export class Player {
       c.fillRect(
         62 * UIRatio,
         canvas.height -
-          22 * UIRatio +
-          UIRatio * (this.sheildCounter / 1000) * 20,
+        22 * UIRatio +
+        UIRatio * (this.sheildCounter / 1000) * 20,
         20 * UIRatio,
         20 * UIRatio - UIRatio * (this.sheildCounter / 1000) * 20,
       );
@@ -1421,11 +1421,11 @@ export class Player {
     if (keyMap.get("ArrowUp") || keyMap.get("KeyW")) {
       const forwardX =
         map[Math.floor(this.posX + this.dirX * this.speed * this.radius)][
-          Math.floor(this.posY)
+        Math.floor(this.posY)
         ];
       const forwardY =
         map[Math.floor(this.posX)][
-          Math.floor(this.posY + this.dirY * this.speed * this.radius)
+        Math.floor(this.posY + this.dirY * this.speed * this.radius)
         ];
 
       if (
@@ -1448,11 +1448,11 @@ export class Player {
 
     const backwardX =
       map[Math.floor(this.posX)][
-        Math.floor(this.posY - this.dirY * this.speed * this.radius)
+      Math.floor(this.posY - this.dirY * this.speed * this.radius)
       ];
     const backwardY =
       map[Math.floor(this.posX - this.dirX * this.speed * this.radius)][
-        Math.floor(this.posY)
+      Math.floor(this.posY)
       ];
 
     if (keyMap.get("ArrowDown") || keyMap.get("KeyS")) {
@@ -1724,11 +1724,11 @@ export class Player {
         if (keyMap.get("ArrowUp") || keyMap.get("KeyW")) {
           const forwardX =
             map[
-              Math.floor(this.posX + this.dirX * this.speed * this.radius * 1)
+            Math.floor(this.posX + this.dirX * this.speed * this.radius * 1)
             ][Math.floor(this.posY)];
           const forwardY =
             map[Math.floor(this.posX)][
-              Math.floor(this.posY + this.dirY * this.speed * this.radius * 1)
+            Math.floor(this.posY + this.dirY * this.speed * this.radius * 1)
             ];
 
           if (forwardX === 0 || forwardX === 4) {
@@ -1740,11 +1740,11 @@ export class Player {
         } else if (keyMap.get("ArrowDown") || keyMap.get("KeyS")) {
           const backwardX =
             map[Math.floor(this.posX)][
-              Math.floor(this.posY - this.dirY * this.speed * this.radius)
+            Math.floor(this.posY - this.dirY * this.speed * this.radius)
             ];
           const backwardY =
             map[Math.floor(this.posX - this.dirX * this.speed * this.radius)][
-              Math.floor(this.posY)
+            Math.floor(this.posY)
             ];
 
           if (keyMap.get("ArrowDown") || keyMap.get("KeyS")) {
@@ -1815,7 +1815,7 @@ export class Player {
           const sprite = ls.sprites[i].type;
           const distance = Math.sqrt(
             (this.posX - sprite.x) * (this.posX - sprite.x) +
-              (this.posY - sprite.y) * (this.posY - sprite.y),
+            (this.posY - sprite.y) * (this.posY - sprite.y),
           );
           let hit = distance < this.radius / 2;
 
@@ -1965,7 +1965,7 @@ export class Player {
           sprite.takeDamage(10);
         }
       }
-      if (this.ammo < 10 && sprite.health <= 0) {
+      if (this.ammo < 10 && sprite.health <= 0 && !(sprite instanceof Ghost)) {
         ammoSound.play();
         this.ammo++;
       }
@@ -2067,7 +2067,7 @@ export class Bullet {
         }
         const distance = Math.sqrt(
           (sprite.x - this.x) * (sprite.x - this.x) +
-            (sprite.y - this.y) * (sprite.y - this.y),
+          (sprite.y - this.y) * (sprite.y - this.y),
         );
 
         if (distance < 0.6) {
