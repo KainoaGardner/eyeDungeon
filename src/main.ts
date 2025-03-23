@@ -1,16 +1,18 @@
 import { canvas, c, targetFps } from "./global";
 import { Player } from "./player";
 import { Map } from "./map";
+import { Cutscene } from "./cutscenes";
 import { spriteUpdate, sprite } from "./sprite";
 import { CloseBlock } from "./closeblock";
 import { setLevel, levelUpdate } from "./levels";
 import { FireballWall } from "./fireball";
 import { Boss } from "./boss";
+import { Screen } from "./screens"
 
 document.body.style.overflow = "hidden";
 
 const ls = {
-  level: 11,
+  level: 0,
   player: new Player(0, 0, 1, 0.04, 0.05, {
     flashlight: false,
     gun: false,
@@ -27,9 +29,13 @@ const ls = {
   fireWall: new Array<FireballWall>(),
   floorTex: 1,
   ceilingTex: 2,
+  cutscene: new Cutscene(0, 1),
 };
 
 setLevel(ls);
+
+let screen = 0;
+const homeScreen = new Screen();
 
 function main(): void {
   drawFrame();
@@ -37,37 +43,57 @@ function main(): void {
 
 function drawFrame(): void {
   requestAnimationFrame(main);
-  c.clearRect(0, 0, canvas.width, canvas.height);
-  ls.player.drawView(ls);
-  ls.player.drawUi(ls.map.map);
+  switch (screen) {
+    case 0:
+      homeScreen.homeScreen();
+      break;
+    case 1:
+      homeScreen.pauseScreen();
+      break;
+    case 2:
+      homeScreen.controls();
+      break;
+    default:
+      c.clearRect(0, 0, canvas.width, canvas.height);
+      if (ls.cutscene.frameCounter !== 0) {
+        ls.cutscene.update();
+      } else {
+        ls.player.drawView(ls);
+        ls.player.drawUi(ls.map.map);
 
-  for (let i = 0; i < ls.sprites.length; i++) {
-    if (ls.sprites[i].type instanceof Boss) {
-      ls.sprites[i].type.drawHealthBar();
-    }
+        for (let i = 0; i < ls.sprites.length; i++) {
+          if (ls.sprites[i].type instanceof Boss) {
+            ls.sprites[i].type.drawHealthBar();
+          }
+        }
+      }
+
+
   }
+
 }
 
 function updateFrame(): void {
   clearInterval(interval);
-  // showFps();
-  ls.player.update(ls);
-  spriteUpdate(ls);
-  levelUpdate(ls);
+  if (ls.cutscene.frameCounter === 0) {
+    // showFps();
+    ls.player.update(ls);
+    spriteUpdate(ls);
+    levelUpdate(ls);
 
-  for (let i = 0; i < ls.moveWall.length; i++) {
-    ls.moveWall[i].update(ls.map);
+    for (let i = 0; i < ls.moveWall.length; i++) {
+      ls.moveWall[i].update(ls.map);
+    }
+
+    for (let i = 0; i < ls.fireWall.length; i++) {
+      ls.fireWall[i].update(ls);
+    }
+
+    if (ls.player.goal(ls.map.map)) {
+      ls.level++;
+      setLevel(ls);
+    }
   }
-
-  for (let i = 0; i < ls.fireWall.length; i++) {
-    ls.fireWall[i].update(ls);
-  }
-
-  if (ls.player.goal(ls.map.map)) {
-    ls.level++;
-    setLevel(ls);
-  }
-
   interval = setInterval(updateFrame, 1000 / targetFps);
 }
 

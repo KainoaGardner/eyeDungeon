@@ -6,6 +6,7 @@ const texHeight = 16;
 const spriteTexWidth = 32;
 const spriteTexHeight = 32;
 
+
 const wallTextures = new Array(14)
   .fill(null)
   .map(() => Array(texWidth).fill(0));
@@ -15,6 +16,9 @@ const bgTextures = new Array(6).fill(null).map(() => Array(texWidth).fill(0));
 const spriteTextures = new Array(38)
   .fill(null)
   .map(() => Array(spriteTexWidth).fill(0));
+
+
+const screens: CanvasImageSource[] = [];
 
 function getTexture(
   tex: any,
@@ -476,6 +480,25 @@ if (ammoImg instanceof HTMLElement) ammoImg.src = "/img/items/ammo.png";
 const errorImg = new Image();
 if (errorImg instanceof HTMLElement) errorImg.src = "/img/items/error.png";
 
+for (let i = 0; i < 4; i++) {
+  const screen = new Image();
+  if (screen instanceof HTMLElement) {
+    screen.src = `/img/screens/screen${i}.png`;
+    screens.push(screen);
+  }
+}
+
+// const titleTextImg = new Image();
+// if (titleTextImg instanceof HTMLElement) titleTextImg.src = "/img/screens/titleText.png";
+// screens.push(titleTextImg);
+
+const frame0Img = new Image();
+if (frame0Img instanceof HTMLElement) frame0Img.src = "/img/screens/frame0.png";
+
+const frame1Img = new Image();
+if (frame1Img instanceof HTMLElement) frame1Img.src = "/img/screens/frame1.png";
+
+
 export {
   texWidth,
   texHeight,
@@ -503,4 +526,8 @@ export {
   shootImgs,
   ammoImg,
   errorImg,
+
+  screens,
+  frame0Img,
+  frame1Img,
 };

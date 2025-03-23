@@ -1,5 +1,6 @@
 import { Player } from "./player";
 import { Map } from "./map";
+import { Cutscene } from "./cutscenes";
 import { makeMap } from "./maze";
 import { sprite } from "./sprite";
 import { CloseBlock } from "./closeblock";
@@ -41,6 +42,7 @@ interface levelSettings {
   fireWall: FireballWall[];
   floorTex: number;
   ceilingTex: number;
+  cutscene: Cutscene;
 }
 
 function setLevel(ls: levelSettings) {
