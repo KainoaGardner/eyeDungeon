@@ -12,7 +12,7 @@ import { Screen } from "./screens"
 document.body.style.overflow = "hidden";
 
 const ls = {
-  level: 0,
+  level: 1,
   player: new Player(0, 0, 1, 0.04, 0.05, {
     flashlight: false,
     gun: false,
@@ -30,12 +30,13 @@ const ls = {
   floorTex: 1,
   ceilingTex: 2,
   cutscene: new Cutscene(0, 1),
+  screen: 0,
+  backScreen: 0,
 };
 
 setLevel(ls);
 
-let screen = 0;
-const homeScreen = new Screen();
+const uiScreen = new Screen();
 
 function main(): void {
   drawFrame();
@@ -43,16 +44,25 @@ function main(): void {
 
 function drawFrame(): void {
   requestAnimationFrame(main);
-  switch (screen) {
+  switch (ls.screen) {
     case 0:
-      homeScreen.homeScreen();
+      uiScreen.homeScreen();
+      uiScreen.homeScreenUpdate(ls);
       break;
     case 1:
-      homeScreen.pauseScreen();
+      uiScreen.pauseScreen();
+      uiScreen.backUpdate(ls);
       break;
     case 2:
-      homeScreen.controls();
+      uiScreen.controls();
+      uiScreen.backUpdate(ls);
       break;
+    case 3:
+      uiScreen.settings();
+      uiScreen.settingsUpdate();
+      uiScreen.backUpdate(ls);
+      break;
+
     default:
       c.clearRect(0, 0, canvas.width, canvas.height);
       if (ls.cutscene.frameCounter !== 0) {
@@ -75,7 +85,7 @@ function drawFrame(): void {
 
 function updateFrame(): void {
   clearInterval(interval);
-  if (ls.cutscene.frameCounter === 0) {
+  if (ls.cutscene.frameCounter === 0 && ls.screen === -1) {
     // showFps();
     ls.player.update(ls);
     spriteUpdate(ls);

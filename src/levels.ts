@@ -43,6 +43,8 @@ interface levelSettings {
   floorTex: number;
   ceilingTex: number;
   cutscene: Cutscene;
+  screen: number;
+  backScreen: number;
 }
 
 function setLevel(ls: levelSettings) {
@@ -92,7 +94,7 @@ function setLevel(ls: levelSettings) {
 function level1(ls: levelSettings) {
   //player
   const direction = getPlayerDirection(-90);
-  ls.player.posX = 1.5;
+  ls.player.posX = 2;
   ls.player.posY = 1.5;
   ls.player.dirX = direction.dirX;
   ls.player.dirY = direction.dirY;
@@ -155,7 +157,7 @@ function level1(ls: levelSettings) {
       0, 0, 0, 0, 0, 0, 1,
     ],
     [
-      1, 2, 2, 1, 6, 6, 1, 1, 6, 6, 1, 1, 6, 6, 1, 2, 2, 0, 0, 0, 0, 6, 1, 1, 0,
+      1, 0, 0, 1, 6, 6, 1, 1, 6, 6, 1, 1, 6, 6, 1, 2, 2, 0, 0, 0, 0, 6, 1, 1, 0,
       1, 0, 1, 1, 1, 0, 1,
     ],
     [

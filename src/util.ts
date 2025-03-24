@@ -1,3 +1,4 @@
+import { canvas, mouse } from "./global"
 function drawImage(
   ctx: any,
   image: typeof Image,
@@ -15,4 +16,25 @@ function drawImage(
   ctx.restore();
 }
 
+function getMousePos(canvas: HTMLCanvasElement, event: any) {
+  let rect = canvas.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+  mouse.x = x;
+  mouse.y = y;
+}
+
+canvas.addEventListener("mousemove", function(e: any) {
+  getMousePos(canvas, e)
+})
+
+canvas.addEventListener("mousedown", function(e: any) {
+  if (e.button === 0) mouse.click = true;
+})
+
+canvas.addEventListener("mouseup", function(e: any) {
+  if (e.button === 0) mouse.click = false;
+})
+
 export { drawImage };
+

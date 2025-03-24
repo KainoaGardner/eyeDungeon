@@ -7,6 +7,7 @@ keyMap.set("KeyW", false);
 keyMap.set("KeyS", false);
 keyMap.set("KeyD", false);
 keyMap.set("KeyA", false);
+keyMap.set("Escape", false);
 
 keyMap.set("KeyE", false);
 keyMap.set("KeyQ", false);

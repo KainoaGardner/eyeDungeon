@@ -2,46 +2,48 @@ interface pos {
   x: number;
   y: number;
 }
+
+interface mouseType {
+  x: number;
+  y: number;
+  click: boolean;
+}
+
+interface screenSettings {
+  displayWidth: number;
+  displayHeight: number;
+
+  graphicsWidth: number;
+  graphicsHeight: number;
+
+  UIRatio: number;
+  bufferRatio: number;
+}
+
+
 document.body.style.backgroundColor = "#000000";
 
 const canvas = document.querySelector("canvas")!;
 const targetFps = 30;
 
-// canvas.width = 1920;
-// canvas.height = 1080;
+const settings: screenSettings = {
+  displayWidth: 1280,
+  displayHeight: 720,
 
-// canvas.width = 1366;
-// canvas.height = 768;
+  graphicsWidth: 256,
+  graphicsHeight: 144,
 
-canvas.width = 1280;
-canvas.height = 720;
+  UIRatio: (1280 / 256) * (256 / 256),
+  bufferRatio: 1280 / 256,
+}
 
-// canvas.width = 854;
-// canvas.height = 480;
+canvas.width = settings.displayWidth;
+canvas.height = settings.displayHeight;
 
-// canvas.width = 640;
-// canvas.height = 360;
+const maxGraphicsHeight = 512;
+const maxGraphicsWidth = 288;
 
-// canvas.width = 256;
-// canvas.height = 144;
 
-// const bufferWidth = 512;
-// const bufferHeight = 288;
-// const UIRatio = (canvas.width / bufferWidth) * 2;
-
-// const bufferWidth = 256;
-// const bufferHeight = 144;
-// const UIRatio = canvas.width / bufferWidth;
-
-const bufferWidth = 192;
-const bufferHeight = 108;
-const UIRatio = (canvas.width / bufferWidth) * 0.75;
-
-// const bufferWidth = 128;
-// const bufferHeight = 72;
-// const UIRatio = canvas.width / bufferWidth / 2;
-
-const bufferRatio = canvas.width / bufferWidth;
 
 const c = canvas.getContext("2d")!;
 c.textBaseline = "middle";
@@ -49,13 +51,17 @@ c.textAlign = "center";
 
 document.body.style.overflow = "hidden";
 
-const buffer = new Array(bufferHeight)
+const buffer = new Array(maxGraphicsHeight)
   .fill(null)
-  .map(() => Array(bufferWidth).fill(undefined));
+  .map(() => Array(maxGraphicsWidth).fill(undefined));
 
-const lightingBuffer = new Array(bufferWidth).fill(undefined);
-const invisBlockBuffer = new Array(bufferWidth).fill(undefined);
-const zBuffer = new Array(bufferWidth).fill(undefined);
+const lightingBuffer = new Array(maxGraphicsWidth).fill(undefined);
+const invisBlockBuffer = new Array(maxGraphicsWidth).fill(undefined);
+const zBuffer = new Array(maxGraphicsWidth).fill(undefined);
+
+const mouse: mouseType = { x: 0, y: 0, click: false }
+
+
 
 export {
   canvas,
@@ -63,11 +69,9 @@ export {
   buffer,
   lightingBuffer,
   invisBlockBuffer,
-  bufferWidth,
-  bufferHeight,
-  bufferRatio,
-  UIRatio,
+  settings,
   targetFps,
   zBuffer,
   type pos,
+  mouse
 };

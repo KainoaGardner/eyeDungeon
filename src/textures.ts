@@ -71,327 +71,57 @@ addTexture("/img/bg/roof2.png", 5, texWidth, texHeight, bgTextures);
 //walls
 addTexture("/img/walls/stone.png", 0, texWidth, texHeight, wallTextures);
 addTexture("/img/walls/stone.png", 1, texWidth, texHeight, wallTextures);
-
 addTexture("/img/walls/goal.png", 3, texWidth, texHeight, wallTextures);
-
 addTexture("/img/walls/fireBallWall.png", 4, texWidth, texHeight, wallTextures);
 addTexture("/img/walls/moveWall.png", 5, texWidth, texHeight, wallTextures);
-
 addTexture("/img/walls/closeWall.png", 6, texWidth, texHeight, wallTextures);
-
 addTexture("/img/walls/lamp0.png", 7, texWidth, texHeight, wallTextures);
 addTexture("/img/walls/lamp1.png", 8, texWidth, texHeight, wallTextures);
-
 addTexture("/img/walls/break0.png", 9, texWidth, texHeight, wallTextures);
 addTexture("/img/walls/break1.png", 10, texWidth, texHeight, wallTextures);
 addTexture("/img/walls/break2.png", 11, texWidth, texHeight, wallTextures);
-addTexture(
-  "/img/walls/spikeballWall.png",
-  12,
-  texWidth,
-  texHeight,
-  wallTextures,
-);
-
+addTexture("/img/walls/spikeballWall.png", 12, texWidth, texHeight, wallTextures,);
 addTexture("/img/walls/goal.png", 13, texWidth, texHeight, wallTextures);
 
 //sprites
-addTexture(
-  "/img/sprites/fireball.png",
-  0,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/fireballReflect.png",
-  1,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/clock.png",
-  2,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/mage0.png",
-  3,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/mage1.png",
-  4,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/mage2.png",
-  5,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/mage3.png",
-  6,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/mage4.png",
-  7,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/slime0.png",
-  8,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/slime1.png",
-  9,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/slime2.png",
-  10,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/slime3.png",
-  11,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/slime4.png",
-  12,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/spikeball.png",
-  13,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/ghost0.png",
-  14,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/ghost1.png",
-  15,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/ghost2.png",
-  16,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/ghost3.png",
-  17,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/bullet.png",
-  18,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/skeleton0.png",
-  19,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/skeleton1.png",
-  20,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/skeleton2.png",
-  21,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/skeleton3.png",
-  22,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/skeleton4.png",
-  23,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/boss0.png",
-  24,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/boss1.png",
-  25,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-addTexture(
-  "/img/sprites/boss2.png",
-  26,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-addTexture(
-  "/img/sprites/boss3.png",
-  27,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-addTexture(
-  "/img/sprites/boss4.png",
-  28,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/boss5.png",
-  29,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-addTexture(
-  "/img/sprites/boss6.png",
-  30,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-addTexture(
-  "/img/sprites/boss7.png",
-  31,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-addTexture(
-  "/img/sprites/boss8.png",
-  32,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/boss9.png",
-  33,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/boss10.png",
-  34,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-addTexture(
-  "/img/sprites/boss11.png",
-  35,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/boss12.png",
-  36,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
-
-addTexture(
-  "/img/sprites/boss13.png",
-  36,
-  spriteTexWidth,
-  spriteTexHeight,
-  spriteTextures,
-);
+addTexture("/img/sprites/fireball.png", 0, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/fireballReflect.png", 1, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/clock.png", 2, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/mage0.png", 3, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/mage1.png", 4, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/mage2.png", 5, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/mage3.png", 6, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/mage4.png", 7, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/slime0.png", 8, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/slime1.png", 9, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/slime2.png", 10, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/slime3.png", 11, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/slime4.png", 12, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/spikeball.png", 13, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/ghost0.png", 14, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/ghost1.png", 15, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/ghost2.png", 16, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/ghost3.png", 17, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/bullet.png", 18, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/skeleton0.png", 19, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/skeleton1.png", 20, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/skeleton2.png", 21, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/skeleton3.png", 22, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/skeleton4.png", 23, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/boss0.png", 24, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/boss1.png", 25, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/boss2.png", 26, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/boss3.png", 27, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/boss4.png", 28, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/boss5.png", 29, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/boss6.png", 30, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/boss7.png", 31, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/boss8.png", 32, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/boss9.png", 33, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/boss10.png", 34, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/boss11.png", 35, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/boss12.png", 36, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/boss13.png", 36, spriteTexWidth, spriteTexHeight, spriteTextures,);
 
 //items
 const flashlightImg = new Image();
@@ -499,6 +229,10 @@ const frame1Img = new Image();
 if (frame1Img instanceof HTMLElement) frame1Img.src = "/img/screens/frame1.png";
 
 
+const controlsImg = new Image();
+if (controlsImg instanceof HTMLElement) controlsImg.src = "/img/screens/controlsText.png";
+
+
 export {
   texWidth,
   texHeight,
@@ -530,4 +264,5 @@ export {
   screens,
   frame0Img,
   frame1Img,
+  controlsImg,
 };

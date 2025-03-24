@@ -1,4 +1,4 @@
-import { canvas, c, pos, UIRatio } from "./global";
+import { canvas, c, pos, settings } from "./global";
 import { Fireball } from "./fireball";
 import { levelSettings } from "./levels";
 import { CloseBlock } from "./closeblock";
@@ -1101,7 +1101,7 @@ export class Boss {
   drawHealthBar() {
     if (this.deadCounter === 0) {
       c.fillStyle = "#e74c3c";
-      c.fillRect(canvas.width / 2 - (this.health * UIRatio) / (this.startHealth / 1000) / 20, UIRatio, (this.health * UIRatio) / (this.startHealth / 1000) / 10, 5 * UIRatio);
+      c.fillRect(canvas.width / 2 - (this.health * settings.UIRatio) / (this.startHealth / 1000) / 20, settings.UIRatio, (this.health * settings.UIRatio) / (this.startHealth / 1000) / 10, 5 * settings.UIRatio);
     }
   }
 }
