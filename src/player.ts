@@ -1,4 +1,4 @@
-import { sprite, spriteDistance, sortSprites } from "./sprite";
+import { sprite, spriteDistance, sortSprites, HornItem } from "./sprite";
 import { keyMap } from "./keypress";
 import { Fireball } from "./fireball";
 import { Map } from "./map";
@@ -6,6 +6,7 @@ import { setLevel, levelSettings } from "./levels";
 import { Slime, Mage, Ghost, Skeleton } from "./enemy";
 import { Boss } from "./boss";
 import { SpikeBall } from "./spikeball";
+import { Bullet } from "./bullet";
 import { level7BlockHit } from "./level7";
 
 import {
@@ -38,12 +39,8 @@ import {
 } from "./textures";
 
 import {
-  shootSound,
-  ammoSound,
-  swordSounds,
-  reflectSound,
-  mineSound,
-  hitSound,
+  sfxSounds,
+  musicSounds,
 } from "./sounds";
 
 import {
@@ -1342,7 +1339,7 @@ export class Player {
         if (this.holding === 2) {
           if (this.swordCounter === 0) {
             const soundIndex = Math.floor(Math.random() * 5);
-            swordSounds[soundIndex].play();
+            sfxSounds[soundIndex + 5].play();
             this.swordCounter = 1;
             this.reflect = false;
           }
@@ -1350,7 +1347,7 @@ export class Player {
 
         if (this.holding === 3) {
           if (this.ammo > 0 && this.gunCounter === 0) {
-            shootSound.play();
+            sfxSounds[0].play();
             this.ammo--;
             this.gunCounter = 1;
             const speed = 1;
@@ -1535,7 +1532,7 @@ export class Player {
   private gunUpdate() {
     if (this.ammoCounter === this.reloadTimer) {
       if (this.ammo < 10) {
-        ammoSound.play();
+        sfxSounds[1].play();
         this.ammo += 1;
       }
       this.ammoCounter = 0;
@@ -1643,7 +1640,7 @@ export class Player {
     }
 
     if (mine) {
-      mineSound.play();
+      sfxSounds[2].play();
     }
   }
 
@@ -1675,7 +1672,7 @@ export class Player {
     }
 
     if (reflect) {
-      reflectSound.play();
+      sfxSounds[3].play();
     }
   }
 
@@ -1848,11 +1845,17 @@ export class Player {
               }
             } else if (sprite instanceof SpikeBall) {
               this.takeDamage(300);
-            } else {
+            } else if (sprite instanceof HornItem) {
+              hit = false;
+              this.inventory.horn = true;
+              sprite.alive = false;
+
+            }
+            else {
               hit = false;
             }
             if (hit) {
-              hitSound.play();
+              sfxSounds[4].play();
             }
           }
         }
@@ -1963,7 +1966,7 @@ export class Player {
         }
       }
       if (this.ammo < 10 && sprite.health <= 0 && !(sprite instanceof Ghost)) {
-        ammoSound.play();
+        sfxSounds[1].play();
         this.ammo++;
       }
     }
@@ -1979,7 +1982,7 @@ export class Player {
     if (ls.screen === -1 && keyMap.get("Escape")) {
       keyMap.set("Escape", false)
       ls.screen = 1;
-      ls.backScreen = -1;
+      ls.backScreen.push(-1);
     }
 
   }
@@ -2010,84 +2013,4 @@ export class Player {
   }
 }
 
-export class Bullet {
-  x: number;
-  y: number;
-  velX: number;
-  velY: number;
-  alive: boolean = true;
 
-  constructor(x: number, y: number, velX: number, velY: number) {
-    this.x = x;
-    this.y = y;
-    this.velX = velX;
-    this.velY = velY;
-  }
-
-  update(ls: levelSettings) {
-    const blockY = Math.floor(this.x);
-    const blockX = Math.floor(this.y);
-
-    const map = ls.map.map;
-    if (
-      this.x >= 0 &&
-      this.x < map.length &&
-      this.y >= 0 &&
-      this.y < map[0].length
-    ) {
-      if (map[blockY][blockX] === 0) {
-        this.x += this.velX;
-        this.y += this.velY;
-      } else if (
-        map[blockY][blockX] === 10 ||
-        map[blockY][blockX] === 11 ||
-        map[blockY][blockX] === 12
-      ) {
-        ls.map.map[blockY][blockX] = 0;
-        this.alive = false;
-      } else if (
-        (ls.level === 7 && map[blockY][blockX] === 8) ||
-        map[blockY][blockX] === 9
-      ) {
-        level7BlockHit(blockY, blockX, ls);
-        this.alive = false;
-      } else {
-        this.alive = false;
-      }
-    } else {
-      this.alive = false;
-    }
-  }
-
-  hitEnemy(ls: levelSettings) {
-    for (let i = 0; i < ls.sprites.length; i++) {
-      const sprite = ls.sprites[i].type;
-      if (
-        sprite instanceof Ghost ||
-        sprite instanceof Slime ||
-        sprite instanceof Mage ||
-        sprite instanceof Skeleton ||
-        sprite instanceof Boss
-      ) {
-        if (!sprite.alive || sprite.deadCounter !== 0) {
-          continue;
-        }
-        const distance = Math.sqrt(
-          (sprite.x - this.x) * (sprite.x - this.x) +
-          (sprite.y - this.y) * (sprite.y - this.y),
-        );
-
-        if (distance < 0.6) {
-          sprite.takeDamage(100);
-          this.alive = false;
-
-          // if (ls.player.ammo < 10 && sprite.health <= 0) {
-          //   ammoSound.play();
-          //   ls.player.ammo++;
-          // }
-          break;
-        }
-      }
-    }
-  }
-}

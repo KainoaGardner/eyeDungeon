@@ -2,7 +2,7 @@ import { Player } from "./player";
 import { Map } from "./map";
 import { Cutscene } from "./cutscenes";
 import { makeMap } from "./maze";
-import { sprite } from "./sprite";
+import { sprite, HornItem } from "./sprite";
 import { CloseBlock } from "./closeblock";
 import { FireballWall } from "./fireball";
 import { Slime, Mage, Ghost, Skeleton } from "./enemy";
@@ -44,7 +44,7 @@ interface levelSettings {
   ceilingTex: number;
   cutscene: Cutscene;
   screen: number;
-  backScreen: number;
+  backScreen: number[];
 }
 
 function setLevel(ls: levelSettings) {
@@ -102,16 +102,14 @@ function level1(ls: levelSettings) {
   ls.player.planeY = direction.planeY;
   ls.player.holding = 1;
 
-  ls.player.inventory = {
-    flashlight: true,
-    gun: false,
-    run: false,
-    horn: false,
-    sword: false,
-    sheild: false,
-    dash: false,
-    teleport: false,
-  };
+  ls.player.inventory.flashlight = true;
+  ls.player.inventory.gun = false;
+  ls.player.inventory.run = false;
+  ls.player.inventory.sword = false;
+  ls.player.inventory.sheild = false;
+  ls.player.inventory.dash = false;
+  ls.player.inventory.teleport = false;
+
 
   //map
 
@@ -293,17 +291,14 @@ function level2(ls: levelSettings) {
   ls.player.planeY = -1;
   ls.player.holding = 2;
 
-  ls.player.inventory = {
-    flashlight: true,
-    gun: false,
-    run: false,
-    horn: false,
-    sword: true,
-    sheild: false,
-    dash: false,
+  ls.player.inventory.flashlight = true;
+  ls.player.inventory.sword = true;
+  ls.player.inventory.gun = false;
+  ls.player.inventory.run = false;
+  ls.player.inventory.sheild = false;
+  ls.player.inventory.dash = false;
+  ls.player.inventory.teleport = false;
 
-    teleport: false,
-  };
 
   //map
 
@@ -377,17 +372,13 @@ function level3(ls: levelSettings) {
   ls.player.planeX = direction.planeX;
   ls.player.planeY = direction.planeY;
 
-  ls.player.inventory = {
-    flashlight: true,
-    gun: false,
-    run: true,
-    horn: false,
-    sword: true,
-    sheild: false,
-    dash: false,
-    teleport: false,
-  };
-
+  ls.player.inventory.flashlight = true;
+  ls.player.inventory.sword = true;
+  ls.player.inventory.run = true;
+  ls.player.inventory.gun = false;
+  ls.player.inventory.sheild = false;
+  ls.player.inventory.dash = false;
+  ls.player.inventory.teleport = false;
   //map
 
   ls.map.map = [
@@ -567,7 +558,7 @@ function level3(ls: levelSettings) {
     new FireballWall(13.5, 13.5, 0, 0.1, 100),
     new FireballWall(14.5, 31.5, 0, -0.1, 100),
 
-    new FireballWall(3.5, 11.5, 0.1, 0, 30),
+    new FireballWall(3.5, 11.5, 0.1, 0, 75),
 
     new FireballWall(3.5, 1.5, 0.1, 0, 100),
     new FireballWall(3.5, 2.5, 0.1, 0, 100),
@@ -593,7 +584,7 @@ function level3(ls: levelSettings) {
     { x: 22, y: 24, texture: 8, type: new Slime(22, 24, 100, 1, 6) },
     { x: 18, y: 26, texture: 8, type: new Slime(18, 26, 50, 3, 6) },
 
-    { x: 18, y: 26, texture: 8, type: new Slime(18, 26, 100, 3, 6) },
+    { x: 18, y: 26, texture: 8, type: new Slime(18, 29, 100, 3, 6) },
     { x: 22, y: 26, texture: 8, type: new Slime(22, 26, 100, 3, 6) },
     { x: 20, y: 29, texture: 3, type: new Mage(20, 29, 10, 0.2, 50, 20) },
 
@@ -677,6 +668,8 @@ function level3(ls: levelSettings) {
       texture: 13,
       type: new SpikeBall(-3.1, 0.04, { x: 27.5, y: 9.5 }, 90),
     },
+
+    { x: 24.5, y: 4, texture: 37, type: new HornItem(24.5, 4) },
   ];
 }
 function level4(ls: levelSettings) {
@@ -688,16 +681,15 @@ function level4(ls: levelSettings) {
   ls.player.planeX = 0;
   ls.player.planeY = -1;
 
-  ls.player.inventory = {
-    flashlight: true,
-    gun: false,
-    run: true,
-    horn: false,
-    sword: true,
-    sheild: false,
-    dash: false,
-    teleport: false,
-  };
+  ls.player.inventory.flashlight = true;
+  ls.player.inventory.sword = true;
+  ls.player.inventory.run = true;
+  ls.player.inventory.gun = false;
+  ls.player.inventory.sheild = false;
+  ls.player.inventory.dash = false;
+  ls.player.inventory.teleport = false;
+
+
 
   //map
 
@@ -729,16 +721,14 @@ function level5(ls: levelSettings) {
   ls.player.ammo = 3;
   ls.player.reloadTimer = 1000;
 
-  ls.player.inventory = {
-    flashlight: true,
-    gun: true,
-    run: true,
-    horn: false,
-    sword: true,
-    sheild: false,
-    dash: false,
-    teleport: false,
-  };
+  ls.player.inventory.flashlight = true;
+  ls.player.inventory.sword = true;
+  ls.player.inventory.run = true;
+  ls.player.inventory.gun = true;
+  ls.player.inventory.sheild = false;
+  ls.player.inventory.dash = false;
+  ls.player.inventory.teleport = false;
+
 
   //map
 
@@ -932,17 +922,14 @@ function level6(ls: levelSettings) {
   ls.player.holding = 1;
   ls.player.holding = 3;
 
-  ls.player.inventory = {
-    flashlight: true,
-    gun: true,
-    run: true,
-    horn: false,
-    sword: true,
-    sheild: false,
-    dash: false,
+  ls.player.inventory.flashlight = true;
+  ls.player.inventory.sword = true;
+  ls.player.inventory.run = true;
+  ls.player.inventory.gun = true;
+  ls.player.inventory.sheild = false;
+  ls.player.inventory.dash = false;
+  ls.player.inventory.teleport = false;
 
-    teleport: false,
-  };
   ls.player.ammo = 3;
   ls.player.reloadTimer = 1000;
 
@@ -1223,16 +1210,14 @@ function level7(ls: levelSettings) {
   ls.player.ammo = 3;
   ls.player.reloadTimer = 1000;
 
-  ls.player.inventory = {
-    flashlight: true,
-    gun: true,
-    run: true,
-    horn: false,
-    sword: true,
-    sheild: false,
-    dash: false,
-    teleport: false,
-  };
+  ls.player.inventory.flashlight = true;
+  ls.player.inventory.sword = true;
+  ls.player.inventory.run = true;
+  ls.player.inventory.gun = true;
+  ls.player.inventory.sheild = false;
+  ls.player.inventory.dash = false;
+  ls.player.inventory.teleport = false;
+
 
   //map
 
@@ -1425,44 +1410,38 @@ function level8(ls: levelSettings) {
   ls.player.ammo = 5;
   ls.player.reloadTimer = 1000;
 
-  ls.player.inventory = {
-    flashlight: true,
-    gun: true,
-    run: true,
-    horn: false,
-    sword: true,
-    sheild: true,
-    dash: false,
-    teleport: false,
-  };
+  ls.player.inventory.flashlight = true;
+  ls.player.inventory.sword = true;
+  ls.player.inventory.run = true;
+  ls.player.inventory.gun = true;
+  ls.player.inventory.sheild = true;
+  ls.player.inventory.dash = false;
+  ls.player.inventory.teleport = false;
 
   //map
 
   ls.map.map = [
-    [1, 1, 1, 6, 6, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5],
-    [1, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5],
-    [1, 1, 1, 6, 6, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 10, 10, 1, 1],
-    [1, 1, 1, 1, 1, 5, 5, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 13, 13, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 13, 13, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 10, 1, 1, 1, 1, 10, 10, 1, 1],
-    [1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [6, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [6, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [6, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [6, 0, 0, 1, 1, 0, 0, 1, 6, 0, 0, 6, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [6, 0, 0, 1, 1, 0, 0, 1, 1, 5, 5, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 5, 5, 1, 1],
+    [0, 0, 0, 0, 0, 0, 0, 0, 5, 1, 1, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 0, 0, 0],
+    [0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0],
+    [0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0],
+    [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+    [0, 1, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 1, 0],
+    [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+    [5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5],
+    [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+    [0, 1, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 1, 0],
+    [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+    [0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0],
+    [0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0],
+    [0, 0, 0, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 0, 0, 0],
+    [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 5, 1, 1, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0],
   ];
 
   ls.map.lightList = [];
@@ -1605,16 +1584,14 @@ function level9(ls: levelSettings) {
   ls.player.ammo = 8;
   ls.player.reloadTimer = 1000;
 
-  ls.player.inventory = {
-    flashlight: true,
-    gun: true,
-    run: true,
-    horn: false,
-    sword: true,
-    sheild: true,
-    dash: true,
-    teleport: false,
-  };
+  ls.player.inventory.flashlight = true;
+  ls.player.inventory.sword = true;
+  ls.player.inventory.run = true;
+  ls.player.inventory.gun = true;
+  ls.player.inventory.sheild = true;
+  ls.player.inventory.dash = true;
+  ls.player.inventory.teleport = false;
+
 
   //map
 
@@ -1629,8 +1606,8 @@ function level9(ls: levelSettings) {
     [1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
     [1, 0, 0, 13, 13, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
     [1, 0, 0, 13, 13, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 10, 1, 1, 1, 1, 10, 10, 1, 1],
+    [1, 0, 0, 13, 13, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+    [1, 0, 0, 13, 13, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 10, 1, 1, 1, 1, 10, 10, 1, 1],
     [1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
     [1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
     [1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
@@ -1799,16 +1776,13 @@ function level10(ls: levelSettings) {
   ls.player.holding = 1;
   ls.player.reloadTimer = 1000;
 
-  ls.player.inventory = {
-    flashlight: true,
-    gun: true,
-    run: true,
-    horn: false,
-    sword: true,
-    sheild: true,
-    dash: true,
-    teleport: true,
-  };
+  ls.player.inventory.flashlight = true;
+  ls.player.inventory.sword = true;
+  ls.player.inventory.run = true;
+  ls.player.inventory.gun = true;
+  ls.player.inventory.sheild = true;
+  ls.player.inventory.dash = true;
+  ls.player.inventory.teleport = true;
 
   //map
 
@@ -1833,7 +1807,7 @@ function level10(ls: levelSettings) {
     [1, 1, 10, 10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1],
     [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5],
     [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5],
-    [1, 0, 0, 13, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5],
+    [1, 0, 0, 13, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5],
     [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5],
     [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -2066,16 +2040,13 @@ function level11(ls: levelSettings) {
   ls.player.holding = 1;
   ls.player.reloadTimer = 100;
 
-  ls.player.inventory = {
-    flashlight: true,
-    gun: true,
-    run: true,
-    horn: false,
-    sword: true,
-    sheild: true,
-    dash: true,
-    teleport: true,
-  };
+  ls.player.inventory.flashlight = true;
+  ls.player.inventory.sword = true;
+  ls.player.inventory.run = true;
+  ls.player.inventory.gun = true;
+  ls.player.inventory.sheild = true;
+  ls.player.inventory.dash = true;
+  ls.player.inventory.teleport = true;
 
   //map
 
@@ -2126,16 +2097,15 @@ function level0(ls: levelSettings) {
 
   ls.player.holding = 1;
 
-  ls.player.inventory = {
-    flashlight: true,
-    gun: true,
-    run: true,
-    horn: true,
-    sword: true,
-    sheild: true,
-    dash: true,
-    teleport: true,
-  };
+  ls.player.inventory.flashlight = true;
+  ls.player.inventory.sword = true;
+  ls.player.inventory.run = true;
+  ls.player.inventory.gun = true;
+  ls.player.inventory.sheild = true;
+  ls.player.inventory.dash = true;
+  ls.player.inventory.teleport = true;
+  ls.player.inventory.horn = true;
+
 
   //map
 
@@ -2158,7 +2128,8 @@ function level0(ls: levelSettings) {
   ls.floorTex = 3;
   ls.ceilingTex = 1;
 
-  ls.sprites = [];
+  ls.sprites = [
+  ];
 }
 
 function levelUpdate(ls: levelSettings) {

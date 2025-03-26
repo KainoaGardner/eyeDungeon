@@ -1,7 +1,7 @@
 import { canvas, mouse } from "./global"
 function drawImage(
   ctx: any,
-  image: typeof Image,
+  image: any,
   x: number,
   y: number,
   w: number,

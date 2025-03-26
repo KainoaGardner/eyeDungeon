@@ -9,7 +9,7 @@ interface mouseType {
   click: boolean;
 }
 
-interface screenSettings {
+interface gameSettings {
   displayWidth: number;
   displayHeight: number;
 
@@ -18,6 +18,9 @@ interface screenSettings {
 
   UIRatio: number;
   bufferRatio: number;
+
+  musicVolume: number;
+  sfxVolume: number;
 }
 
 
@@ -26,7 +29,7 @@ document.body.style.backgroundColor = "#000000";
 const canvas = document.querySelector("canvas")!;
 const targetFps = 30;
 
-const settings: screenSettings = {
+const settings: gameSettings = {
   displayWidth: 1280,
   displayHeight: 720,
 
@@ -35,6 +38,8 @@ const settings: screenSettings = {
 
   UIRatio: (1280 / 256) * (256 / 256),
   bufferRatio: 1280 / 256,
+  musicVolume: 50,
+  sfxVolume: 50,
 }
 
 canvas.width = settings.displayWidth;

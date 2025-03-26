@@ -12,7 +12,7 @@ import { Screen } from "./screens"
 document.body.style.overflow = "hidden";
 
 const ls = {
-  level: 1,
+  level: 3,
   player: new Player(0, 0, 1, 0.04, 0.05, {
     flashlight: false,
     gun: false,
@@ -31,7 +31,7 @@ const ls = {
   ceilingTex: 2,
   cutscene: new Cutscene(0, 1),
   screen: 0,
-  backScreen: 0,
+  backScreen: [0],
 };
 
 setLevel(ls);
@@ -51,6 +51,7 @@ function drawFrame(): void {
       break;
     case 1:
       uiScreen.pauseScreen();
+      uiScreen.pauseScreenUpdate(ls);
       uiScreen.backUpdate(ls);
       break;
     case 2:
@@ -59,9 +60,21 @@ function drawFrame(): void {
       break;
     case 3:
       uiScreen.settings();
-      uiScreen.settingsUpdate();
+      uiScreen.settingsUpdate(ls);
       uiScreen.backUpdate(ls);
       break;
+    case 4:
+      uiScreen.videoSettings();
+      uiScreen.videoSettingsUpdate();
+      uiScreen.backUpdate(ls);
+      break;
+    case 5:
+      uiScreen.audioSettings();
+      uiScreen.audioSettingsUpdate();
+      uiScreen.backUpdate(ls);
+      break;
+
+
 
     default:
       c.clearRect(0, 0, canvas.width, canvas.height);

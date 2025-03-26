@@ -1,7 +1,7 @@
 import { levelSettings } from "./levels";
 import { Slime, Mage, Ghost, Skeleton } from "./enemy";
 import { Boss } from "./boss";
-import { ammoSound } from "./sounds";
+import { sfxSounds } from "./sounds";
 
 export class Fireball {
   x: number;
@@ -49,12 +49,12 @@ export class Fireball {
         ) {
           const distance = Math.sqrt(
             (this.x - sprite.x) * (this.x - sprite.x) +
-              (this.y - sprite.y) * (this.y - sprite.y),
+            (this.y - sprite.y) * (this.y - sprite.y),
           );
           if (distance < 1) {
             sprite.type.takeDamage(50);
             if (ls.player.ammo < 10 && sprite.type.health <= 0) {
-              ammoSound.play();
+              sfxSounds[1].play();
               ls.player.ammo++;
             }
             this.alive = false;

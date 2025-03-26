@@ -4,7 +4,7 @@ import { Teleport } from "./player";
 import { Slime, Mage, Ghost, Skeleton } from "./enemy";
 import { Boss } from "./boss";
 import { SpikeBall } from "./spikeball";
-import { Bullet } from "./player";
+import { Bullet } from "./bullet";
 
 interface sprite {
   x: number;
@@ -17,6 +17,17 @@ interface spriteOrder {
   index: number;
   distance: number;
 }
+
+export class HornItem {
+  public alive = true;
+  x: number;
+  y: number;
+  constructor(x: number, y: number) {
+    this.x = x;
+    this.y = y;
+
+  }
+};
 
 const spriteDistance: spriteOrder[] = [];
 
@@ -44,7 +55,12 @@ function spriteUpdate(ls: levelSettings) {
       if (!sprite.type.alive) {
         ls.sprites.splice(i, 1);
       }
-    } else if (ls.sprites[i].type instanceof Bullet) {
+    } else if (ls.sprites[i].type instanceof HornItem) {
+      if (!sprite.type.alive) {
+        ls.sprites.splice(i, 1);
+      }
+    }
+    else if (ls.sprites[i].type instanceof Bullet) {
       sprite.type.update(ls);
       sprite.type.hitEnemy(ls);
       sprite.x = sprite.type.x;

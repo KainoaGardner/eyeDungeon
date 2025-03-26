@@ -13,7 +13,7 @@ const wallTextures = new Array(14)
 
 const bgTextures = new Array(6).fill(null).map(() => Array(texWidth).fill(0));
 
-const spriteTextures = new Array(38)
+const spriteTextures = new Array(39)
   .fill(null)
   .map(() => Array(spriteTexWidth).fill(0));
 
@@ -122,6 +122,7 @@ addTexture("/img/sprites/boss10.png", 34, spriteTexWidth, spriteTexHeight, sprit
 addTexture("/img/sprites/boss11.png", 35, spriteTexWidth, spriteTexHeight, spriteTextures,);
 addTexture("/img/sprites/boss12.png", 36, spriteTexWidth, spriteTexHeight, spriteTextures,);
 addTexture("/img/sprites/boss13.png", 36, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/horn.png", 37, spriteTexWidth, spriteTexHeight, spriteTextures,);
 
 //items
 const flashlightImg = new Image();
@@ -210,7 +211,7 @@ if (ammoImg instanceof HTMLElement) ammoImg.src = "/img/items/ammo.png";
 const errorImg = new Image();
 if (errorImg instanceof HTMLElement) errorImg.src = "/img/items/error.png";
 
-for (let i = 0; i < 4; i++) {
+for (let i = 0; i < 6; i++) {
   const screen = new Image();
   if (screen instanceof HTMLElement) {
     screen.src = `/img/screens/screen${i}.png`;
@@ -231,6 +232,8 @@ if (frame1Img instanceof HTMLElement) frame1Img.src = "/img/screens/frame1.png";
 
 const controlsImg = new Image();
 if (controlsImg instanceof HTMLElement) controlsImg.src = "/img/screens/controlsText.png";
+
+
 
 
 export {
