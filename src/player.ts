@@ -2011,6 +2011,43 @@ export class Player {
     this.inblockUpdate(ls.map.map);
     this.damageEnemy(ls);
   }
+
+  resetPlayer(): void {
+    this.health = 1000;
+    this.stamina = 1000;
+    this.reloadTimer = 1000;
+
+    this.teleportPlaced = false;
+    this.teleportX = 0
+    this.teleportY = 0
+
+    this.hit = 0
+    this.fireballHit = 0
+
+    this.dashCount = 0
+
+    this.reflect = false
+    this.running = false;
+    this.tired = false
+
+    this.viewDist = 32
+    this.battery = 1000
+    this.flashlight = true
+
+    this.sheild = false
+    this.sheildCounter = 1000
+    this.sheildBreak = false
+    this.sheildBash = false
+
+    this.swordHit = false;
+    this.gunCounter = 0
+    this.swordCounter = 0
+    this.ammoCounter = 0
+
+    this.holding = 1
+  }
+
+
 }
 
 

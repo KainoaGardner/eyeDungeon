@@ -12,7 +12,7 @@ import { Screen } from "./screens"
 document.body.style.overflow = "hidden";
 
 const ls = {
-  level: 3,
+  level: 1,
   player: new Player(0, 0, 1, 0.04, 0.05, {
     flashlight: false,
     gun: false,
@@ -73,7 +73,11 @@ function drawFrame(): void {
       uiScreen.audioSettingsUpdate();
       uiScreen.backUpdate(ls);
       break;
-
+    case 6:
+      uiScreen.levelSelect();
+      uiScreen.levelSelectUpdate(ls);
+      uiScreen.backUpdate(ls);
+      break;
 
 
     default:
@@ -90,8 +94,6 @@ function drawFrame(): void {
           }
         }
       }
-
-
   }
 
 }

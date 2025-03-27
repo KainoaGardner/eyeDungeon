@@ -12,7 +12,6 @@ export class Cutscene {
     this.frameCounter = frameCounter
   }
 
-
   update() {
     switch (this.scene) {
       case 0:

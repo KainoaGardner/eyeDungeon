@@ -10,27 +10,14 @@ import { Boss } from "./boss";
 import { SpikeBall } from "./spikeball";
 import { level7Update } from "./level7";
 import { level8Update } from "./level8";
+import { unlockedLevels } from "./global";
+
 
 interface direction {
   dirX: number;
   dirY: number;
   planeX: number;
   planeY: number;
-}
-function getPlayerDirection(angle: number): direction {
-  angle = (angle * Math.PI) / 180;
-  let dirX = 1;
-  let dirY = 0;
-  let planeX = 0;
-  let planeY = -1;
-
-  dirX = Math.cos(-angle);
-  dirY = Math.sin(-angle);
-
-  planeX = Math.sin(-angle);
-  planeY = -Math.cos(-angle);
-
-  return { dirX: dirX, dirY: dirY, planeX: planeX, planeY: planeY };
 }
 
 interface levelSettings {
@@ -47,9 +34,67 @@ interface levelSettings {
   backScreen: number[];
 }
 
+
+
+export function newGame(ls: levelSettings) {
+  ls.level = 1;
+
+  ls.player.resetPlayer();
+  ls.cutscene.scene = 0
+  ls.cutscene.frameCounter = 1
+
+  ls.player.inventory.flashlight = false
+  ls.player.inventory.gun = false
+  ls.player.inventory.run = false
+  ls.player.inventory.horn = false
+  ls.player.inventory.sword = false
+  ls.player.inventory.sheild = false
+  ls.player.inventory.dash = false
+  ls.player.inventory.teleport = false
+
+  unlockedLevels.set(1, false)
+  unlockedLevels.set(2, false)
+  unlockedLevels.set(3, false)
+  unlockedLevels.set(4, false)
+  unlockedLevels.set(5, false)
+  unlockedLevels.set(6, false)
+  unlockedLevels.set(7, false)
+  unlockedLevels.set(8, false)
+  unlockedLevels.set(9, false)
+  unlockedLevels.set(10, false)
+  unlockedLevels.set(11, false)
+
+  ls.screen = -1;
+  ls.backScreen.push(-1);
+
+  // ls.cleared = {}
+
+  setLevel(ls);
+}
+
+
+function getPlayerDirection(angle: number): direction {
+  angle = (angle * Math.PI) / 180;
+  let dirX = 1;
+  let dirY = 0;
+  let planeX = 0;
+  let planeY = -1;
+
+  dirX = Math.cos(-angle);
+  dirY = Math.sin(-angle);
+
+  planeX = Math.sin(-angle);
+  planeY = -Math.cos(-angle);
+
+  return { dirX: dirX, dirY: dirY, planeX: planeX, planeY: planeY };
+}
+
+
+
 function setLevel(ls: levelSettings) {
   ls.player.health = 1000;
   ls.player.stamina = 1000;
+  unlockedLevels.set(ls.level, true)
   switch (ls.level) {
     case 1:
       level1(ls);

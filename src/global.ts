@@ -42,6 +42,19 @@ const settings: gameSettings = {
   sfxVolume: 50,
 }
 
+const unlockedLevels = new Map<number, boolean>();
+unlockedLevels.set(1, false)
+unlockedLevels.set(2, false)
+unlockedLevels.set(3, false)
+unlockedLevels.set(4, false)
+unlockedLevels.set(5, false)
+unlockedLevels.set(6, false)
+unlockedLevels.set(7, false)
+unlockedLevels.set(8, false)
+unlockedLevels.set(9, false)
+unlockedLevels.set(10, false)
+unlockedLevels.set(11, false)
+
 canvas.width = settings.displayWidth;
 canvas.height = settings.displayHeight;
 
@@ -66,8 +79,6 @@ const zBuffer = new Array(maxGraphicsWidth).fill(undefined);
 
 const mouse: mouseType = { x: 0, y: 0, click: false }
 
-
-
 export {
   canvas,
   c,
@@ -78,5 +89,6 @@ export {
   targetFps,
   zBuffer,
   type pos,
-  mouse
+  mouse,
+  unlockedLevels
 };
