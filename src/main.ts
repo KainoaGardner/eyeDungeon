@@ -74,6 +74,11 @@ function drawFrame(): void {
       uiScreen.backUpdate(ls);
       break;
     case 6:
+      uiScreen.languageSettings();
+      uiScreen.languageSettingsUpdate();
+      uiScreen.backUpdate(ls);
+      break;
+    case 7:
       uiScreen.levelSelect();
       uiScreen.levelSelectUpdate(ls);
       uiScreen.backUpdate(ls);

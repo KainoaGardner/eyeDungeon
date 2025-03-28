@@ -21,6 +21,8 @@ interface gameSettings {
 
   musicVolume: number;
   sfxVolume: number;
+
+  language: number; //0 english 1 japanese
 }
 
 
@@ -40,6 +42,8 @@ const settings: gameSettings = {
   bufferRatio: 1280 / 256,
   musicVolume: 50,
   sfxVolume: 50,
+
+  language: 0,
 }
 
 const unlockedLevels = new Map<number, boolean>();
@@ -78,6 +82,12 @@ const invisBlockBuffer = new Array(maxGraphicsWidth).fill(undefined);
 const zBuffer = new Array(maxGraphicsWidth).fill(undefined);
 
 const mouse: mouseType = { x: 0, y: 0, click: false }
+
+const userLang = navigator.language
+if (userLang === "ja") {
+  settings.language = 1;
+}
+
 
 export {
   canvas,

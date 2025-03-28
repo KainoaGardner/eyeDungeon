@@ -119,7 +119,6 @@ export class Player {
   private sheild: boolean = false;
   private sheildCounter = 1000;
   private sheildBreak = false;
-  private sheildBash = false;
 
   private swordHit: boolean = false;
   private gunCounter = 0;
@@ -1795,11 +1794,6 @@ export class Player {
       }
     }
 
-    if (this.sheild && this.dashCount > 0 && this.dashCount < 10) {
-      this.sheildBash = true;
-    } else {
-      this.sheildBash = false;
-    }
   }
 
   private spriteCollisonUpdate(ls: levelSettings) {
@@ -2037,7 +2031,6 @@ export class Player {
     this.sheild = false
     this.sheildCounter = 1000
     this.sheildBreak = false
-    this.sheildBash = false
 
     this.swordHit = false;
     this.gunCounter = 0

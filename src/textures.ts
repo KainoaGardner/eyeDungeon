@@ -164,14 +164,6 @@ const clockPlacedInvImg = new Image();
 if (clockPlacedInvImg instanceof HTMLElement)
   clockPlacedInvImg.src = "/img/items/clock-inv1.png";
 
-// const sword0Img = new Image();
-// if (sword0Img instanceof HTMLElement) sword0Img.src = "/img/items/sword0.png";
-// const sword1Img = new Image();
-// if (sword1Img instanceof HTMLElement) sword1Img.src = "/img/items/sword1.png";
-// const sword2Img = new Image();
-// if (sword2Img instanceof HTMLElement) sword2Img.src = "/img/items/sword2.png";
-// const sword3Img = new Image();
-// if (sword3Img instanceof HTMLElement) sword3Img.src = "/img/items/sword3.png";
 
 const swordInvImg = new Image();
 if (swordInvImg instanceof HTMLElement)
@@ -211,7 +203,7 @@ if (ammoImg instanceof HTMLElement) ammoImg.src = "/img/items/ammo.png";
 const errorImg = new Image();
 if (errorImg instanceof HTMLElement) errorImg.src = "/img/items/error.png";
 
-for (let i = 0; i < 6; i++) {
+for (let i = 0; i < 7; i++) {
   const screen = new Image();
   if (screen instanceof HTMLElement) {
     screen.src = `/img/screens/screen${i}.png`;
@@ -219,21 +211,14 @@ for (let i = 0; i < 6; i++) {
   }
 }
 
-// const titleTextImg = new Image();
-// if (titleTextImg instanceof HTMLElement) titleTextImg.src = "/img/screens/titleText.png";
-// screens.push(titleTextImg);
-
 const frame0Img = new Image();
 if (frame0Img instanceof HTMLElement) frame0Img.src = "/img/screens/frame0.png";
 
 const frame1Img = new Image();
 if (frame1Img instanceof HTMLElement) frame1Img.src = "/img/screens/frame1.png";
 
-
 const controlsImg = new Image();
 if (controlsImg instanceof HTMLElement) controlsImg.src = "/img/screens/controlsText.png";
-
-
 
 
 export {

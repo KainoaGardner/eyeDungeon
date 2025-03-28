@@ -1452,7 +1452,7 @@ function level8(ls: levelSettings) {
   ls.player.planeX = 0;
   ls.player.planeY = -1;
   ls.player.holding = 2;
-  ls.player.ammo = 5;
+  ls.player.ammo = 3;
   ls.player.reloadTimer = 1000;
 
   ls.player.inventory.flashlight = true;
@@ -1626,7 +1626,7 @@ function level9(ls: levelSettings) {
   ls.player.planeY = direction.planeY;
 
   ls.player.holding = 4;
-  ls.player.ammo = 8;
+  ls.player.ammo = 3;
   ls.player.reloadTimer = 1000;
 
   ls.player.inventory.flashlight = true;
@@ -1816,7 +1816,7 @@ function level10(ls: levelSettings) {
 
   ls.player.posX = 12;
   ls.player.posY = 4.5;
-  ls.player.ammo = 8;
+  ls.player.ammo = 6;
 
   ls.player.holding = 1;
   ls.player.reloadTimer = 1000;
@@ -2080,7 +2080,7 @@ function level11(ls: levelSettings) {
 
   ls.player.posX = 8.5;
   ls.player.posY = 1.5;
-  ls.player.ammo = 10;
+  ls.player.ammo = 3;
 
   ls.player.holding = 1;
   ls.player.reloadTimer = 100;
@@ -2139,6 +2139,7 @@ function level0(ls: levelSettings) {
   ls.player.posX = 1.5;
   ls.player.posY = 1.5;
   ls.player.ammo = 3;
+  ls.player.reloadTimer = 100;
 
   ls.player.holding = 1;
 

@@ -3,13 +3,15 @@ import { screens, frame0Img, frame1Img, controlsImg } from "./textures"
 import { levelSettings, setLevel, newGame } from "./levels"
 import { keyMap } from "./keypress";
 import { setSFXVolume, setMusicVolume } from "./sounds";
+import { languageText } from "./text"
+import { saveData, uploadData } from "./save"
 
 function checkHover(left: number, right: number, top: number, bottom: number): boolean {
   if (mouse.x > left && mouse.x < right && mouse.y > top && mouse.y < bottom) return true;
   return false;
 }
 
-function updateDisplaySettings(displayWidth: number, displayHeight: number, graphicsWidth: number, graphicsHeight: number) {
+export function updateDisplaySettings(displayWidth: number, displayHeight: number, graphicsWidth: number, graphicsHeight: number) {
   settings.displayWidth = displayWidth;
   settings.displayHeight = displayHeight;
   settings.graphicsWidth = graphicsWidth;
@@ -25,7 +27,7 @@ function updateDisplaySettings(displayWidth: number, displayHeight: number, grap
   c.textAlign = "center";
 }
 
-function updateVolume(change: number, type: number) {
+export function updateVolume(change: number, type: number) {
   //sfx 0 music 1
   if (type === 0) {
     if (settings.sfxVolume + change >= 0 && settings.sfxVolume + change <= 100) {
@@ -47,7 +49,7 @@ export class Screen {
   }
 
   homeScreen() {
-    c.drawImage(screens[1], 0, 0, canvas.width, canvas.height);
+    c.drawImage(screens[4], 0, 0, canvas.width, canvas.height);
     c.drawImage(frame0Img, canvas.width / 2 - settings.UIRatio * 32 * 5 / 2, settings.UIRatio * 14, settings.UIRatio * 32 * 5, settings.UIRatio * 16 * 3);
 
     c.drawImage(frame1Img, canvas.width / 2 - settings.UIRatio * 32 * 6 / 2, settings.UIRatio * 14, settings.UIRatio * 32 * 6, settings.UIRatio * 16 * 3);
@@ -62,24 +64,24 @@ export class Screen {
 
     c.lineWidth = 3 * settings.UIRatio / 10;
 
-    c.fillText("NEW", canvas.width / 2 - settings.UIRatio * 36 * 2 / 2, settings.UIRatio * 87.5)
-    c.strokeText("NEW", canvas.width / 2 - settings.UIRatio * 36 * 2 / 2, settings.UIRatio * 87.5)
+    const text = languageText[settings.language]
+    c.fillText(text.get("new")!, canvas.width / 2 - settings.UIRatio * 36 * 2 / 2, settings.UIRatio * 87.5)
+    c.strokeText(text.get("new")!, canvas.width / 2 - settings.UIRatio * 36 * 2 / 2, settings.UIRatio * 87.5)
 
-    c.fillText("LOAD", canvas.width / 2 - settings.UIRatio * 36 * 2 / 2, settings.UIRatio * 122.5)
-    c.strokeText("LOAD", canvas.width / 2 - settings.UIRatio * 36 * 2 / 2, settings.UIRatio * 122.5)
+    c.fillText(text.get("load")!, canvas.width / 2 - settings.UIRatio * 36 * 2 / 2, settings.UIRatio * 122.5)
+    c.strokeText(text.get("load")!, canvas.width / 2 - settings.UIRatio * 36 * 2 / 2, settings.UIRatio * 122.5)
 
-    c.fillText("CONTROLS", canvas.width / 2 + settings.UIRatio * 36 * 2 / 2, settings.UIRatio * 122.5)
-    c.strokeText("CONTROLS", canvas.width / 2 + settings.UIRatio * 36 * 2 / 2, settings.UIRatio * 122.5)
+    c.fillText(text.get("controls")!, canvas.width / 2 + settings.UIRatio * 36 * 2 / 2, settings.UIRatio * 122.5)
+    c.strokeText(text.get("controls")!, canvas.width / 2 + settings.UIRatio * 36 * 2 / 2, settings.UIRatio * 122.5)
 
-    c.fillText("SETTINGS", canvas.width / 2 + settings.UIRatio * 36 * 2 / 2, settings.UIRatio * 87.5)
-    c.strokeText("SETTINGS", canvas.width / 2 + settings.UIRatio * 36 * 2 / 2, settings.UIRatio * 87.5)
+    c.fillText(text.get("settings")!, canvas.width / 2 + settings.UIRatio * 36 * 2 / 2, settings.UIRatio * 87.5)
+    c.strokeText(text.get("settings")!, canvas.width / 2 + settings.UIRatio * 36 * 2 / 2, settings.UIRatio * 87.5)
 
     c.font = `bold ${20 * settings.UIRatio}px Arial`
     c.lineWidth = 4 * settings.UIRatio / 10;
 
-    c.fillText("EYE DUNGEON", canvas.width / 2, settings.UIRatio * 39.5)
-    c.strokeText("EYE DUNGEON", canvas.width / 2, settings.UIRatio * 39.5)
-    // c.drawImage(screens[4], canvas.width / 2 - settings.UIRatio * 30 * 4 / 2, settings.UIRatio * 25, settings.UIRatio * 30 * 4, settings.UIRatio * 25);
+    c.fillText(text.get("title")!, canvas.width / 2, settings.UIRatio * 39.5)
+    c.strokeText(text.get("title")!, canvas.width / 2, settings.UIRatio * 39.5)
 
   }
 
@@ -128,7 +130,7 @@ export class Screen {
 
 
   pauseScreen() {
-    c.drawImage(screens[0], 0, 0, canvas.width, canvas.height);
+    c.drawImage(screens[4], 0, 0, canvas.width, canvas.height);
 
     c.drawImage(frame0Img, canvas.width / 2 - settings.UIRatio * 32 * 5 / 2, settings.UIRatio * 14, settings.UIRatio * 32 * 5, settings.UIRatio * 16 * 3);
 
@@ -144,32 +146,32 @@ export class Screen {
     c.font = `bold ${9 * settings.UIRatio}px Arial`
     c.fillStyle = "#bcbcbc"
     c.strokeStyle = "black"
-
     c.lineWidth = 3 * settings.UIRatio / 10;
 
-    c.fillText("NEW", canvas.width / 2 - settings.UIRatio * 33 * 2, settings.UIRatio * 87.5)
-    c.strokeText("NEW", canvas.width / 2 - settings.UIRatio * 33 * 2, settings.UIRatio * 87.5)
+    const text = languageText[settings.language]
+    c.fillText(text.get("new")!, canvas.width / 2 - settings.UIRatio * 33 * 2, settings.UIRatio * 87.5)
+    c.strokeText(text.get("new")!, canvas.width / 2 - settings.UIRatio * 33 * 2, settings.UIRatio * 87.5)
 
-    c.fillText("LEVELS", canvas.width / 2 - settings.UIRatio * 33 * 2, settings.UIRatio * 122.5)
-    c.strokeText("LEVELS", canvas.width / 2 - settings.UIRatio * 33 * 2, settings.UIRatio * 122.5)
+    c.fillText(text.get("levels")!, canvas.width / 2 - settings.UIRatio * 33 * 2, settings.UIRatio * 122.5)
+    c.strokeText(text.get("levels")!, canvas.width / 2 - settings.UIRatio * 33 * 2, settings.UIRatio * 122.5)
 
-    c.fillText("SAVE", canvas.width / 2, settings.UIRatio * 87.5)
-    c.strokeText("SAVE", canvas.width / 2, settings.UIRatio * 87.5)
+    c.fillText(text.get("save")!, canvas.width / 2, settings.UIRatio * 87.5)
+    c.strokeText(text.get("save")!, canvas.width / 2, settings.UIRatio * 87.5)
 
-    c.fillText("LOAD", canvas.width / 2, settings.UIRatio * 122.5)
-    c.strokeText("LOAD", canvas.width / 2, settings.UIRatio * 122.5)
+    c.fillText(text.get("load")!, canvas.width / 2, settings.UIRatio * 122.5)
+    c.strokeText(text.get("load")!, canvas.width / 2, settings.UIRatio * 122.5)
 
-    c.fillText("CONTROLS", canvas.width / 2 + settings.UIRatio * 66, settings.UIRatio * 122.5)
-    c.strokeText("CONTROLS", canvas.width / 2 + settings.UIRatio * 66, settings.UIRatio * 122.5)
+    c.fillText(text.get("controls")!, canvas.width / 2 + settings.UIRatio * 66, settings.UIRatio * 122.5)
+    c.strokeText(text.get("controls")!, canvas.width / 2 + settings.UIRatio * 66, settings.UIRatio * 122.5)
 
-    c.fillText("SETTINGS", canvas.width / 2 + settings.UIRatio * 66, settings.UIRatio * 87.5)
-    c.strokeText("SETTINGS", canvas.width / 2 + settings.UIRatio * 66, settings.UIRatio * 87.5)
+    c.fillText(text.get("settings")!, canvas.width / 2 + settings.UIRatio * 66, settings.UIRatio * 87.5)
+    c.strokeText(text.get("settings")!, canvas.width / 2 + settings.UIRatio * 66, settings.UIRatio * 87.5)
 
     c.font = `bold ${20 * settings.UIRatio}px Arial`
     c.lineWidth = 4 * settings.UIRatio / 10;
 
-    c.fillText("PAUSED", canvas.width / 2, settings.UIRatio * 39.5)
-    c.strokeText("PAUSED", canvas.width / 2, settings.UIRatio * 39.5)
+    c.fillText(text.get("paused")!, canvas.width / 2, settings.UIRatio * 39.5)
+    c.strokeText(text.get("paused")!, canvas.width / 2, settings.UIRatio * 39.5)
 
   }
 
@@ -199,6 +201,7 @@ export class Screen {
     if (checkHover(canvas.width / 2 - settings.UIRatio * 32, canvas.width / 2 + settings.UIRatio * 32, settings.UIRatio * 70, settings.UIRatio * 102)) {
       c.strokeRect(canvas.width / 2 - settings.UIRatio * 32, settings.UIRatio * 70, settings.UIRatio * 32 * 2, settings.UIRatio * 16 * 2);
       if (mouse.click) {
+        saveData(ls)
       }
     }
 
@@ -206,6 +209,7 @@ export class Screen {
     if (checkHover(canvas.width / 2 - settings.UIRatio * 32, canvas.width / 2 + settings.UIRatio * 32, settings.UIRatio * 105, settings.UIRatio * 137)) {
       c.strokeRect(canvas.width / 2 - settings.UIRatio * 32, settings.UIRatio * 105, settings.UIRatio * 32 * 2, settings.UIRatio * 16 * 2);
       if (mouse.click) {
+        uploadData(ls)
       }
     }
 
@@ -221,7 +225,7 @@ export class Screen {
     if (checkHover(canvas.width / 2 - settings.UIRatio * 49 * 2, canvas.width / 2 - settings.UIRatio * 17 * 2, settings.UIRatio * 105, settings.UIRatio * 137)) {
       c.strokeRect(canvas.width / 2 - settings.UIRatio * 49 * 2, settings.UIRatio * 105, settings.UIRatio * 32 * 2, settings.UIRatio * 16 * 2);
       if (mouse.click) {
-        ls.screen = 6;
+        ls.screen = 7;
         ls.backScreen.push(1)
       }
     }
@@ -240,8 +244,9 @@ export class Screen {
     c.strokeStyle = "black"
     c.lineWidth = 4 * settings.UIRatio / 10;
 
-    c.fillText("CONTROLS", canvas.width / 2, settings.UIRatio * 18)
-    c.strokeText("CONTROLS", canvas.width / 2, settings.UIRatio * 18)
+    const text = languageText[settings.language]
+    c.fillText(text.get("controls")!, canvas.width / 2, settings.UIRatio * 18)
+    c.strokeText(text.get("controls")!, canvas.width / 2, settings.UIRatio * 18)
 
     c.drawImage(frame1Img, canvas.width / 2 - settings.UIRatio * 32 * 5 / 2, canvas.height - settings.UIRatio * 16 * 7, settings.UIRatio * 32 * 5, settings.UIRatio * 16 * 7);
     c.drawImage(controlsImg, canvas.width / 2 - settings.UIRatio * 75 / 2, settings.UIRatio * 54, 75 * settings.UIRatio, 70 * settings.UIRatio);
@@ -257,7 +262,6 @@ export class Screen {
       }
     }
 
-
     if (mouse.click) mouse.click = false;
   }
 
@@ -271,8 +275,9 @@ export class Screen {
     c.strokeStyle = "black"
     c.lineWidth = 4 * settings.UIRatio / 10;
 
-    c.fillText("VIDEO", canvas.width / 2, settings.UIRatio * 18)
-    c.strokeText("VIDEO", canvas.width / 2, settings.UIRatio * 18)
+    const text = languageText[settings.language]
+    c.fillText(text.get("video")!, canvas.width / 2, settings.UIRatio * 18)
+    c.strokeText(text.get("video")!, canvas.width / 2, settings.UIRatio * 18)
 
     c.drawImage(frame1Img, canvas.width / 2 - settings.UIRatio * 8 * 25 / 2, canvas.height - settings.UIRatio * 16 * 7, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 16 * 2);
 
@@ -282,7 +287,6 @@ export class Screen {
     c.drawImage(frame1Img, canvas.width / 2 - settings.UIRatio * 8 * 25 / 2, canvas.height - settings.UIRatio * 16 * 2, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 16);
     c.drawImage(frame1Img, canvas.width / 2 - settings.UIRatio * 8 * 25 / 2, canvas.height - settings.UIRatio * 16 * 1, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 16);
 
-
     c.drawImage(frame1Img, canvas.width / 2, canvas.height - settings.UIRatio * 16 * 7, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 16 * 2);
     c.drawImage(frame1Img, canvas.width / 2, canvas.height - settings.UIRatio * 16 * 5, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 16);
     c.drawImage(frame1Img, canvas.width / 2, canvas.height - settings.UIRatio * 16 * 4, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 16);
@@ -290,14 +294,13 @@ export class Screen {
     c.drawImage(frame1Img, canvas.width / 2, canvas.height - settings.UIRatio * 16 * 2, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 16);
     c.drawImage(frame1Img, canvas.width / 2, canvas.height - settings.UIRatio * 16 * 1, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 16);
 
-
     c.font = `bold ${15 * settings.UIRatio}px Arial`
     c.lineWidth = 3 * settings.UIRatio / 10;
-    c.fillText("Display", canvas.width / 2 - settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 49)
-    c.strokeText("Display", canvas.width / 2 - settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 49)
+    c.fillText(text.get("display")!, canvas.width / 2 - settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 49)
+    c.strokeText(text.get("display")!, canvas.width / 2 - settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 49)
 
-    c.fillText("Graphics", canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 49)
-    c.strokeText("Graphics", canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 49)
+    c.fillText(text.get("graphics")!, canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 49)
+    c.strokeText(text.get("graphics")!, canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 49)
 
     c.font = `bold ${10 * settings.UIRatio}px Arial`
     c.lineWidth = 2 * settings.UIRatio / 10;
@@ -313,17 +316,16 @@ export class Screen {
     c.fillText("640x360", canvas.width / 2 - settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 137)
     c.strokeText("640x360", canvas.width / 2 - settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 137)
 
-    c.fillText("Extra High", canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 73)
-    c.strokeText("Extra High", canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 73)
-    c.fillText("High", canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 88.5)
-    c.strokeText("High", canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 88.5)
-    c.fillText("Normal", canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 105)
-    c.strokeText("Normal", canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 105)
-    c.fillText("Low", canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 121)
-    c.strokeText("Low", canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 121)
-    c.fillText("Extra Low", canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 137)
-    c.strokeText("Extra Low", canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 137)
-
+    c.fillText(text.get("extraHigh")!, canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 73)
+    c.strokeText(text.get("extraHigh")!, canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 73)
+    c.fillText(text.get("high")!, canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 88.5)
+    c.strokeText(text.get("high")!, canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 88.5)
+    c.fillText(text.get("normal")!, canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 105)
+    c.strokeText(text.get("normal")!, canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 105)
+    c.fillText(text.get("low")!, canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 121)
+    c.strokeText(text.get("low")!, canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 121)
+    c.fillText(text.get("extraLow")!, canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 137)
+    c.strokeText(text.get("extraLow")!, canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 137)
   }
 
   videoSettingsUpdate() {
@@ -407,17 +409,18 @@ export class Screen {
     c.strokeStyle = "black"
     c.lineWidth = 4 * settings.UIRatio / 10;
 
-    c.fillText("AUDIO", canvas.width / 2, settings.UIRatio * 18)
-    c.strokeText("AUDIO", canvas.width / 2, settings.UIRatio * 18)
+    const text = languageText[settings.language]
+    c.fillText(text.get("audio")!, canvas.width / 2, settings.UIRatio * 18)
+    c.strokeText(text.get("audio")!, canvas.width / 2, settings.UIRatio * 18)
 
     c.font = `bold ${15 * settings.UIRatio}px Arial`
     c.lineWidth = 3 * settings.UIRatio / 10;
 
-    c.fillText("SFX", canvas.width / 2 - settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 65)
-    c.strokeText("SFX", canvas.width / 2 - settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 65)
+    c.fillText(text.get("sfx")!, canvas.width / 2 - settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 65)
+    c.strokeText(text.get("sfx")!, canvas.width / 2 - settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 65)
 
-    c.fillText("MUSIC", canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 65)
-    c.strokeText("MUSIC", canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 65)
+    c.fillText(text.get("music")!, canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 65)
+    c.strokeText(text.get("music")!, canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 65)
 
 
     c.fillText(`${settings.sfxVolume}`, canvas.width / 2 - settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 114)
@@ -443,10 +446,6 @@ export class Screen {
   audioSettingsUpdate() {
     c.strokeStyle = "#bcbcbc"
     c.lineWidth = 4 * settings.UIRatio / 10;
-
-    // c.drawImage(frame1Img, canvas.width / 2 + settings.UIRatio * 8 * 21 / 8, canvas.height - settings.UIRatio * 8 * 5, settings.UIRatio * 16, settings.UIRatio * 16);
-    // c.drawImage(frame1Img, canvas.width / 2 + settings.UIRatio * 12 * 21 / 4, canvas.height - settings.UIRatio * 8 * 5, settings.UIRatio * 16, settings.UIRatio * 16);
-
 
     //MUSIC -
     if (checkHover(canvas.width / 2 + settings.UIRatio * 8 * 21 / 8, canvas.width / 2 + settings.UIRatio * 8 * 37 / 8, canvas.height - settings.UIRatio * 8 * 5, canvas.height - settings.UIRatio * 8 * 3)) {
@@ -480,32 +479,98 @@ export class Screen {
         updateVolume(10, 0);
       }
     }
+
+
+    if (mouse.click) mouse.click = false;
   }
 
-
-  settings() {
-    c.drawImage(screens[4], 0, 0, canvas.width, canvas.height);
+  languageSettings() {
+    c.drawImage(screens[6], 0, 0, canvas.width, canvas.height);
     c.drawImage(frame1Img, canvas.width / 2 - settings.UIRatio * 32 * 5 / 2, 0, settings.UIRatio * 32 * 5, settings.UIRatio * 16 * 2);
 
-    c.drawImage(frame1Img, canvas.width / 2 - settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 16 * 3, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 32);
-    c.drawImage(frame1Img, canvas.width / 2 - settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 16 * 5.5, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 32);
+    c.drawImage(frame1Img, canvas.width / 2 - settings.UIRatio * 32, canvas.height / 2 - settings.UIRatio * 8, settings.UIRatio * 32 * 2, settings.UIRatio * 16);
+    c.drawImage(frame1Img, canvas.width / 2 - settings.UIRatio * 32, canvas.height / 2 + settings.UIRatio * 12, settings.UIRatio * 32 * 2, settings.UIRatio * 16);
 
     c.font = `bold ${20 * settings.UIRatio}px Arial`
     c.fillStyle = "#bcbcbc"
     c.strokeStyle = "black"
     c.lineWidth = 4 * settings.UIRatio / 10;
 
-    c.fillText("SETTINGS", canvas.width / 2, settings.UIRatio * 18)
-    c.strokeText("SETTINGS", canvas.width / 2, settings.UIRatio * 18)
+
+    const text = languageText[settings.language]
+    c.fillText(text.get("language")!, canvas.width / 2, settings.UIRatio * 18)
+    c.strokeText(text.get("language")!, canvas.width / 2, settings.UIRatio * 18)
+
+    c.font = `bold ${8 * settings.UIRatio}px Arial`
+    c.lineWidth = 2 * settings.UIRatio / 10;
+
+    c.fillText("ENGLISH", canvas.width / 2, settings.UIRatio * 73)
+    c.strokeText("ENGLISH", canvas.width / 2, settings.UIRatio * 73)
+
+    c.fillText("日本語", canvas.width / 2, settings.UIRatio * 93)
+    c.strokeText("日本語", canvas.width / 2, settings.UIRatio * 93)
+
+
+  }
+
+  languageSettingsUpdate() {
+    c.strokeStyle = "#bcbcbc"
+    c.lineWidth = 4 * settings.UIRatio / 10;
+
+
+    if (settings.language === 0)
+      c.strokeRect(canvas.width / 2 - settings.UIRatio * 32, canvas.height / 2 - settings.UIRatio * 8, settings.UIRatio * 32 * 2, settings.UIRatio * 16);
+
+    if (settings.language === 1)
+      c.strokeRect(canvas.width / 2 - settings.UIRatio * 32, canvas.height / 2 + settings.UIRatio * 12, settings.UIRatio * 32 * 2, settings.UIRatio * 16);
+
+    //english
+    if (checkHover(canvas.width / 2 - settings.UIRatio * 32, canvas.width / 2 + settings.UIRatio * 32, canvas.height / 2 - settings.UIRatio * 8, canvas.height / 2 + settings.UIRatio * 8)) {
+      c.strokeRect(canvas.width / 2 - settings.UIRatio * 32, canvas.height / 2 - settings.UIRatio * 8, settings.UIRatio * 32 * 2, settings.UIRatio * 16);
+      if (mouse.click) {
+        settings.language = 0;
+      }
+    }
+
+    //日本語
+    if (checkHover(canvas.width / 2 - settings.UIRatio * 32, canvas.width / 2 + settings.UIRatio * 32, canvas.height / 2 + settings.UIRatio * 12, canvas.height / 2 + settings.UIRatio * 28)) {
+      c.strokeRect(canvas.width / 2 - settings.UIRatio * 32, canvas.height / 2 + settings.UIRatio * 12, settings.UIRatio * 32 * 2, settings.UIRatio * 16);
+      if (mouse.click) {
+        settings.language = 1;
+      }
+    }
+
+    if (mouse.click) mouse.click = false;
+  }
+
+  settings() {
+    c.drawImage(screens[1], 0, 0, canvas.width, canvas.height);
+    c.drawImage(frame1Img, canvas.width / 2 - settings.UIRatio * 32 * 5 / 2, 0, settings.UIRatio * 32 * 5, settings.UIRatio * 16 * 2);
+
+    c.drawImage(frame1Img, canvas.width / 2 - settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 16 * 2.25, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 32);
+    c.drawImage(frame1Img, canvas.width / 2 - settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 16 * 4.5, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 32);
+    c.drawImage(frame1Img, canvas.width / 2 - settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 16 * 6.75, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 32);
+
+    c.font = `bold ${20 * settings.UIRatio}px Arial`
+    c.fillStyle = "#bcbcbc"
+    c.strokeStyle = "black"
+    c.lineWidth = 4 * settings.UIRatio / 10;
+
+    const text = languageText[settings.language]
+    c.fillText(text.get("settings")!, canvas.width / 2, settings.UIRatio * 18)
+    c.strokeText(text.get("settings")!, canvas.width / 2, settings.UIRatio * 18)
 
     c.font = `bold ${10 * settings.UIRatio}px Arial`
     c.lineWidth = 4 * settings.UIRatio / 10;
 
-    c.fillText("VIDEO", canvas.width / 2, settings.UIRatio * 65.5)
-    c.strokeText("VIDEO", canvas.width / 2, settings.UIRatio * 65.5)
+    c.fillText(text.get("video")!, canvas.width / 2, settings.UIRatio * 53)
+    c.strokeText(text.get("video")!, canvas.width / 2, settings.UIRatio * 53)
 
-    c.fillText("AUDIO", canvas.width / 2, settings.UIRatio * 105.5)
-    c.strokeText("AUDIO", canvas.width / 2, settings.UIRatio * 105.5)
+    c.fillText(text.get("audio")!, canvas.width / 2, settings.UIRatio * 89)
+    c.strokeText(text.get("audio")!, canvas.width / 2, settings.UIRatio * 89)
+    105.
+    c.fillText(text.get("language")!, canvas.width / 2, settings.UIRatio * 125)
+    c.strokeText(text.get("language")!, canvas.width / 2, settings.UIRatio * 125)
 
   }
 
@@ -514,19 +579,27 @@ export class Screen {
     c.lineWidth = 4 * settings.UIRatio / 10;
 
     //Video
-    if (checkHover(canvas.width / 2 - settings.UIRatio * 8 * 25 / 4, canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 16 * 3, settings.UIRatio * 16 * 5)) {
-      c.strokeRect(canvas.width / 2 - settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 16 * 3, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 32);
+    if (checkHover(canvas.width / 2 - settings.UIRatio * 8 * 25 / 4, canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 16 * 2.25, settings.UIRatio * 16 * 4.25)) {
+      c.strokeRect(canvas.width / 2 - settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 16 * 2.25, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 32);
       if (mouse.click) {
         ls.backScreen.push(3);
         ls.screen = 4;
       }
     }
     //Audio
-    if (checkHover(canvas.width / 2 - settings.UIRatio * 8 * 25 / 4, canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 16 * 5.5, settings.UIRatio * 16 * 8)) {
-      c.strokeRect(canvas.width / 2 - settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 16 * 5.5, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 32);
+    if (checkHover(canvas.width / 2 - settings.UIRatio * 8 * 25 / 4, canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 16 * 4.5, settings.UIRatio * 16 * 6.5)) {
+      c.strokeRect(canvas.width / 2 - settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 16 * 4.5, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 32);
       if (mouse.click) {
         ls.backScreen.push(3);
         ls.screen = 5;
+      }
+    }
+    //Language
+    if (checkHover(canvas.width / 2 - settings.UIRatio * 8 * 25 / 4, canvas.width / 2 + settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 16 * 6.75, settings.UIRatio * 16 * 8.75)) {
+      c.strokeRect(canvas.width / 2 - settings.UIRatio * 8 * 25 / 4, settings.UIRatio * 16 * 6.75, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 32);
+      if (mouse.click) {
+        ls.backScreen.push(3);
+        ls.screen = 6;
       }
     }
 
@@ -558,8 +631,9 @@ export class Screen {
     c.strokeStyle = "black"
     c.lineWidth = 4 * settings.UIRatio / 10;
 
-    c.fillText("LEVELS", canvas.width / 2, settings.UIRatio * 18)
-    c.strokeText("LEVELS", canvas.width / 2, settings.UIRatio * 18)
+    const text = languageText[settings.language]
+    c.fillText(text.get("levels")!, canvas.width / 2, settings.UIRatio * 18)
+    c.strokeText(text.get("levels")!, canvas.width / 2, settings.UIRatio * 18)
 
     c.font = `bold ${15 * settings.UIRatio}px Arial`
     c.lineWidth = 4 * settings.UIRatio / 10;
@@ -590,8 +664,8 @@ export class Screen {
     c.font = `bold ${9 * settings.UIRatio}px Arial`
     c.lineWidth = 4 * settings.UIRatio / 10;
 
-    c.fillText("BOSS", canvas.width / 2, settings.UIRatio * 123)
-    c.strokeText("BOSS", canvas.width / 2, settings.UIRatio * 123)
+    c.fillText(text.get("boss")!, canvas.width / 2, settings.UIRatio * 123)
+    c.strokeText(text.get("boss")!, canvas.width / 2, settings.UIRatio * 123)
 
     c.globalAlpha = 0.5;
     c.fillStyle = "black"
@@ -632,6 +706,7 @@ export class Screen {
 
     c.globalAlpha = 1;
   }
+
 
   levelSelectUpdate(ls: levelSettings) {
     c.strokeStyle = "#bcbcbc"
@@ -751,7 +826,4 @@ export class Screen {
     if (mouse.click) mouse.click = false;
   }
 }
-
-
-
 
