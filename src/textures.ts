@@ -18,7 +18,11 @@ const spriteTextures = new Array(39)
   .map(() => Array(spriteTexWidth).fill(0));
 
 
+
+const cutsceneTextures = new Array(3);
+
 const screens: CanvasImageSource[] = [];
+
 
 function getTexture(
   tex: any,
@@ -221,6 +225,22 @@ const controlsImg = new Image();
 if (controlsImg instanceof HTMLElement) controlsImg.src = "/img/screens/controlsText.png";
 
 
+const bossCS0 = new Image();
+if (bossCS0 instanceof HTMLElement) bossCS0.src = "/img/cutscenes/boss0.png";
+cutsceneTextures[0] = bossCS0
+
+const bossCS1 = new Image();
+if (bossCS1 instanceof HTMLElement) bossCS1.src = "/img/cutscenes/boss1.png";
+cutsceneTextures[1] = bossCS1
+
+const bossCS2 = new Image();
+if (bossCS2 instanceof HTMLElement) bossCS2.src = "/img/cutscenes/boss2.png";
+cutsceneTextures[2] = bossCS2
+
+
+
+
+
 export {
   texWidth,
   texHeight,
@@ -253,4 +273,6 @@ export {
   frame0Img,
   frame1Img,
   controlsImg,
+
+  cutsceneTextures
 };

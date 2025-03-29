@@ -66,6 +66,10 @@ japaneseText.set("language", "言語")
 englishText.set("boss", "BOSS")
 japaneseText.set("boss", "ボス")
 
+englishText.set("skip", "Press ESCAPE to skip")
+japaneseText.set("skip", "ESCAPE 押すとスキップをする")
+
+
 export { languageText }
 
 

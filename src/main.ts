@@ -29,7 +29,7 @@ const ls = {
   fireWall: new Array<FireballWall>(),
   floorTex: 1,
   ceilingTex: 2,
-  cutscene: new Cutscene(0, 1),
+  cutscene: new Cutscene(0, -1),
   screen: 0,
   backScreen: [0],
 };
@@ -86,10 +86,11 @@ function drawFrame(): void {
 
 
     default:
-      c.clearRect(0, 0, canvas.width, canvas.height);
       if (ls.cutscene.frameCounter !== 0) {
         ls.cutscene.update();
+        ls.cutscene.skipText();
       } else {
+        c.clearRect(0, 0, canvas.width, canvas.height);
         ls.player.drawView(ls);
         ls.player.drawUi(ls.map.map);
 

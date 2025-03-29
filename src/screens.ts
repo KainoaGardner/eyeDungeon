@@ -101,8 +101,7 @@ export class Screen {
     if (checkHover(canvas.width / 2 - settings.UIRatio * 34 * 2, canvas.width / 2 - settings.UIRatio * 4, settings.UIRatio * 105, settings.UIRatio * 137)) {
       c.strokeRect(canvas.width / 2 - settings.UIRatio * 34 * 2, settings.UIRatio * 105, settings.UIRatio * 32 * 2, settings.UIRatio * 16 * 2);
       if (mouse.click) {
-        ls.screen = -1;
-        ls.backScreen.push(-1);
+        uploadData(ls)
       }
     }
 

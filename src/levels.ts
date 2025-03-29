@@ -2072,6 +2072,9 @@ function level10(ls: levelSettings) {
 }
 
 function level11(ls: levelSettings) {
+  ls.cutscene.scene = 10
+  ls.cutscene.frameCounter = 1
+
   const direction = getPlayerDirection(-90);
   ls.player.dirX = direction.dirX;
   ls.player.dirY = direction.dirY;

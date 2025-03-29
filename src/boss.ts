@@ -15,6 +15,8 @@ export class Boss {
   deadCounter = 0;
   alive: boolean = true;
 
+  private startCounter = 0;
+
   private shootSpeed = 0.2;
   private movePos: pos;
   private hurtCounter = 0;
@@ -992,57 +994,63 @@ export class Boss {
   }
 
   update(ls: levelSettings) {
-    if (this.attackCounter === 0) {
-      this.attack = this.chooseAttack();
-    }
+    if (this.startCounter < 100) {
+      this.startCounter++;
+    } else {
 
-    switch (this.attack) {
-      case 1:
-        this.attack1(ls);
-        break;
-      case 2:
-        this.attack2(ls);
-        break;
-      case 3:
-        this.attack3(ls);
-        break;
-      case 4:
-        this.attack4(ls);
-        break;
-      case 5:
-        this.attack5();
-        break;
-      case 6:
-        this.attack6(ls);
-        break;
-      case 7:
-        this.attack7(ls);
-        break;
-      case 8:
-        this.attack8(ls);
-        break;
-      case 9:
-        this.attack9(ls);
-        break;
-      case 10:
-        this.attack10(ls);
-        break;
-      case 11:
-        this.attack11(ls);
-        break;
-      case 12:
-        this.attack12(ls);
-        break;
-      case 13:
-        this.attack13(ls);
-        break;
 
-      default:
-        this.moveUpdate(ls.map.map);
-        break;
-    }
-    if (this.attackCounter !== 0) {
-      this.attackCounter += 1;
+      if (this.attackCounter === 0) {
+        this.attack = this.chooseAttack();
+      }
+
+      switch (this.attack) {
+        case 1:
+          this.attack1(ls);
+          break;
+        case 2:
+          this.attack2(ls);
+          break;
+        case 3:
+          this.attack3(ls);
+          break;
+        case 4:
+          this.attack4(ls);
+          break;
+        case 5:
+          this.attack5();
+          break;
+        case 6:
+          this.attack6(ls);
+          break;
+        case 7:
+          this.attack7(ls);
+          break;
+        case 8:
+          this.attack8(ls);
+          break;
+        case 9:
+          this.attack9(ls);
+          break;
+        case 10:
+          this.attack10(ls);
+          break;
+        case 11:
+          this.attack11(ls);
+          break;
+        case 12:
+          this.attack12(ls);
+          break;
+        case 13:
+          this.attack13(ls);
+          break;
+
+        default:
+          this.moveUpdate(ls.map.map);
+          break;
+      }
+      if (this.attackCounter !== 0) {
+        this.attackCounter += 1;
+      }
     }
   }
 
