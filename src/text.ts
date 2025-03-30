@@ -70,6 +70,22 @@ englishText.set("skip", "Press ESCAPE to skip")
 japaneseText.set("skip", "ESCAPE 押すとスキップをする")
 
 
+englishText.set("getFlashlight", "You equipped Flashlight")
+japaneseText.set("getFlashlight", "懐中電灯を装備しました")
+
+englishText.set("findSword", "You found a Sword")
+japaneseText.set("findSword", "剣を拾いました")
+
+englishText.set("getRun", "You can now Run")
+japaneseText.set("getRun", "走れるようになりました")
+
+
+englishText.set("level", "Level")
+japaneseText.set("level", "レベル")
+
+
+
+
 export { languageText }
 
 

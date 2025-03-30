@@ -47,17 +47,29 @@ const settings: gameSettings = {
 }
 
 const unlockedLevels = new Map<number, boolean>();
-unlockedLevels.set(1, false)
-unlockedLevels.set(2, false)
-unlockedLevels.set(3, false)
-unlockedLevels.set(4, false)
-unlockedLevels.set(5, false)
-unlockedLevels.set(6, false)
-unlockedLevels.set(7, false)
-unlockedLevels.set(8, false)
-unlockedLevels.set(9, false)
-unlockedLevels.set(10, false)
-unlockedLevels.set(11, false)
+// unlockedLevels.set(1, false)
+// unlockedLevels.set(2, false)
+// unlockedLevels.set(3, false)
+// unlockedLevels.set(4, false)
+// unlockedLevels.set(5, false)
+// unlockedLevels.set(6, false)
+// unlockedLevels.set(7, false)
+// unlockedLevels.set(8, false)
+// unlockedLevels.set(9, false)
+// unlockedLevels.set(10, false)
+// unlockedLevels.set(11, false)
+
+unlockedLevels.set(1, true)
+unlockedLevels.set(2, true)
+unlockedLevels.set(3, true)
+unlockedLevels.set(4, true)
+unlockedLevels.set(5, true)
+unlockedLevels.set(6, true)
+unlockedLevels.set(7, true)
+unlockedLevels.set(8, true)
+unlockedLevels.set(9, true)
+unlockedLevels.set(10, true)
+unlockedLevels.set(11, true)
 
 canvas.width = settings.displayWidth;
 canvas.height = settings.displayHeight;
@@ -79,7 +91,10 @@ const buffer = new Array(maxGraphicsHeight)
 
 const lightingBuffer = new Array(maxGraphicsWidth).fill(undefined);
 const invisBlockBuffer = new Array(maxGraphicsWidth).fill(undefined);
-const zBuffer = new Array(maxGraphicsWidth).fill(undefined);
+const zBuffer = new Array(maxGraphicsHeight)
+  .fill(null)
+  .map(() => Array(maxGraphicsWidth).fill(undefined));
+
 
 const mouse: mouseType = { x: 0, y: 0, click: false }
 

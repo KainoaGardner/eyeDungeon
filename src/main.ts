@@ -30,7 +30,7 @@ const ls = {
   floorTex: 1,
   ceilingTex: 2,
   cutscene: new Cutscene(0, -1),
-  screen: 0,
+  screen: 1,
   backScreen: [0],
 };
 
@@ -87,8 +87,7 @@ function drawFrame(): void {
 
     default:
       if (ls.cutscene.frameCounter !== 0) {
-        ls.cutscene.update();
-        ls.cutscene.skipText();
+        ls.cutscene.update(ls.level);
       } else {
         c.clearRect(0, 0, canvas.width, canvas.height);
         ls.player.drawView(ls);

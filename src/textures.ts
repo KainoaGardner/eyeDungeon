@@ -19,9 +19,11 @@ const spriteTextures = new Array(39)
 
 
 
-const cutsceneTextures = new Array(3);
+const cutsceneTextures = new Array(19);
 
-const screens: CanvasImageSource[] = [];
+const screens: CanvasImageSource[] = new Array(7);
+
+const playerTextures: CanvasImageSource[] = new Array(10);
 
 
 function getTexture(
@@ -125,8 +127,8 @@ addTexture("/img/sprites/boss9.png", 33, spriteTexWidth, spriteTexHeight, sprite
 addTexture("/img/sprites/boss10.png", 34, spriteTexWidth, spriteTexHeight, spriteTextures,);
 addTexture("/img/sprites/boss11.png", 35, spriteTexWidth, spriteTexHeight, spriteTextures,);
 addTexture("/img/sprites/boss12.png", 36, spriteTexWidth, spriteTexHeight, spriteTextures,);
-addTexture("/img/sprites/boss13.png", 36, spriteTexWidth, spriteTexHeight, spriteTextures,);
-addTexture("/img/sprites/horn.png", 37, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/boss13.png", 37, spriteTexWidth, spriteTexHeight, spriteTextures,);
+addTexture("/img/sprites/horn.png", 38, spriteTexWidth, spriteTexHeight, spriteTextures,);
 
 //items
 const flashlightImg = new Image();
@@ -211,7 +213,38 @@ for (let i = 0; i < 7; i++) {
   const screen = new Image();
   if (screen instanceof HTMLElement) {
     screen.src = `/img/screens/screen${i}.png`;
-    screens.push(screen);
+    screens[i] = screen;
+  }
+}
+
+for (let i = 0; i < 10; i++) {
+  const player = new Image();
+  if (player instanceof HTMLElement) {
+    player.src = `/img/cutscenes/player${i}.png`;
+    playerTextures[i] = player;
+  }
+}
+
+for (let i = 0; i < 5; i++) {
+  const bg = new Image();
+  if (bg instanceof HTMLElement) {
+    bg.src = `/img/cutscenes/bg${i}.png`;
+    cutsceneTextures[i + 3] = bg;
+  }
+}
+
+const bg = new Image();
+if (bg instanceof HTMLElement) {
+  bg.src = `/img/cutscenes/bg5.png`;
+  cutsceneTextures[18] = bg;
+}
+
+
+for (let i = 0; i < 3; i++) {
+  const cloud = new Image();
+  if (cloud instanceof HTMLElement) {
+    cloud.src = `/img/cutscenes/cloud${i}.png`;
+    cutsceneTextures[i + 8] = cloud;
   }
 }
 
@@ -224,19 +257,43 @@ if (frame1Img instanceof HTMLElement) frame1Img.src = "/img/screens/frame1.png";
 const controlsImg = new Image();
 if (controlsImg instanceof HTMLElement) controlsImg.src = "/img/screens/controlsText.png";
 
+for (let i = 0; i < 3; i++) {
+  const boss = new Image();
+  if (boss instanceof HTMLElement) {
+    boss.src = `/img/cutscenes/boss${i}.png`;
+    cutsceneTextures[i] = boss;
+  }
+}
 
-const bossCS0 = new Image();
-if (bossCS0 instanceof HTMLElement) bossCS0.src = "/img/cutscenes/boss0.png";
-cutsceneTextures[0] = bossCS0
+for (let i = 0; i < 2; i++) {
+  const slime = new Image();
+  if (slime instanceof HTMLElement) {
+    slime.src = `/img/cutscenes/slime${i}.png`;
+    cutsceneTextures[i + 11] = slime;
+  }
+}
 
-const bossCS1 = new Image();
-if (bossCS1 instanceof HTMLElement) bossCS1.src = "/img/cutscenes/boss1.png";
-cutsceneTextures[1] = bossCS1
+for (let i = 0; i < 2; i++) {
+  const mage = new Image();
+  if (mage instanceof HTMLElement) {
+    mage.src = `/img/cutscenes/mage${i}.png`;
+    cutsceneTextures[i + 14] = mage;
+  }
+}
 
-const bossCS2 = new Image();
-if (bossCS2 instanceof HTMLElement) bossCS2.src = "/img/cutscenes/boss2.png";
-cutsceneTextures[2] = bossCS2
+for (let i = 0; i < 2; i++) {
+  const ghost = new Image();
+  if (ghost instanceof HTMLElement) {
+    ghost.src = `/img/cutscenes/ghost${i}.png`;
+    cutsceneTextures[i + 16] = ghost;
+  }
+}
 
+const fireball = new Image();
+if (fireball instanceof HTMLElement) {
+  fireball.src = `/img/cutscenes/fireball.png`;
+  cutsceneTextures[13] = fireball;
+}
 
 
 
@@ -274,5 +331,6 @@ export {
   frame1Img,
   controlsImg,
 
-  cutsceneTextures
+  cutsceneTextures,
+  playerTextures
 };

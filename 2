@@ -29,24 +29,6 @@ export class Cutscene {
       case 3:
         this.cutscene4(level)
         break;
-      case 4:
-        this.cutscene5(level)
-        break;
-      case 5:
-        this.cutscene6(level)
-        break;
-      case 6:
-        this.cutscene7(level)
-        break;
-      case 7:
-        this.cutscene8(level)
-        break;
-      case 8:
-        this.cutscene9(level)
-        break;
-      case 9:
-        this.cutscene10(level)
-        break;
       case 10:
         this.bossCutscene();
         break;
@@ -390,7 +372,6 @@ export class Cutscene {
   }
 
   private cutscene4(level: number) {
-    const text = languageText[settings.language]
     if (this.frameCounter > 1300) {
       this.frameCounter = 0;
     }
@@ -403,13 +384,13 @@ export class Cutscene {
     if (this.frameCounter > 100 && this.frameCounter < 1000) {
       c.drawImage(cutsceneTextures[18], 0, 0, canvas.width, canvas.height)
       if (playerWalkFrame === 0 || playerWalkFrame === 1) {
-        c.drawImage(playerTextures[1], settings.UIRatio * (-40 + (this.frameCounter - 100) / 2), settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+        c.drawImage(playerTextures[1], settings.UIRatio * (-20 + (this.frameCounter - 100) / 2), settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
       }
       if (playerWalkFrame === 2) {
-        c.drawImage(playerTextures[2], settings.UIRatio * (-40 + (this.frameCounter - 100) / 2), settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+        c.drawImage(playerTextures[2], settings.UIRatio * (-20 + (this.frameCounter - 100) / 2), settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
       }
       if (playerWalkFrame === 3) {
-        c.drawImage(playerTextures[3], settings.UIRatio * (-40 + (this.frameCounter - 100) / 2), settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+        c.drawImage(playerTextures[3], settings.UIRatio * (-20 + (this.frameCounter - 100) / 2), settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
       }
 
 
@@ -417,15 +398,15 @@ export class Cutscene {
       c.fillStyle = "white"
       c.beginPath();
       const path = new Path2D();
-      path.moveTo(settings.UIRatio * (-15 + (this.frameCounter - 100) / 2), settings.UIRatio * 95);
+      path.moveTo(settings.UIRatio * (5 + (this.frameCounter - 100) / 2), settings.UIRatio * 95);
 
       path.lineTo(settings.UIRatio * (100 + (this.frameCounter - 100) / 2), settings.UIRatio * 57);
       path.lineTo(settings.UIRatio * (100 + (this.frameCounter - 100) / 2), settings.UIRatio * 137);
-      path.lineTo(settings.UIRatio * (-15 + (this.frameCounter - 100) / 2), settings.UIRatio * 95);
+      path.lineTo(settings.UIRatio * (5 + (this.frameCounter - 100) / 2), settings.UIRatio * 95);
       c.fill(path);
 
       c.globalAlpha = 1;
-      drawImage(c, flashLightInvImg, settings.UIRatio * (-28 + (this.frameCounter - 100) / 2), settings.UIRatio * 85, settings.UIRatio * 20, settings.UIRatio * 20, 135);
+      drawImage(c, flashLightInvImg, settings.UIRatio * (-8 + (this.frameCounter - 100) / 2), settings.UIRatio * 85, settings.UIRatio * 20, settings.UIRatio * 20, 135);
 
       c.globalAlpha = 0.5;
       c.fillStyle = "black"
@@ -473,92 +454,66 @@ export class Cutscene {
     if (this.frameCounter > 1300) {
       this.frameCounter = 0;
     }
+    if (this.frameCounter === 1) {
+      playerWalkFrame = 0;
+    }
+    c.fillStyle = "black"
+    c.fillRect(0, 0, canvas.width, canvas.height)
 
-    if (this.frameCounter > 1000) {
-      c.font = `bold ${10 * settings.UIRatio}px Arial`
+    if (this.frameCounter > 100 && this.frameCounter < 1000) {
+      c.drawImage(cutsceneTextures[18], 0, 0, canvas.width, canvas.height)
+      if (playerWalkFrame === 0 || playerWalkFrame === 1) {
+        c.drawImage(playerTextures[1], settings.UIRatio * (-20 + (this.frameCounter - 100) / 2), settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+      if (playerWalkFrame === 2) {
+        c.drawImage(playerTextures[2], settings.UIRatio * (-20 + (this.frameCounter - 100) / 2), settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+      if (playerWalkFrame === 3) {
+        c.drawImage(playerTextures[3], settings.UIRatio * (-20 + (this.frameCounter - 100) / 2), settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+
+
+      c.globalAlpha = 0.5;
       c.fillStyle = "white"
-      c.strokeStyle = "black"
-      c.lineWidth = 1 * settings.UIRatio / 10;
+      c.beginPath();
+      const path = new Path2D();
+      path.moveTo(settings.UIRatio * (5 + (this.frameCounter - 100) / 2), settings.UIRatio * 95);
 
-      c.fillText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
-      c.strokeText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
-    }
-  }
+      path.lineTo(settings.UIRatio * (100 + (this.frameCounter - 100) / 2), settings.UIRatio * 57);
+      path.lineTo(settings.UIRatio * (100 + (this.frameCounter - 100) / 2), settings.UIRatio * 137);
+      path.lineTo(settings.UIRatio * (5 + (this.frameCounter - 100) / 2), settings.UIRatio * 95);
+      c.fill(path);
 
-  private cutscene6(level: number) {
-    const text = languageText[settings.language]
+      c.globalAlpha = 1;
+      drawImage(c, flashLightInvImg, settings.UIRatio * (-8 + (this.frameCounter - 100) / 2), settings.UIRatio * 85, settings.UIRatio * 20, settings.UIRatio * 20, 135);
 
-    if (this.frameCounter > 1300) {
-      this.frameCounter = 0;
-    }
+      c.globalAlpha = 0.5;
+      c.fillStyle = "black"
+      c.fillRect(0, 0, canvas.width, canvas.height)
 
-    if (this.frameCounter > 1000) {
-      c.font = `bold ${10 * settings.UIRatio}px Arial`
-      c.fillStyle = "white"
-      c.strokeStyle = "black"
-      c.lineWidth = 1 * settings.UIRatio / 10;
+      c.globalAlpha = 1;
 
-      c.fillText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
-      c.strokeText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
-    }
-  }
 
-  private cutscene7(level: number) {
-    const text = languageText[settings.language]
+      if (this.frameCounter % 100 > 50) {
+        c.drawImage(cutsceneTextures[16], settings.UIRatio * (-100 + (this.frameCounter - 100) / 2.5), settings.UIRatio * 85, settings.UIRatio * 40, settings.UIRatio * 40)
+      } else {
+        c.drawImage(cutsceneTextures[17], settings.UIRatio * (-100 + (this.frameCounter - 100) / 2.5), settings.UIRatio * 85, settings.UIRatio * 40, settings.UIRatio * 40)
+      }
 
-    if (this.frameCounter > 1300) {
-      this.frameCounter = 0;
     }
 
-    if (this.frameCounter > 1000) {
-      c.font = `bold ${10 * settings.UIRatio}px Arial`
-      c.fillStyle = "white"
-      c.strokeStyle = "black"
-      c.lineWidth = 1 * settings.UIRatio / 10;
-
-      c.fillText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
-      c.strokeText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
-    }
-  }
-  private cutscene8(level: number) {
-    const text = languageText[settings.language]
-
-    if (this.frameCounter > 1300) {
-      this.frameCounter = 0;
-    }
-
-    if (this.frameCounter > 1000) {
-      c.font = `bold ${10 * settings.UIRatio}px Arial`
-      c.fillStyle = "white"
-      c.strokeStyle = "black"
-      c.lineWidth = 1 * settings.UIRatio / 10;
-
-      c.fillText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
-      c.strokeText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
-    }
-  }
-  private cutscene9(level: number) {
-    const text = languageText[settings.language]
-
-    if (this.frameCounter > 1300) {
-      this.frameCounter = 0;
-    }
-
-    if (this.frameCounter > 1000) {
-      c.font = `bold ${10 * settings.UIRatio}px Arial`
-      c.fillStyle = "white"
-      c.strokeStyle = "black"
-      c.lineWidth = 1 * settings.UIRatio / 10;
-
-      c.fillText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
-      c.strokeText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
-    }
-  }
-  private cutscene10(level: number) {
-    const text = languageText[settings.language]
-
-    if (this.frameCounter > 1300) {
-      this.frameCounter = 0;
+    if (this.frameCounter > 100 && this.frameCounter < 1000) {
+      if (this.frameCounter % 15 === 0) {
+        if (playerWalkFrame === 0) {
+          playerWalkFrame = 2;
+        } else if (playerWalkFrame === 1) {
+          playerWalkFrame = 3;
+        } else if (playerWalkFrame === 2) {
+          playerWalkFrame = 1;
+        } else if (playerWalkFrame === 3) {
+          playerWalkFrame = 0;
+        }
+      }
     }
 
     if (this.frameCounter > 1000) {

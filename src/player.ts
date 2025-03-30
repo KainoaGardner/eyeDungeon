@@ -47,7 +47,6 @@ import {
   canvas,
   c,
   buffer,
-  lightingBuffer,
   settings,
   invisBlockBuffer,
   zBuffer,
@@ -176,30 +175,6 @@ export class Player {
     }
   }
 
-  private clearLightBuffer() {
-    for (let i = 0; i < settings.graphicsWidth; i++) {
-      lightingBuffer[i] = undefined;
-    }
-  }
-
-  private drawLightBuffer() {
-    for (let i = 0; i < settings.graphicsWidth; i++) {
-      if (lightingBuffer[i] !== undefined) {
-        const height = lightingBuffer[i][0];
-        const alpha = lightingBuffer[i][1];
-        c.globalAlpha = alpha;
-        c.fillStyle = "black";
-        c.fillRect(
-          settings.bufferRatio * i,
-          canvas.height / 2 - height / 2,
-          settings.bufferRatio,
-          height,
-        );
-      }
-    }
-    c.globalAlpha = 1;
-  }
-
   draw(scale: number, blockSize: number): void {
     c.beginPath();
     c.arc(
@@ -227,7 +202,11 @@ export class Player {
     c.stroke();
   }
 
-  private drawBG(floorTex: number, ceilingTex: number) {
+  private drawBG(ls: levelSettings) {
+    const floorTex = ls.floorTex
+    const ceilingTex = ls.ceilingTex
+    const levelBrightness = ls.map.brightness
+
     c.fillStyle = "black";
     c.fillRect(0, 0, canvas.width, canvas.height);
     for (let y = 0; y < settings.graphicsHeight; y++) {
@@ -247,6 +226,36 @@ export class Player {
       let floorX = this.posX + rowDistance * rayDirX0;
       let floorY = this.posY + rowDistance * rayDirY0;
 
+
+      let brightness: number;
+      if (
+        this.viewDist === 64 ||
+        (this.gunCounter > 0 && this.gunCounter < 15 && this.holding === 3)
+      ) {
+        if (ls.level === 4) {
+          brightness =
+            ((p - levelBrightness) / (settings.graphicsHeight / 2)) *
+            ((p - levelBrightness) / (settings.graphicsHeight / 2)) *
+            2;
+        } else {
+          brightness = ((p - levelBrightness) / (settings.graphicsHeight / 2)) * 5;
+        }
+      } else {
+        if (ls.level === 4) {
+          brightness =
+            ((p - levelBrightness) / (settings.graphicsHeight / 2)) *
+            ((p - levelBrightness) / (settings.graphicsHeight / 2)) /
+            2;
+        } else {
+          brightness = (p - levelBrightness) / (settings.graphicsHeight / 2);
+        }
+      }
+
+      brightness = Math.abs(brightness)
+      if (brightness > 1) {
+        brightness = 1
+      }
+
       for (let x = 0; x < settings.graphicsWidth; x++) {
         const cellX = Math.floor(floorX);
         const cellY = Math.floor(floorY);
@@ -258,10 +267,31 @@ export class Player {
         floorY += floorStepY;
 
         let color = bgTextures[floorTex][texWidth * tY + tX];
-        buffer[y][x] = color;
+        let red = 0;
+        let green = 0;
+        let blue = 0;
+        if (color) {
+          red = color[0]
+          green = color[1]
+          blue = color[2]
 
+          red = Math.floor(red * brightness)
+          green = Math.floor(green * brightness)
+          blue = Math.floor(blue * brightness)
+        }
+
+        buffer[y][x] = [red, green, blue];
         color = bgTextures[ceilingTex][texWidth * tY + tX];
-        buffer[settings.graphicsHeight - y - 1][x] = color;
+
+        if (color) {
+          red = color[0]
+          green = color[1]
+          blue = color[2]
+
+          red = Math.floor(red * brightness)
+          green = Math.floor(green * brightness)
+          blue = Math.floor(blue * brightness)
+        } buffer[settings.graphicsHeight - y - 1][x] = [red, green, blue];
       }
     }
   }
@@ -308,80 +338,34 @@ export class Player {
         if (
           transformY > 0 &&
           x > 0 &&
-          x < settings.graphicsWidth &&
-          transformY < zBuffer[x]
-        ) {
+          x < settings.graphicsWidth) {
           const texX = Math.floor(
             (256 * (x - (-spriteWidth / 2 + spriteScreenX)) * spriteTexWidth) /
             spriteWidth /
             256,
           );
 
-          zBuffer[x] = transformY;
           for (let y = drawStartY; y < drawEndY; y++) {
-            const d = y * 256 - settings.graphicsHeight * 128 + spriteHeight * 128;
-            const texY = Math.floor((d * spriteTexHeight) / spriteHeight / 256);
-            const color =
-              spriteTextures[sprites[spriteDistance[i].index].texture][
-              spriteTexWidth * texY + texX
-              ];
-            if (
-              color !== undefined &&
-              !(color[0] === 0 && color[1] === 255 && color[2] === 0)
-            ) {
-              buffer[y][x] = color;
+            if (transformY < zBuffer[y][x]) {
+              const d = y * 256 - settings.graphicsHeight * 128 + spriteHeight * 128;
+              const texY = Math.floor((d * spriteTexHeight) / spriteHeight / 256);
+              const color =
+                spriteTextures[sprites[spriteDistance[i].index].texture][
+                spriteTexWidth * texY + texX
+                ];
+              if (
+                color !== undefined &&
+                !(color[0] === 0 && color[1] === 255 && color[2] === 0)
+              ) {
+                zBuffer[y][x] = transformY;
+                buffer[y][x] = color;
+              }
+
             }
           }
         }
       }
     }
-  }
-
-  private drawBGLight(levelBrightness: number, level: number) {
-    c.fillStyle = "black";
-    for (let y = 0; y < settings.graphicsHeight / 2; y++) {
-      let brightness: number;
-      if (
-        this.viewDist === 64 ||
-        (this.gunCounter > 0 && this.gunCounter < 15 && this.holding === 3)
-      ) {
-        if (level === 4) {
-          brightness =
-            ((y - levelBrightness) / (settings.graphicsHeight / 2)) *
-            ((y - levelBrightness) / (settings.graphicsHeight / 2)) *
-            2;
-        } else {
-          brightness = ((y - levelBrightness) / (settings.graphicsHeight / 2)) * 5;
-        }
-      } else {
-        if (level === 4) {
-          brightness =
-            (((y - levelBrightness) / (settings.graphicsHeight / 2)) *
-              ((y - levelBrightness) / (settings.graphicsHeight / 2))) /
-            3;
-        } else {
-          brightness = (y - levelBrightness) / (settings.graphicsHeight / 2);
-        }
-
-        // brightness = y / (settings.graphicsHeight * levelBrightness);
-      }
-
-      c.globalAlpha = 1 - brightness;
-      c.fillRect(
-        0,
-        canvas.height / 2 + y * settings.bufferRatio,
-        canvas.width,
-        settings.bufferRatio,
-      );
-
-      c.fillRect(
-        0,
-        canvas.height / 2 - settings.bufferRatio - y * settings.bufferRatio,
-        canvas.width,
-        settings.bufferRatio,
-      );
-    }
-    c.globalAlpha = 1;
   }
 
   private drawWalls(
@@ -392,7 +376,9 @@ export class Player {
   ) {
     for (let x = 0; x < settings.graphicsWidth; x++) {
       const result = this.distance(x, map);
-      zBuffer[x] = result.distance;
+      for (let y = 0; y < settings.graphicsHeight; y++) {
+        zBuffer[y][x] = result.distance;
+      }
 
       const height = Math.floor(settings.graphicsHeight / result.distance);
       let drawStart = Math.floor(-height / 2 + settings.graphicsHeight / 2);
@@ -420,7 +406,6 @@ export class Player {
       if (alpha > 1) {
         alpha = 1;
       }
-      lightingBuffer[x] = [height * settings.bufferRatio, alpha];
 
       let texNum = result.wallType - 1;
       if (texNum > wallTextures.length) {
@@ -430,7 +415,7 @@ export class Player {
       const step = texHeight / height;
       let texPos = (drawStart - settings.graphicsHeight / 2 + height / 2) * step;
 
-      for (let y = drawStart; y < drawEnd; y++) {
+      for (let y = drawStart; y <= drawEnd; y++) {
         const texY = Math.floor(texPos);
         texPos += step;
 
@@ -445,6 +430,10 @@ export class Player {
             green -= 30;
             blue -= 30;
           }
+
+          red = Math.floor(red * (1 - alpha))
+          green = Math.floor(green * (1 - alpha))
+          blue = Math.floor(blue * (1 - alpha))
 
           buffer[y][x] = [red, green, blue];
         } else {
@@ -510,21 +499,14 @@ export class Player {
 
   drawView(ls: levelSettings) {
     this.clearBuffer();
-    this.drawBG(ls.floorTex, ls.ceilingTex);
-    this.drawBuffer();
-    this.drawBGLight(ls.map.brightness, ls.level);
-
-    this.clearBuffer();
-    this.clearLightBuffer();
     this.clearInvisBlockBuffer();
+
+    this.drawBG(ls);
     this.drawWalls(ls.map.map, ls.map.lightList, ls.map.brightness, ls.sprites);
+    this.drawSprites(ls.sprites);
+
     this.drawBuffer();
     this.drawInvisBlockBuffer();
-    this.drawLightBuffer();
-
-    this.clearBuffer();
-    this.drawSprites(ls.sprites);
-    this.drawBuffer();
   }
 
   private getBrightness(
@@ -1053,7 +1035,8 @@ export class Player {
 
     c.globalAlpha = 1;
     c.fillStyle = "#e74c3c";
-    c.font = "bold 35px Arial";
+    c.font = `bold ${8 * settings.UIRatio}px Arial`
+
 
     if (this.inventory.flashlight) {
       c.fillText("1", 5 * settings.UIRatio, canvas.height - 5 * settings.UIRatio);
@@ -1987,7 +1970,7 @@ export class Player {
     this.pauseUpdate(ls);
 
     //seperate gun and sword update
-    this.gunUpdate();
+    if (this.inventory.gun) this.gunUpdate();
     if (this.inventory.flashlight) this.flashlightUpdate();
     if (this.inventory.flashlight) this.hiddenBlockUpdate(ls.map);
     if (this.inventory.sword) this.swordUpdate(ls);

@@ -138,6 +138,9 @@ function setLevel(ls: levelSettings) {
 
 function level1(ls: levelSettings) {
   //player
+  ls.cutscene.scene = 0
+  ls.cutscene.frameCounter = 1
+
   const direction = getPlayerDirection(-90);
   ls.player.posX = 2;
   ls.player.posY = 1.5;
@@ -328,6 +331,10 @@ function level1(ls: levelSettings) {
 }
 function level2(ls: levelSettings) {
   //player
+
+  ls.cutscene.scene = 1
+  ls.cutscene.frameCounter = 1
+
   ls.player.posX = 1.5;
   ls.player.posY = 1.5;
   ls.player.dirX = 1;
@@ -408,6 +415,9 @@ function level2(ls: levelSettings) {
   ];
 }
 function level3(ls: levelSettings) {
+  ls.cutscene.scene = 2
+  ls.cutscene.frameCounter = 1
+
   //player
   ls.player.posX = 1.5;
   ls.player.posY = 1.5;
@@ -416,6 +426,7 @@ function level3(ls: levelSettings) {
   ls.player.dirY = direction.dirY;
   ls.player.planeX = direction.planeX;
   ls.player.planeY = direction.planeY;
+  ls.player.holding = 2;
 
   ls.player.inventory.flashlight = true;
   ls.player.inventory.sword = true;
@@ -714,10 +725,14 @@ function level3(ls: levelSettings) {
       type: new SpikeBall(-3.1, 0.04, { x: 27.5, y: 9.5 }, 90),
     },
 
-    { x: 24.5, y: 4, texture: 37, type: new HornItem(24.5, 4) },
+    { x: 24.5, y: 4, texture: 38, type: new HornItem(24.5, 4) },
   ];
 }
 function level4(ls: levelSettings) {
+
+  ls.cutscene.scene = 3
+  ls.cutscene.frameCounter = 1
+
   //player
   ls.player.posX = 1.5;
   ls.player.posY = 1.5;
@@ -725,6 +740,7 @@ function level4(ls: levelSettings) {
   ls.player.dirY = 0;
   ls.player.planeX = 0;
   ls.player.planeY = -1;
+  ls.player.holding = 1;
 
   ls.player.inventory.flashlight = true;
   ls.player.inventory.sword = true;
@@ -754,6 +770,8 @@ function level4(ls: levelSettings) {
   ];
 }
 function level5(ls: levelSettings) {
+  ls.cutscene.scene = 4
+  ls.cutscene.frameCounter = 1
   //player
   const direction = getPlayerDirection(180);
   ls.player.posX = 13.5;
@@ -765,6 +783,7 @@ function level5(ls: levelSettings) {
   ls.player.holding = 3;
   ls.player.ammo = 3;
   ls.player.reloadTimer = 1000;
+  ls.player.holding = 3;
 
   ls.player.inventory.flashlight = true;
   ls.player.inventory.sword = true;
@@ -953,6 +972,9 @@ function level5(ls: levelSettings) {
   ];
 }
 function level6(ls: levelSettings) {
+  ls.cutscene.scene = 5
+  ls.cutscene.frameCounter = 1
+
   //player
   const direction = getPlayerDirection(-90);
   // ls.player.posX = 12.5;
@@ -964,7 +986,6 @@ function level6(ls: levelSettings) {
   ls.player.dirY = direction.dirY;
   ls.player.planeX = direction.planeX;
   ls.player.planeY = direction.planeY;
-  ls.player.holding = 1;
   ls.player.holding = 3;
 
   ls.player.inventory.flashlight = true;
@@ -1244,6 +1265,9 @@ function level6(ls: levelSettings) {
   ];
 }
 function level7(ls: levelSettings) {
+  ls.cutscene.scene = 6
+  ls.cutscene.frameCounter = 1
+
   //player
   ls.player.posX = 19.5;
   ls.player.posY = 9.5;
@@ -1254,6 +1278,7 @@ function level7(ls: levelSettings) {
   ls.player.planeY = direction.planeY;
   ls.player.ammo = 3;
   ls.player.reloadTimer = 1000;
+  ls.player.holding = 3;
 
   ls.player.inventory.flashlight = true;
   ls.player.inventory.sword = true;
@@ -1444,6 +1469,9 @@ function level7(ls: levelSettings) {
 }
 
 function level8(ls: levelSettings) {
+  ls.cutscene.scene = 7
+  ls.cutscene.frameCounter = 1
+
   //player
   ls.player.posX = 10.5;
   ls.player.posY = 10.5;
@@ -1454,6 +1482,7 @@ function level8(ls: levelSettings) {
   ls.player.holding = 2;
   ls.player.ammo = 3;
   ls.player.reloadTimer = 1000;
+  ls.player.holding = 4;
 
   ls.player.inventory.flashlight = true;
   ls.player.inventory.sword = true;
@@ -1616,6 +1645,9 @@ function level8(ls: levelSettings) {
   ];
 }
 function level9(ls: levelSettings) {
+  ls.cutscene.scene = 8
+  ls.cutscene.frameCounter = 1
+
   //player
   ls.player.posX = 2;
   ls.player.posY = 2;
@@ -1625,7 +1657,7 @@ function level9(ls: levelSettings) {
   ls.player.planeX = direction.planeX;
   ls.player.planeY = direction.planeY;
 
-  ls.player.holding = 4;
+  ls.player.holding = 3;
   ls.player.ammo = 3;
   ls.player.reloadTimer = 1000;
 
@@ -1808,6 +1840,9 @@ function level9(ls: levelSettings) {
   ];
 }
 function level10(ls: levelSettings) {
+  ls.cutscene.scene = 9
+  ls.cutscene.frameCounter = 1
+
   const direction = getPlayerDirection(-90);
   ls.player.dirX = direction.dirX;
   ls.player.dirY = direction.dirY;
@@ -1818,7 +1853,7 @@ function level10(ls: levelSettings) {
   ls.player.posY = 4.5;
   ls.player.ammo = 6;
 
-  ls.player.holding = 1;
+  ls.player.holding = 3;
   ls.player.reloadTimer = 1000;
 
   ls.player.inventory.flashlight = true;
@@ -2085,7 +2120,7 @@ function level11(ls: levelSettings) {
   ls.player.posY = 1.5;
   ls.player.ammo = 3;
 
-  ls.player.holding = 1;
+  ls.player.holding = 3;
   ls.player.reloadTimer = 100;
 
   ls.player.inventory.flashlight = true;
