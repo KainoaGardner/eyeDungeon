@@ -19,7 +19,7 @@ const spriteTextures = new Array(39)
 
 
 
-const cutsceneTextures = new Array(28);
+const cutsceneTextures = new Array(33);
 
 const screens: CanvasImageSource[] = new Array(7);
 
@@ -239,7 +239,7 @@ for (let i = 0; i < 5; i++) {
 const bg = new Image();
 if (bg instanceof HTMLElement) {
   bg.src = `/img/cutscenes/bg5.png`;
-  cutsceneTextures[18] = bg;
+  cutsceneTextures[28] = bg;
 }
 
 
@@ -345,6 +345,30 @@ if (closeWall instanceof HTMLElement) {
   closeWall.src = `/img/cutscenes/closeWall.png`;
   cutsceneTextures[27] = closeWall;
 }
+
+for (let i = 0; i < 2; i++) {
+  const bg78 = new Image();
+  if (bg78 instanceof HTMLElement) {
+    bg78.src = `/img/cutscenes/bg${i + 7}.png`;
+    cutsceneTextures[i + 28] = bg78;
+  }
+}
+
+const boss3 = new Image();
+if (boss3 instanceof HTMLElement) {
+  boss3.src = `/img/cutscenes/boss3.png`;
+  cutsceneTextures[30] = boss3;
+}
+
+for (let i = 0; i < 2; i++) {
+  const stairs = new Image();
+  if (stairs instanceof HTMLElement) {
+    stairs.src = `/img/cutscenes/stairs${i}.png`;
+    cutsceneTextures[i + 31] = stairs;
+  }
+}
+
+
 
 
 

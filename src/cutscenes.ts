@@ -1,5 +1,8 @@
 import { canvas, c, settings, } from "./global";
-import { cutsceneTextures, playerTextures, flashLightInvImg, swordInvImg, gunInvImg, gunInv1Img, sheildInvImg, dashInvImg } from "./textures"
+import {
+  cutsceneTextures, playerTextures, flashLightInvImg, swordInvImg, gunInvImg, gunInv1Img,
+  sheildInvImg, dashInvImg, clockInvImg
+} from "./textures"
 import { keyMap } from "./keypress"
 import { languageText } from "./text"
 import { drawImage } from "./util"
@@ -410,7 +413,7 @@ export class Cutscene {
     c.fillRect(0, 0, canvas.width, canvas.height)
 
     if (this.frameCounter > 100 && this.frameCounter < 1000) {
-      c.drawImage(cutsceneTextures[18], 0, 0, canvas.width, canvas.height)
+      c.drawImage(cutsceneTextures[28], 0, 0, canvas.width, canvas.height)
       if (playerWalkFrame === 0 || playerWalkFrame === 1) {
         c.drawImage(playerTextures[1], settings.UIRatio * (-40 + (this.frameCounter - 100) / 2), settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
       }
@@ -1269,11 +1272,139 @@ export class Cutscene {
   private cutscene10(level: number) {
     const text = languageText[settings.language]
 
-    if (this.frameCounter > 1300) {
+    if (this.frameCounter > 2700) {
       this.frameCounter = 0;
     }
 
-    if (this.frameCounter > 1000) {
+    c.fillStyle = "black"
+    c.fillRect(0, 0, canvas.width, canvas.height)
+
+    if (this.frameCounter >= 100 && this.frameCounter < 2400) {
+      c.drawImage(cutsceneTextures[5], 0, 0, canvas.width, canvas.height)
+    }
+
+    if (this.frameCounter > 100 && this.frameCounter < 300) {
+      if (playerWalkFrame === 0 || playerWalkFrame === 1) {
+        c.drawImage(playerTextures[1], settings.UIRatio * (0 + (this.frameCounter - 100) / 5), settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+      if (playerWalkFrame === 2) {
+        c.drawImage(playerTextures[2], settings.UIRatio * (0 + (this.frameCounter - 100) / 5), settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+      if (playerWalkFrame === 3) {
+        c.drawImage(playerTextures[3], settings.UIRatio * (0 + (this.frameCounter - 100) / 5), settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+    } else if (this.frameCounter >= 300 && this.frameCounter < 400) {
+      c.drawImage(playerTextures[2], settings.UIRatio * 40, settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+    } else if (this.frameCounter >= 400 && this.frameCounter < 500) {
+      c.drawImage(playerTextures[6], settings.UIRatio * 40, settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+    } else if (this.frameCounter >= 500 && this.frameCounter < 1200) {
+      c.drawImage(playerTextures[5], settings.UIRatio * 40, settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+      c.font = `bold ${10 * settings.UIRatio}px Arial`
+      c.fillStyle = "white"
+      c.strokeStyle = "black"
+      c.lineWidth = 1 * settings.UIRatio / 10;
+
+      c.fillText(text.get("learnTeleport")!, canvas.width / 2, canvas.height / 2)
+      c.strokeText(text.get("learnTeleport")!, canvas.width / 2, canvas.height / 2)
+
+    }
+    else if (this.frameCounter >= 1200 && this.frameCounter < 1300) {
+      c.drawImage(playerTextures[6], settings.UIRatio * 40, settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+    }
+    else if (this.frameCounter >= 1300 && this.frameCounter < 1500) {
+      if (playerWalkFrame === 0 || playerWalkFrame === 1) {
+        c.drawImage(playerTextures[1], settings.UIRatio * (40 + (this.frameCounter - 1300) / 2), settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+      if (playerWalkFrame === 2) {
+        c.drawImage(playerTextures[2], settings.UIRatio * (40 + (this.frameCounter - 1300) / 2), settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+      if (playerWalkFrame === 3) {
+        c.drawImage(playerTextures[3], settings.UIRatio * (40 + (this.frameCounter - 1300) / 2), settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+    } else if (this.frameCounter >= 1500 && this.frameCounter < 1600) {
+      c.drawImage(playerTextures[0], settings.UIRatio * 140, settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+    } else if (this.frameCounter >= 1600 && this.frameCounter < 1800) {
+      c.drawImage(playerTextures[0], settings.UIRatio * 60, settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+    }
+    else if (this.frameCounter >= 1800 && this.frameCounter < 1920) {
+      if (playerWalkFrame === 0 || playerWalkFrame === 1) {
+        c.drawImage(playerTextures[1], settings.UIRatio * (60 + (this.frameCounter - 1800) / 2), settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+      if (playerWalkFrame === 2) {
+        c.drawImage(playerTextures[2], settings.UIRatio * (60 + (this.frameCounter - 1800) / 2), settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+      if (playerWalkFrame === 3) {
+        c.drawImage(playerTextures[3], settings.UIRatio * (60 + (this.frameCounter - 1800) / 2), settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+    }
+    else if (this.frameCounter >= 1920 && this.frameCounter < 2000) {
+      c.drawImage(playerTextures[6], settings.UIRatio * 120, settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+    }
+    else if (this.frameCounter >= 2000 && this.frameCounter < 2300) {
+      if (playerWalkFrame === 0 || playerWalkFrame === 1) {
+        c.drawImage(playerTextures[1], settings.UIRatio * (120 + (this.frameCounter - 2000) / 2), settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+      if (playerWalkFrame === 2) {
+        c.drawImage(playerTextures[2], settings.UIRatio * (120 + (this.frameCounter - 2000) / 2), settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+      if (playerWalkFrame === 3) {
+        c.drawImage(playerTextures[3], settings.UIRatio * (120 + (this.frameCounter - 2000) / 2), settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+    }
+
+    if (this.frameCounter >= 100 && this.frameCounter < 500) {
+      c.drawImage(clockInvImg, settings.UIRatio * 70, settings.UIRatio * 105, settings.UIRatio * 20, settings.UIRatio * 20)
+    } else if (this.frameCounter >= 500 && this.frameCounter < 1200) {
+      c.drawImage(clockInvImg, settings.UIRatio * 70, settings.UIRatio * 90, settings.UIRatio * 20, settings.UIRatio * 20)
+    } else if (this.frameCounter >= 1200 && this.frameCounter < 1600) {
+      c.drawImage(clockInvImg, settings.UIRatio * 70, settings.UIRatio * 100, settings.UIRatio * 20, settings.UIRatio * 20)
+    } else if (this.frameCounter >= 1600 && this.frameCounter < 2000) {
+      c.drawImage(clockInvImg, settings.UIRatio * 150, settings.UIRatio * 100, settings.UIRatio * 20, settings.UIRatio * 20)
+    } else if (this.frameCounter >= 2000 && this.frameCounter < 2400) {
+      c.drawImage(clockInvImg, settings.UIRatio * (130 + (this.frameCounter - 2000) / 2), settings.UIRatio * 80, settings.UIRatio * 20, settings.UIRatio * 20)
+    }
+
+    if (this.frameCounter >= 1200 && this.frameCounter < 2000) {
+      c.drawImage(cutsceneTextures[23], settings.UIRatio * (-20 + (this.frameCounter - 1200) / 3), settings.UIRatio * -20, settings.UIRatio * 40, settings.UIRatio * 40)
+      c.drawImage(cutsceneTextures[23], settings.UIRatio * (-20 + (this.frameCounter - 1200) / 3), settings.UIRatio * 0, settings.UIRatio * 40, settings.UIRatio * 40)
+      c.drawImage(cutsceneTextures[23], settings.UIRatio * (-20 + (this.frameCounter - 1200) / 3), settings.UIRatio * 20, settings.UIRatio * 40, settings.UIRatio * 40)
+      c.drawImage(cutsceneTextures[23], settings.UIRatio * (-20 + (this.frameCounter - 1200) / 3), settings.UIRatio * 40, settings.UIRatio * 40, settings.UIRatio * 40)
+      c.drawImage(cutsceneTextures[23], settings.UIRatio * (-20 + (this.frameCounter - 1200) / 3), settings.UIRatio * 60, settings.UIRatio * 40, settings.UIRatio * 40)
+      c.drawImage(cutsceneTextures[23], settings.UIRatio * (-20 + (this.frameCounter - 1200) / 3), settings.UIRatio * 80, settings.UIRatio * 40, settings.UIRatio * 40)
+      c.drawImage(cutsceneTextures[23], settings.UIRatio * (-20 + (this.frameCounter - 1200) / 3), settings.UIRatio * 100, settings.UIRatio * 40, settings.UIRatio * 40)
+      c.drawImage(cutsceneTextures[23], settings.UIRatio * (-20 + (this.frameCounter - 1200) / 3), settings.UIRatio * 120, settings.UIRatio * 40, settings.UIRatio * 40)
+      c.drawImage(cutsceneTextures[23], settings.UIRatio * (-20 + (this.frameCounter - 1200) / 3), settings.UIRatio * 140, settings.UIRatio * 40, settings.UIRatio * 40)
+    }
+
+    if (this.frameCounter > 100 && this.frameCounter < 300) {
+      if (this.frameCounter % 40 === 0) {
+        if (playerWalkFrame === 0) {
+          playerWalkFrame = 2;
+        } else if (playerWalkFrame === 1) {
+          playerWalkFrame = 3;
+        } else if (playerWalkFrame === 2) {
+          playerWalkFrame = 1;
+        } else if (playerWalkFrame === 3) {
+          playerWalkFrame = 0;
+        }
+      }
+    }
+
+    if (this.frameCounter > 1300 && this.frameCounter < 2300) {
+      if (this.frameCounter % 20 === 0) {
+        if (playerWalkFrame === 0) {
+          playerWalkFrame = 2;
+        } else if (playerWalkFrame === 1) {
+          playerWalkFrame = 3;
+        } else if (playerWalkFrame === 2) {
+          playerWalkFrame = 1;
+        } else if (playerWalkFrame === 3) {
+          playerWalkFrame = 0;
+        }
+      }
+    }
+
+    if (this.frameCounter > 2400) {
       c.font = `bold ${10 * settings.UIRatio}px Arial`
       c.fillStyle = "white"
       c.strokeStyle = "black"
@@ -1282,6 +1413,7 @@ export class Cutscene {
       c.fillText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
       c.strokeText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
     }
+
   }
 
 
@@ -1366,22 +1498,208 @@ export class Cutscene {
   }
 
   private winCutscene(ls: levelSettings) {
-    // const text = languageText[settings.language]
+    const text = languageText[settings.language]
+    c.fillStyle = "black"
+    c.fillRect(0, 0, canvas.width, canvas.height)
 
-    if (this.frameCounter > 1300) {
+
+    if (this.frameCounter > 3800) {
       this.frameCounter = 0;
       ls.screen = 8;
       ls.backScreen = [];
     }
 
-    if (this.frameCounter > 1000) {
+    if (this.frameCounter >= 100 && this.frameCounter < 700) {
+      c.drawImage(cutsceneTextures[28], 0, 0, canvas.width, canvas.height);
+      c.drawImage(cutsceneTextures[30], 0, settings.UIRatio * 27, settings.UIRatio * 100, settings.UIRatio * 100);
+    } else if (this.frameCounter >= 700 && this.frameCounter < 1220) {
+      c.drawImage(cutsceneTextures[28], settings.UIRatio * (0 - (this.frameCounter - 700) / 2), 0, canvas.width, canvas.height);
+      c.drawImage(cutsceneTextures[30], settings.UIRatio * (0 - (this.frameCounter - 700) / 2),
+        settings.UIRatio * 27, settings.UIRatio * 100, settings.UIRatio * 100);
+
+      c.drawImage(cutsceneTextures[4], canvas.width + settings.UIRatio * (0 - (this.frameCounter - 700) / 2), 0, canvas.width, canvas.height);
+      c.drawImage(cutsceneTextures[29], canvas.width + settings.UIRatio * (0 - (this.frameCounter - 700) / 2), 0, canvas.width, canvas.height);
+
+      c.drawImage(cutsceneTextures[31], canvas.width + settings.UIRatio * (0 - (this.frameCounter - 700) / 2), 0, canvas.width, canvas.height);
+    }
+
+    if (this.frameCounter >= 1210 && this.frameCounter < 2500) {
+      c.drawImage(cutsceneTextures[4], settings.UIRatio * (0 - (this.frameCounter - 1220) / 2),
+        settings.UIRatio * (this.frameCounter - 1220) / 2.8, canvas.width, canvas.height);
+      c.drawImage(cutsceneTextures[4], canvas.width + settings.UIRatio * (0 - (this.frameCounter - 1220) / 2),
+        settings.UIRatio * (this.frameCounter - 1220) / 2.8, canvas.width, canvas.height);
+      c.drawImage(cutsceneTextures[4], settings.UIRatio * (0 - (this.frameCounter - 1220) / 2),
+        -canvas.height + settings.UIRatio * (this.frameCounter - 1220) / 2.8, canvas.width, canvas.height);
+      c.drawImage(cutsceneTextures[4], canvas.width + settings.UIRatio * (0 - (this.frameCounter - 1220) / 2),
+        -canvas.height + settings.UIRatio * (this.frameCounter - 1220) / 2.8, canvas.width, canvas.height);
+
+      c.drawImage(cutsceneTextures[4], canvas.width + settings.UIRatio * (0 - (this.frameCounter - 1220) / 2),
+        settings.UIRatio * (this.frameCounter - 1220) / 2.8, canvas.width, canvas.height);
+      c.drawImage(cutsceneTextures[4], canvas.width * 2 + settings.UIRatio * (0 - (this.frameCounter - 1220) / 2),
+        settings.UIRatio * (this.frameCounter - 1220) / 2.8, canvas.width, canvas.height);
+      c.drawImage(cutsceneTextures[4], canvas.width + settings.UIRatio * (0 - (this.frameCounter - 1220) / 2),
+        -canvas.height * 2 + settings.UIRatio * (this.frameCounter - 1220) / 2.8, canvas.width, canvas.height);
+      c.drawImage(cutsceneTextures[4], settings.UIRatio * (0 - (this.frameCounter - 1220) / 2),
+        -canvas.height * 2 + settings.UIRatio * (this.frameCounter - 1220) / 2.8, canvas.width, canvas.height);
+      c.drawImage(cutsceneTextures[4], canvas.width * 2 + settings.UIRatio * (0 - (this.frameCounter - 1220) / 2),
+        -canvas.height * 2 + settings.UIRatio * (this.frameCounter - 1220) / 2.8, canvas.width, canvas.height);
+
+      c.drawImage(cutsceneTextures[3], canvas.width * 2 + settings.UIRatio * (0 - (this.frameCounter - 1220) / 2),
+        settings.UIRatio * (this.frameCounter - 1220) / 2.8, canvas.width, canvas.height);
+      c.drawImage(cutsceneTextures[3], canvas.width * 3 + settings.UIRatio * (0 - (this.frameCounter - 1220) / 2),
+        settings.UIRatio * (this.frameCounter - 1220) / 2.8, canvas.width, canvas.height);
+      c.drawImage(cutsceneTextures[3], canvas.width * 1 + settings.UIRatio * (0 - (this.frameCounter - 1220) / 2),
+        -canvas.height * 3 + settings.UIRatio * (this.frameCounter - 1220) / 2.8, canvas.width, canvas.height);
+      c.drawImage(cutsceneTextures[3], canvas.width * 2 + settings.UIRatio * (0 - (this.frameCounter - 1220) / 2),
+        -canvas.height * 3 + settings.UIRatio * (this.frameCounter - 1220) / 2.8, canvas.width, canvas.height);
+      c.drawImage(cutsceneTextures[3], canvas.width * 3 + settings.UIRatio * (0 - (this.frameCounter - 1220) / 2),
+        -canvas.height * 3 + settings.UIRatio * (this.frameCounter - 1220) / 2.8, canvas.width, canvas.height);
+
+      c.drawImage(cutsceneTextures[3], canvas.width * 3 + settings.UIRatio * (0 - (this.frameCounter - 1220) / 2),
+        settings.UIRatio * (this.frameCounter - 1220) / 2.8, canvas.width, canvas.height);
+      c.drawImage(cutsceneTextures[3], canvas.width * 4 + settings.UIRatio * (0 - (this.frameCounter - 1220) / 2),
+        settings.UIRatio * (this.frameCounter - 1220) / 2.8, canvas.width, canvas.height);
+      c.drawImage(cutsceneTextures[3], canvas.width * 2 + settings.UIRatio * (0 - (this.frameCounter - 1220) / 2),
+        -canvas.height * 4 + settings.UIRatio * (this.frameCounter - 1220) / 2.8, canvas.width, canvas.height);
+      c.drawImage(cutsceneTextures[3], canvas.width * 3 + settings.UIRatio * (0 - (this.frameCounter - 1220) / 2),
+        -canvas.height * 4 + settings.UIRatio * (this.frameCounter - 1220) / 2.8, canvas.width, canvas.height);
+      c.drawImage(cutsceneTextures[3], canvas.width * 4 + settings.UIRatio * (0 - (this.frameCounter - 1220) / 2),
+        -canvas.height * 4 + settings.UIRatio * (this.frameCounter - 1220) / 2.8, canvas.width, canvas.height);
+
+
+      c.drawImage(cutsceneTextures[29], settings.UIRatio * (0 - (this.frameCounter - 1220) / 2),
+        settings.UIRatio * (this.frameCounter - 1220) / 2.8, canvas.width, canvas.height);
+      c.drawImage(cutsceneTextures[31], settings.UIRatio * (0 - (this.frameCounter - 1220) / 2),
+        settings.UIRatio * (this.frameCounter - 1220) / 2.8, canvas.width, canvas.height);
+
+      c.drawImage(cutsceneTextures[32], settings.UIRatio * (176 - (this.frameCounter - 1220) / 2),
+        + settings.UIRatio * (20 + (this.frameCounter - 1220) / 2.8), canvas.width, canvas.height);
+      c.drawImage(cutsceneTextures[31], settings.UIRatio * (176 - (this.frameCounter - 1220) / 2),
+        -canvas.height + settings.UIRatio * (20 + (this.frameCounter - 1220) / 2.8), canvas.width, canvas.height);
+
+      c.drawImage(cutsceneTextures[32], settings.UIRatio * (352 - (this.frameCounter - 1220) / 2),
+        -canvas.height * 1 + settings.UIRatio * (40 + (this.frameCounter - 1220) / 2.8), canvas.width, canvas.height);
+      c.drawImage(cutsceneTextures[31], settings.UIRatio * (352 - (this.frameCounter - 1220) / 2),
+        -canvas.height * 2 + settings.UIRatio * (40 + (this.frameCounter - 1220) / 2.8), canvas.width, canvas.height);
+
+      c.drawImage(cutsceneTextures[32], settings.UIRatio * (528 - (this.frameCounter - 1220) / 2),
+        -canvas.height * 2 + settings.UIRatio * (60 + (this.frameCounter - 1220) / 2.8), canvas.width, canvas.height);
+      c.drawImage(cutsceneTextures[31], settings.UIRatio * (528 - (this.frameCounter - 1220) / 2),
+        -canvas.height * 3 + settings.UIRatio * (60 + (this.frameCounter - 1220) / 2.8), canvas.width, canvas.height);
+
+      c.drawImage(cutsceneTextures[32], settings.UIRatio * (704 - (this.frameCounter - 1220) / 2),
+        -canvas.height * 3 + settings.UIRatio * (80 + (this.frameCounter - 1220) / 2.8), canvas.width, canvas.height);
+      c.drawImage(cutsceneTextures[31], settings.UIRatio * (704 - (this.frameCounter - 1220) / 2),
+        -canvas.height * 4 + settings.UIRatio * (80 + (this.frameCounter - 1220) / 2.8), canvas.width, canvas.height);
+    } else if (this.frameCounter >= 2500 && this.frameCounter < 3000) {
+      c.drawImage(cutsceneTextures[3], 0, 0, canvas.width, canvas.height)
+      c.drawImage(cutsceneTextures[31], -canvas.width + settings.UIRatio * 135, canvas.height + settings.UIRatio * -60, canvas.width, canvas.height)
+      c.drawImage(cutsceneTextures[31], settings.UIRatio * 54, settings.UIRatio * -45, canvas.width, canvas.height)
+      c.drawImage(cutsceneTextures[32], settings.UIRatio * 54, canvas.height + settings.UIRatio * -45, canvas.width, canvas.height)
+
+    } else if (this.frameCounter >= 3000 && this.frameCounter < 3500) {
+      c.drawImage(cutsceneTextures[6], 0, 0, canvas.width, canvas.height)
+
+      c.drawImage(cutsceneTextures[8], settings.UIRatio * (75 + (this.frameCounter - 2900) / 50), settings.UIRatio * 30, settings.UIRatio * 35 * 2, settings.UIRatio * 11 * 2)
+      c.drawImage(cutsceneTextures[9], settings.UIRatio * (30 + (this.frameCounter - 2900) / 40), settings.UIRatio * 45, settings.UIRatio * 35 * 2, settings.UIRatio * 11 * 2)
+      c.drawImage(cutsceneTextures[10], settings.UIRatio * (0 + (this.frameCounter - 2900) / 60), settings.UIRatio * 45, settings.UIRatio * 35, settings.UIRatio * 11)
+      c.drawImage(cutsceneTextures[10], settings.UIRatio * (150 + (this.frameCounter - 2900) / 30), settings.UIRatio * 25, settings.UIRatio * 35 * 3, settings.UIRatio * 11 * 3)
+
+    }
+
+    if (this.frameCounter >= 100 && this.frameCounter < 500) {
+      if (this.frameCounter % 100 > 50) {
+        c.drawImage(playerTextures[8], canvas.width / 2 + settings.UIRatio * -20, settings.UIRatio * 80, settings.UIRatio * 40, settings.UIRatio * 40);
+      } else {
+        c.drawImage(playerTextures[0], canvas.width / 2 + settings.UIRatio * -20, settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40);
+      }
+    } else if (this.frameCounter >= 500 && this.frameCounter < 600) {
+      c.drawImage(playerTextures[0], canvas.width / 2 + settings.UIRatio * -20, settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40);
+    } else if (this.frameCounter >= 600 && this.frameCounter < 700) {
+      c.drawImage(playerTextures[1], canvas.width / 2 + settings.UIRatio * -20, settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40);
+    }
+    else if (this.frameCounter >= 700 && this.frameCounter < 1150) {
+      if (playerWalkFrame === 0 || playerWalkFrame === 1) {
+        c.drawImage(playerTextures[1], canvas.width / 2 + settings.UIRatio * -20, settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+      if (playerWalkFrame === 2) {
+        c.drawImage(playerTextures[2], canvas.width / 2 + settings.UIRatio * -20, settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+      if (playerWalkFrame === 3) {
+        c.drawImage(playerTextures[3], canvas.width / 2 + settings.UIRatio * -20, settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+    } else if (this.frameCounter >= 1140 && this.frameCounter < 1220) {
+      if (playerWalkFrame === 0 || playerWalkFrame === 1) {
+        c.drawImage(playerTextures[1], canvas.width / 2 + settings.UIRatio * -20, settings.UIRatio * (90 - (this.frameCounter - 1140) / 2), settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+      if (playerWalkFrame === 2) {
+        c.drawImage(playerTextures[2], canvas.width / 2 + settings.UIRatio * -20, settings.UIRatio * (90 - (this.frameCounter - 1140) / 2), settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+      if (playerWalkFrame === 3) {
+        c.drawImage(playerTextures[3], canvas.width / 2 + settings.UIRatio * -20, settings.UIRatio * (90 - (this.frameCounter - 1140) / 2), settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+    }
+    else if (this.frameCounter >= 1220 && this.frameCounter < 2500) {
+      if (playerWalkFrame === 0 || playerWalkFrame === 1) {
+        c.drawImage(playerTextures[1], canvas.width / 2 + settings.UIRatio * -20, canvas.height / 2 + settings.UIRatio * -20, settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+      if (playerWalkFrame === 2) {
+        c.drawImage(playerTextures[2], canvas.width / 2 + settings.UIRatio * -20, canvas.height / 2 + settings.UIRatio * -20, settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+      if (playerWalkFrame === 3) {
+        c.drawImage(playerTextures[3], canvas.width / 2 + settings.UIRatio * -20, canvas.height / 2 + settings.UIRatio * -20, settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+    } else if (this.frameCounter >= 2500 && this.frameCounter < 3000) {
+      if (playerWalkFrame === 0 || playerWalkFrame === 1) {
+        c.drawImage(playerTextures[1], canvas.width / 2 + settings.UIRatio * (-20 + (this.frameCounter - 2500) / 2),
+          canvas.height / 2 + settings.UIRatio * (-20 - (this.frameCounter - 2500) / 2),
+          settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+      if (playerWalkFrame === 2) {
+        c.drawImage(playerTextures[2], canvas.width / 2 + settings.UIRatio * (-20 + (this.frameCounter - 2500) / 2),
+          canvas.height / 2 + settings.UIRatio * (-20 - (this.frameCounter - 2500) / 2),
+          settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+      if (playerWalkFrame === 3) {
+        c.drawImage(playerTextures[3], canvas.width / 2 + settings.UIRatio * (-20 + (this.frameCounter - 2500) / 2),
+          canvas.height / 2 + settings.UIRatio * (-20 - (this.frameCounter - 2500) / 2),
+          settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+    } else if (this.frameCounter >= 3000 && this.frameCounter < 3500) {
+      if (playerWalkFrame === 0 || playerWalkFrame === 1) {
+        c.drawImage(playerTextures[1], canvas.width / 2 + settings.UIRatio * (20 + (this.frameCounter - 3000) / 2), settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+      if (playerWalkFrame === 2) {
+        c.drawImage(playerTextures[2], canvas.width / 2 + settings.UIRatio * (20 + (this.frameCounter - 3000) / 2), settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+      if (playerWalkFrame === 3) {
+        c.drawImage(playerTextures[3], canvas.width / 2 + settings.UIRatio * (20 + (this.frameCounter - 3000) / 2), settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
+      }
+    }
+
+    if (this.frameCounter > 640 && this.frameCounter < 3500) {
+      if (this.frameCounter % 20 === 0) {
+        if (playerWalkFrame === 0) {
+          playerWalkFrame = 2;
+        } else if (playerWalkFrame === 1) {
+          playerWalkFrame = 3;
+        } else if (playerWalkFrame === 2) {
+          playerWalkFrame = 1;
+        } else if (playerWalkFrame === 3) {
+          playerWalkFrame = 0;
+        }
+      }
+    }
+
+
+    if (this.frameCounter > 3500) {
       c.font = `bold ${10 * settings.UIRatio}px Arial`
       c.fillStyle = "white"
       c.strokeStyle = "black"
       c.lineWidth = 1 * settings.UIRatio / 10;
 
-      // c.fillText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
-      // c.strokeText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
+      c.fillText(text.get("win")!, canvas.width / 2, canvas.height / 2)
+      c.strokeText(text.get("win")!, canvas.width / 2, canvas.height / 2)
     }
   }
 

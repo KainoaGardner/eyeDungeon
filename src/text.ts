@@ -88,9 +88,11 @@ japaneseText.set("findGun", "銃を拾いました")
 englishText.set("findSheild", "You found a Sheild")
 japaneseText.set("findSheild", "盾を拾いました")
 
-englishText.set("learnDash", "You can now Dash")
+englishText.set("learnDash", "You learned how to Dash")
 japaneseText.set("learnDash", "ダッシュを習得しました")
 
+englishText.set("learnTeleport", "You learned how to Teleport")
+japaneseText.set("learnTeleport", "瞬間移動を習得しました")
 
 englishText.set("level", "Level")
 japaneseText.set("level", "レベル")
