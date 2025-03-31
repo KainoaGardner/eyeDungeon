@@ -1,4 +1,5 @@
 import { levelSettings } from "./levels";
+import { level7BlockHit } from "./level7";
 import { Slime, Mage, Ghost, Skeleton } from "./enemy";
 import { Boss } from "./boss";
 
@@ -70,7 +71,7 @@ export class Bullet {
         );
 
         if (distance < 0.6) {
-          sprite.takeDamage(100);
+          sprite.takeDamage(150);
           this.alive = false;
           break;
         }

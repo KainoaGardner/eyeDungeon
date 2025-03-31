@@ -27,6 +27,9 @@ japaneseText.set("save", "セーブ")
 englishText.set("paused", "PAUSED")
 japaneseText.set("paused", "ポーズ")
 
+englishText.set("win", "YOU WIN")
+japaneseText.set("win", "勝利")
+
 englishText.set("video", "VIDEO")
 japaneseText.set("video", "ビデオ")
 
@@ -70,7 +73,7 @@ englishText.set("skip", "Press ESCAPE to skip")
 japaneseText.set("skip", "ESCAPE 押すとスキップをする")
 
 
-englishText.set("getFlashlight", "You equipped Flashlight")
+englishText.set("getFlashlight", "You equipped a Flashlight")
 japaneseText.set("getFlashlight", "懐中電灯を装備しました")
 
 englishText.set("findSword", "You found a Sword")
@@ -78,6 +81,15 @@ japaneseText.set("findSword", "剣を拾いました")
 
 englishText.set("getRun", "You can now Run")
 japaneseText.set("getRun", "走れるようになりました")
+
+englishText.set("findGun", "You found a Gun")
+japaneseText.set("findGun", "銃を拾いました")
+
+englishText.set("findSheild", "You found a Sheild")
+japaneseText.set("findSheild", "盾を拾いました")
+
+englishText.set("learnDash", "You can now Dash")
+japaneseText.set("learnDash", "ダッシュを習得しました")
 
 
 englishText.set("level", "Level")

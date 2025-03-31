@@ -83,11 +83,14 @@ function drawFrame(): void {
       uiScreen.levelSelectUpdate(ls);
       uiScreen.backUpdate(ls);
       break;
-
+    case 8:
+      uiScreen.winScreen();
+      uiScreen.winScreenUpdate(ls);
+      break;
 
     default:
       if (ls.cutscene.frameCounter !== 0) {
-        ls.cutscene.update(ls.level);
+        ls.cutscene.update(ls);
       } else {
         c.clearRect(0, 0, canvas.width, canvas.height);
         ls.player.drawView(ls);

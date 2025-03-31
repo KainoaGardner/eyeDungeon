@@ -19,7 +19,7 @@ const spriteTextures = new Array(39)
 
 
 
-const cutsceneTextures = new Array(19);
+const cutsceneTextures = new Array(28);
 
 const screens: CanvasImageSource[] = new Array(7);
 
@@ -181,6 +181,9 @@ if (flashLightInvImg instanceof HTMLElement)
 
 const gunInvImg = new Image();
 if (gunInvImg instanceof HTMLElement) gunInvImg.src = "/img/items/gun-inv.png";
+const gunInv1Img = new Image();
+if (gunInv1Img instanceof HTMLElement) gunInv1Img.src = "/img/items/gun-inv1.png";
+
 
 const dashInvImg = new Image();
 if (dashInvImg instanceof HTMLElement) dashInvImg.src = "/img/items/dash.png";
@@ -295,6 +298,55 @@ if (fireball instanceof HTMLElement) {
   cutsceneTextures[13] = fireball;
 }
 
+for (let i = 0; i < 2; i++) {
+  const slime = new Image();
+  if (slime instanceof HTMLElement) {
+    slime.src = `/img/cutscenes/slimel${i}.png`;
+    cutsceneTextures[i + 18] = slime;
+  }
+}
+
+for (let i = 0; i < 2; i++) {
+  const slime = new Image();
+  if (slime instanceof HTMLElement) {
+    slime.src = `/img/cutscenes/slime${i + 2}.png`;
+    cutsceneTextures[i + 20] = slime;
+  }
+}
+
+const bg6 = new Image();
+if (bg6 instanceof HTMLElement) {
+  bg6.src = `/img/cutscenes/bg6.png`;
+  cutsceneTextures[22] = bg6;
+}
+
+const spikeBall = new Image();
+if (spikeBall instanceof HTMLElement) {
+  spikeBall.src = `/img/cutscenes/spikeball.png`;
+  cutsceneTextures[23] = spikeBall;
+}
+
+for (let i = 0; i < 2; i++) {
+  const door = new Image();
+  if (door instanceof HTMLElement) {
+    door.src = `/img/cutscenes/door${i}.png`;
+    cutsceneTextures[i + 24] = door;
+  }
+}
+
+const sheild = new Image();
+if (sheild instanceof HTMLElement) {
+  sheild.src = `/img/cutscenes/sheild.png`;
+  cutsceneTextures[26] = sheild;
+}
+
+const closeWall = new Image();
+if (closeWall instanceof HTMLElement) {
+  closeWall.src = `/img/cutscenes/closeWall.png`;
+  cutsceneTextures[27] = closeWall;
+}
+
+
 
 
 
@@ -317,6 +369,7 @@ export {
   hornInvImg,
   flashlightImg,
   gunInvImg,
+  gunInv1Img,
   dashInvImg,
   flashLightInvImg,
   clockInvImg,

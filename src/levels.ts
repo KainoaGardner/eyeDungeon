@@ -92,8 +92,7 @@ function getPlayerDirection(angle: number): direction {
 
 
 function setLevel(ls: levelSettings) {
-  ls.player.health = 1000;
-  ls.player.stamina = 1000;
+  ls.player.resetPlayer();
   unlockedLevels.set(ls.level, true)
   switch (ls.level) {
     case 1:
@@ -2162,7 +2161,7 @@ function level11(ls: levelSettings) {
   ls.ceilingTex = 5;
 
   ls.sprites = [
-    { x: 8.5, y: 8.5, texture: 24, type: new Boss(8.5, 8.5, 5000, 10) },
+    { x: 8.5, y: 8.5, texture: 24, type: new Boss(8.5, 8.5, 100, 10) },
   ];
 }
 

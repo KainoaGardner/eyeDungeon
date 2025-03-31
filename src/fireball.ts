@@ -52,7 +52,7 @@ export class Fireball {
             (this.y - sprite.y) * (this.y - sprite.y),
           );
           if (distance < 1) {
-            sprite.type.takeDamage(50);
+            sprite.type.takeDamage(200);
             if (ls.player.ammo < 10 && sprite.type.health <= 0) {
               sfxSounds[1].play();
               ls.player.ammo++;

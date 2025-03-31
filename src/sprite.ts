@@ -256,6 +256,9 @@ function spriteUpdate(ls: levelSettings) {
       }
       if (!sprite.type.alive) {
         ls.sprites.splice(i, 1);
+
+        ls.cutscene.scene = 11
+        ls.cutscene.frameCounter = 1
       }
     }
   }

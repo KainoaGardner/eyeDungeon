@@ -332,53 +332,63 @@ export class Screen {
     c.lineWidth = 4 * settings.UIRatio / 10;
 
     //1920x1080
-    if (checkHover(canvas.width / 2 - settings.UIRatio * 8 * 25 / 2, canvas.width / 2, canvas.height - settings.UIRatio * 16 * 5, canvas.height - settings.UIRatio * 16 * 4)) {
+    if (checkHover(canvas.width / 2 - settings.UIRatio * 8 * 25 / 2, canvas.width / 2, canvas.height - settings.UIRatio * 16 * 5, canvas.height - settings.UIRatio * 16 * 4) ||
+      settings.displayWidth === 1920) {
       c.strokeRect(canvas.width / 2 - settings.UIRatio * 8 * 25 / 2, canvas.height - settings.UIRatio * 16 * 5, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 16);
       if (mouse.click) updateDisplaySettings(1920, 1080, settings.graphicsWidth, settings.graphicsHeight);
     }
     //1600x900
-    if (checkHover(canvas.width / 2 - settings.UIRatio * 8 * 25 / 2, canvas.width / 2, canvas.height - settings.UIRatio * 16 * 4, canvas.height - settings.UIRatio * 16 * 3)) {
+    if (checkHover(canvas.width / 2 - settings.UIRatio * 8 * 25 / 2, canvas.width / 2, canvas.height - settings.UIRatio * 16 * 4, canvas.height - settings.UIRatio * 16 * 3) ||
+      settings.displayWidth === 1600) {
       c.strokeRect(canvas.width / 2 - settings.UIRatio * 8 * 25 / 2, canvas.height - settings.UIRatio * 16 * 4, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 16);
       if (mouse.click) updateDisplaySettings(1600, 900, settings.graphicsWidth, settings.graphicsHeight);
     }
     //1280x720
-    if (checkHover(canvas.width / 2 - settings.UIRatio * 8 * 25 / 2, canvas.width / 2, canvas.height - settings.UIRatio * 16 * 3, canvas.height - settings.UIRatio * 16 * 2)) {
+    if (checkHover(canvas.width / 2 - settings.UIRatio * 8 * 25 / 2, canvas.width / 2, canvas.height - settings.UIRatio * 16 * 3, canvas.height - settings.UIRatio * 16 * 2) ||
+      settings.displayWidth === 1280) {
       c.strokeRect(canvas.width / 2 - settings.UIRatio * 8 * 25 / 2, canvas.height - settings.UIRatio * 16 * 3, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 16);
       if (mouse.click) updateDisplaySettings(1280, 720, settings.graphicsWidth, settings.graphicsHeight);
     }
     //960x540
-    if (checkHover(canvas.width / 2 - settings.UIRatio * 8 * 25 / 2, canvas.width / 2, canvas.height - settings.UIRatio * 16 * 2, canvas.height - settings.UIRatio * 16 * 1)) {
+    if (checkHover(canvas.width / 2 - settings.UIRatio * 8 * 25 / 2, canvas.width / 2, canvas.height - settings.UIRatio * 16 * 2, canvas.height - settings.UIRatio * 16 * 1) ||
+      settings.displayWidth === 960) {
       c.strokeRect(canvas.width / 2 - settings.UIRatio * 8 * 25 / 2, canvas.height - settings.UIRatio * 16 * 2, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 16);
       if (mouse.click) updateDisplaySettings(960, 540, settings.graphicsWidth, settings.graphicsHeight);
     }
     //640x360
-    if (checkHover(canvas.width / 2 - settings.UIRatio * 8 * 25 / 2, canvas.width / 2, canvas.height - settings.UIRatio * 16 * 1, canvas.height)) {
+    if (checkHover(canvas.width / 2 - settings.UIRatio * 8 * 25 / 2, canvas.width / 2, canvas.height - settings.UIRatio * 16 * 1, canvas.height) ||
+      settings.displayWidth === 640) {
       c.strokeRect(canvas.width / 2 - settings.UIRatio * 8 * 25 / 2, canvas.height - settings.UIRatio * 16 * 1, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 16);
       if (mouse.click) updateDisplaySettings(640, 360, settings.graphicsWidth, settings.graphicsHeight);
     }
 
     //ExtraHigh
-    if (checkHover(canvas.width / 2, canvas.width / 2 + settings.UIRatio * 8 * 25 / 2, canvas.height - settings.UIRatio * 16 * 5, canvas.height - settings.UIRatio * 16 * 4)) {
+    if (checkHover(canvas.width / 2, canvas.width / 2 + settings.UIRatio * 8 * 25 / 2, canvas.height - settings.UIRatio * 16 * 5, canvas.height - settings.UIRatio * 16 * 4) ||
+      settings.graphicsWidth === 512) {
       c.strokeRect(canvas.width / 2, canvas.height - settings.UIRatio * 16 * 5, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 16);
       if (mouse.click) updateDisplaySettings(settings.displayWidth, settings.displayHeight, 512, 288);
     }
     //High
-    if (checkHover(canvas.width / 2, canvas.width / 2 + settings.UIRatio * 8 * 25 / 2, canvas.height - settings.UIRatio * 16 * 4, canvas.height - settings.UIRatio * 16 * 3)) {
+    if (checkHover(canvas.width / 2, canvas.width / 2 + settings.UIRatio * 8 * 25 / 2, canvas.height - settings.UIRatio * 16 * 4, canvas.height - settings.UIRatio * 16 * 3) ||
+      settings.graphicsWidth === 384) {
       c.strokeRect(canvas.width / 2, canvas.height - settings.UIRatio * 16 * 4, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 16);
       if (mouse.click) updateDisplaySettings(settings.displayWidth, settings.displayHeight, 384, 216);
     }
     //Normal
-    if (checkHover(canvas.width / 2, canvas.width / 2 + settings.UIRatio * 8 * 25 / 2, canvas.height - settings.UIRatio * 16 * 3, canvas.height - settings.UIRatio * 16 * 2)) {
+    if (checkHover(canvas.width / 2, canvas.width / 2 + settings.UIRatio * 8 * 25 / 2, canvas.height - settings.UIRatio * 16 * 3, canvas.height - settings.UIRatio * 16 * 2) ||
+      settings.graphicsWidth === 256) {
       c.strokeRect(canvas.width / 2, canvas.height - settings.UIRatio * 16 * 3, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 16);
       if (mouse.click) updateDisplaySettings(settings.displayWidth, settings.displayHeight, 256, 144);
     }
     //Low
-    if (checkHover(canvas.width / 2, canvas.width / 2 + settings.UIRatio * 8 * 25 / 2, canvas.height - settings.UIRatio * 16 * 2, canvas.height - settings.UIRatio * 16 * 1)) {
+    if (checkHover(canvas.width / 2, canvas.width / 2 + settings.UIRatio * 8 * 25 / 2, canvas.height - settings.UIRatio * 16 * 2, canvas.height - settings.UIRatio * 16 * 1) ||
+      settings.graphicsWidth === 192) {
       c.strokeRect(canvas.width / 2, canvas.height - settings.UIRatio * 16 * 2, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 16);
       if (mouse.click) updateDisplaySettings(settings.displayWidth, settings.displayHeight, 192, 108);
     }
     //ExtraLow
-    if (checkHover(canvas.width / 2, canvas.width / 2 + settings.UIRatio * 8 * 25 / 2, canvas.height - settings.UIRatio * 16 * 1, canvas.height)) {
+    if (checkHover(canvas.width / 2, canvas.width / 2 + settings.UIRatio * 8 * 25 / 2, canvas.height - settings.UIRatio * 16 * 1, canvas.height) ||
+      settings.graphicsWidth === 128) {
       c.strokeRect(canvas.width / 2, canvas.height - settings.UIRatio * 16 * 1, settings.UIRatio * 8 * 25 / 2, settings.UIRatio * 16);
       if (mouse.click) updateDisplaySettings(settings.displayWidth, settings.displayHeight, 128, 72);
     }
@@ -824,5 +834,110 @@ export class Screen {
 
     if (mouse.click) mouse.click = false;
   }
+
+  winScreen() {
+    c.drawImage(screens[4], 0, 0, canvas.width, canvas.height);
+
+    c.drawImage(frame0Img, canvas.width / 2 - settings.UIRatio * 32 * 5 / 2, settings.UIRatio * 14, settings.UIRatio * 32 * 5, settings.UIRatio * 16 * 3);
+
+    c.drawImage(frame1Img, canvas.width / 2 - settings.UIRatio * 32 * 6 / 2, settings.UIRatio * 14, settings.UIRatio * 32 * 6, settings.UIRatio * 16 * 3);
+    c.drawImage(frame1Img, canvas.width / 2 - settings.UIRatio * 49 * 2, settings.UIRatio * 70, settings.UIRatio * 32 * 2, settings.UIRatio * 16 * 2);
+    c.drawImage(frame1Img, canvas.width / 2 - settings.UIRatio * 49 * 2, settings.UIRatio * 105, settings.UIRatio * 32 * 2, settings.UIRatio * 16 * 2);
+    c.drawImage(frame1Img, canvas.width / 2 + settings.UIRatio * 34, settings.UIRatio * 70, settings.UIRatio * 32 * 2, settings.UIRatio * 16 * 2);
+    c.drawImage(frame1Img, canvas.width / 2 + settings.UIRatio * 34, settings.UIRatio * 105, settings.UIRatio * 32 * 2, settings.UIRatio * 16 * 2);
+    c.drawImage(frame1Img, canvas.width / 2 - settings.UIRatio * 32, settings.UIRatio * 70, settings.UIRatio * 32 * 2, settings.UIRatio * 16 * 2);
+    c.drawImage(frame1Img, canvas.width / 2 - settings.UIRatio * 32, settings.UIRatio * 105, settings.UIRatio * 32 * 2, settings.UIRatio * 16 * 2);
+
+
+    c.font = `bold ${9 * settings.UIRatio}px Arial`
+    c.fillStyle = "#bcbcbc"
+    c.strokeStyle = "black"
+    c.lineWidth = 3 * settings.UIRatio / 10;
+
+    const text = languageText[settings.language]
+    c.fillText(text.get("new")!, canvas.width / 2 - settings.UIRatio * 33 * 2, settings.UIRatio * 87.5)
+    c.strokeText(text.get("new")!, canvas.width / 2 - settings.UIRatio * 33 * 2, settings.UIRatio * 87.5)
+
+    c.fillText(text.get("levels")!, canvas.width / 2 - settings.UIRatio * 33 * 2, settings.UIRatio * 122.5)
+    c.strokeText(text.get("levels")!, canvas.width / 2 - settings.UIRatio * 33 * 2, settings.UIRatio * 122.5)
+
+    c.fillText(text.get("save")!, canvas.width / 2, settings.UIRatio * 87.5)
+    c.strokeText(text.get("save")!, canvas.width / 2, settings.UIRatio * 87.5)
+
+    c.fillText(text.get("load")!, canvas.width / 2, settings.UIRatio * 122.5)
+    c.strokeText(text.get("load")!, canvas.width / 2, settings.UIRatio * 122.5)
+
+    c.fillText(text.get("controls")!, canvas.width / 2 + settings.UIRatio * 66, settings.UIRatio * 122.5)
+    c.strokeText(text.get("controls")!, canvas.width / 2 + settings.UIRatio * 66, settings.UIRatio * 122.5)
+
+    c.fillText(text.get("settings")!, canvas.width / 2 + settings.UIRatio * 66, settings.UIRatio * 87.5)
+    c.strokeText(text.get("settings")!, canvas.width / 2 + settings.UIRatio * 66, settings.UIRatio * 87.5)
+
+    c.font = `bold ${20 * settings.UIRatio}px Arial`
+    c.lineWidth = 4 * settings.UIRatio / 10;
+
+    c.fillText(text.get("win")!, canvas.width / 2, settings.UIRatio * 39.5)
+    c.strokeText(text.get("win")!, canvas.width / 2, settings.UIRatio * 39.5)
+
+  }
+
+  winScreenUpdate(ls: levelSettings) {
+    c.strokeStyle = "#bcbcbc"
+    c.lineWidth = 4 * settings.UIRatio / 10;
+
+    //settigns
+    if (checkHover(canvas.width / 2 + settings.UIRatio * 34, canvas.width / 2 + settings.UIRatio * 98, settings.UIRatio * 70, settings.UIRatio * 102)) {
+      c.strokeRect(canvas.width / 2 + settings.UIRatio * 34, settings.UIRatio * 70, settings.UIRatio * 32 * 2, settings.UIRatio * 16 * 2);
+      if (mouse.click) {
+        ls.screen = 3;
+        ls.backScreen.push(8);
+      }
+    }
+
+    //controls
+    if (checkHover(canvas.width / 2 + settings.UIRatio * 34, canvas.width / 2 + settings.UIRatio * 98, settings.UIRatio * 105, settings.UIRatio * 137)) {
+      c.strokeRect(canvas.width / 2 + settings.UIRatio * 34, settings.UIRatio * 105, settings.UIRatio * 32 * 2, settings.UIRatio * 16 * 2);
+      if (mouse.click) {
+        ls.screen = 2;
+        ls.backScreen.push(8);
+      }
+    }
+
+    //save
+    if (checkHover(canvas.width / 2 - settings.UIRatio * 32, canvas.width / 2 + settings.UIRatio * 32, settings.UIRatio * 70, settings.UIRatio * 102)) {
+      c.strokeRect(canvas.width / 2 - settings.UIRatio * 32, settings.UIRatio * 70, settings.UIRatio * 32 * 2, settings.UIRatio * 16 * 2);
+      if (mouse.click) {
+        saveData(ls)
+      }
+    }
+
+    //load
+    if (checkHover(canvas.width / 2 - settings.UIRatio * 32, canvas.width / 2 + settings.UIRatio * 32, settings.UIRatio * 105, settings.UIRatio * 137)) {
+      c.strokeRect(canvas.width / 2 - settings.UIRatio * 32, settings.UIRatio * 105, settings.UIRatio * 32 * 2, settings.UIRatio * 16 * 2);
+      if (mouse.click) {
+        uploadData(ls)
+      }
+    }
+
+    //new
+    if (checkHover(canvas.width / 2 - settings.UIRatio * 49 * 2, canvas.width / 2 - settings.UIRatio * 17 * 2, settings.UIRatio * 70, settings.UIRatio * 102)) {
+      c.strokeRect(canvas.width / 2 - settings.UIRatio * 49 * 2, settings.UIRatio * 70, settings.UIRatio * 32 * 2, settings.UIRatio * 16 * 2);
+      if (mouse.click) {
+        newGame(ls);
+      }
+    }
+
+    //levels
+    if (checkHover(canvas.width / 2 - settings.UIRatio * 49 * 2, canvas.width / 2 - settings.UIRatio * 17 * 2, settings.UIRatio * 105, settings.UIRatio * 137)) {
+      c.strokeRect(canvas.width / 2 - settings.UIRatio * 49 * 2, settings.UIRatio * 105, settings.UIRatio * 32 * 2, settings.UIRatio * 16 * 2);
+      if (mouse.click) {
+        ls.screen = 7;
+        ls.backScreen.push(8)
+      }
+    }
+
+    if (mouse.click) mouse.click = false;
+  }
+
 }
 

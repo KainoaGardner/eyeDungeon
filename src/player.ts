@@ -1924,12 +1924,9 @@ export class Player {
             transformY < 1.5
           ) {
             sprite.takeDamage(10);
-            if (sprite instanceof Boss) {
-              sprite.x += this.dirX * 0.02;
-              sprite.y += this.dirY * 0.02;
-            } else {
-              sprite.x += this.dirX * 0.1;
-              sprite.y += this.dirY * 0.1;
+            if (!(sprite instanceof Boss)) {
+              sprite.x += this.dirX * 0.05;
+              sprite.y += this.dirY * 0.05;
             }
           }
         }
@@ -2022,6 +2019,8 @@ export class Player {
 
     this.holding = 1
   }
+
+
 
 
 }
