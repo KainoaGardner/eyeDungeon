@@ -1,4 +1,6 @@
 import { canvas, mouse } from "./global"
+import { musicSounds, sfxSounds } from "./sounds";
+
 function drawImage(
   ctx: any,
   image: any,
@@ -36,7 +38,7 @@ canvas.addEventListener("mouseup", function(e: any) {
   if (e.button === 0) mouse.click = false;
 })
 
-export function downloadTextFile(filename: string, text: string) {
+function downloadTextFile(filename: string, text: string) {
   const element = document.createElement('a');
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
   element.setAttribute('download', filename);
@@ -46,7 +48,45 @@ export function downloadTextFile(filename: string, text: string) {
   document.body.removeChild(element);
 }
 
+const playingAudio: HTMLAudioElement[] = []
+
+function stopAudio() {
+  for (let i = 0; i < musicSounds.length; i++) {
+    musicSounds[i].pause();
+  }
+  for (let i = 0; i < sfxSounds.length; i++) {
+    sfxSounds[i].pause();
+  }
+  while (playingAudio.length > 0) {
+    playingAudio.pop();
+  }
+}
+
+function pauseAudio() {
+  for (let i = 0; i < sfxSounds.length; i++) {
+    if (!sfxSounds[i].paused) {
+      playingAudio.push(sfxSounds[i]);
+      sfxSounds[i].pause();
+    }
+  }
+
+  for (let i = 0; i < musicSounds.length; i++) {
+    if (!musicSounds[i].paused) {
+      playingAudio.push(musicSounds[i]);
+      musicSounds[i].pause();
+    }
+  }
+}
+
+function unpauseAudio() {
+  while (playingAudio.length > 0) {
+    const audio = playingAudio.pop();
+    if (audio) {
+      audio.play();
+    }
+  }
+}
 
 
-export { drawImage };
+export { stopAudio, downloadTextFile, drawImage, pauseAudio, unpauseAudio }
 

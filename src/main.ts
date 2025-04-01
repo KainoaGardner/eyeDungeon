@@ -8,6 +8,7 @@ import { setLevel, levelUpdate } from "./levels";
 import { FireballWall } from "./fireball";
 import { Boss } from "./boss";
 import { Screen } from "./screens"
+import { stopAudio } from "./util"
 
 document.body.style.overflow = "hidden";
 
@@ -132,6 +133,7 @@ function updateFrame(): void {
     if (ls.player.goal(ls.map.map)) {
       ls.level++;
       setLevel(ls);
+      stopAudio();
     }
   }
   interval = setInterval(updateFrame, 1000 / targetFps);

@@ -6,6 +6,7 @@ import { setSFXVolume, setMusicVolume } from "./sounds";
 import { languageText } from "./text"
 import { saveData, uploadData } from "./save"
 import { sfxSounds, musicSounds } from "./sounds";
+import { unpauseAudio } from "./util";
 
 function checkHover(left: number, right: number, top: number, bottom: number): boolean {
   if (mouse.x > left && mouse.x < right && mouse.y > top && mouse.y < bottom) return true;
@@ -312,6 +313,10 @@ export class Screen {
       sfxSounds[27].pause();
       sfxSounds[27].currentTime = 0;
       sfxSounds[27].play();
+      if (ls.screen === 1) {
+        unpauseAudio();
+      }
+
       if (ls.backScreen.length > 0) {
         ls.screen = ls.backScreen[ls.backScreen.length - 1]
         ls.backScreen.pop()

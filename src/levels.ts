@@ -11,6 +11,7 @@ import { SpikeBall } from "./spikeball";
 import { level7Update } from "./level7";
 import { level8Update } from "./level8";
 import { unlockedLevels } from "./global";
+import { musicSounds } from "./sounds";
 
 
 interface direction {
@@ -89,7 +90,44 @@ function getPlayerDirection(angle: number): direction {
   return { dirX: dirX, dirY: dirY, planeX: planeX, planeY: planeY };
 }
 
+function playLevelBgm(level: number) {
+  switch (level) {
+    case 1:
+      musicSounds[2].play();
+      break;
+    case 2:
+      musicSounds[2].play();
+      break;
+    case 3:
+      musicSounds[2].play();
+      break;
+    case 4:
+      musicSounds[3].play();
+      break;
+    case 5:
+      musicSounds[2].play();
+      break;
+    case 6:
+      musicSounds[2].play();
+      break;
+    case 7:
+      musicSounds[2].play();
+      break;
+    case 8:
+      musicSounds[2].play();
+      break;
+    case 9:
+      musicSounds[2].play();
+      break;
+    case 10:
+      musicSounds[2].play();
+      break;
+    case 11:
+      musicSounds[4].play();
+      break;
+  }
 
+}
 
 function setLevel(ls: levelSettings) {
   ls.player.resetPlayer();
@@ -2236,4 +2274,4 @@ function levelUpdate(ls: levelSettings) {
   }
 }
 
-export { type levelSettings, setLevel, levelUpdate, getPlayerDirection };
+export { type levelSettings, setLevel, levelUpdate, getPlayerDirection, playLevelBgm };

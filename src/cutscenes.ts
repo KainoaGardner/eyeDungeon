@@ -12,9 +12,10 @@ import {
 } from "./textures"
 import { keyMap } from "./keypress"
 import { languageText } from "./text"
-import { drawImage } from "./util"
+import { drawImage, stopAudio } from "./util"
 import { levelSettings } from "./levels"
 import { sfxSounds, musicSounds } from "./sounds";
+import { playLevelBgm } from "./levels"
 
 let playerWalkFrame = 0;
 
@@ -89,15 +90,16 @@ export class Cutscene {
         ls.backScreen = [];
 
       }
-
-      for (let i = 0; i < musicSounds.length; i++) {
-        musicSounds[i].pause();
-      }
-      for (let i = 0; i < sfxSounds.length; i++) {
-        sfxSounds[i].pause();
+      if (this.scene === 1 || this.scene === 4) {
+        sfxSounds[24].volume = settings.sfxVolume / 100;
       }
 
+      stopAudio();
       keyMap.set("Escape", false)
+    }
+
+    if (this.frameCounter === 0) {
+      playLevelBgm(ls.level);
     }
 
   }
@@ -125,6 +127,8 @@ export class Cutscene {
 
     if (this.frameCounter === 700) {
       musicSounds[0].pause();
+      musicSounds[1].pause();
+      musicSounds[1].currentTime = 0;
       musicSounds[1].play();
     }
 
@@ -260,10 +264,40 @@ export class Cutscene {
 
     if (this.frameCounter > 2200) {
       this.frameCounter = 0;
+      musicSounds[1].pause();
     }
     if (this.frameCounter === 1) {
       playerWalkFrame = 0;
+      musicSounds[1].pause();
+      musicSounds[1].currentTime = 0;
+      musicSounds[1].play();
     }
+
+    if (this.frameCounter > 100 && this.frameCounter < 1100) {
+      if (this.frameCounter % 30 === 1) {
+        sfxSounds[10].play()
+      }
+      if (this.frameCounter % 30 === 15) {
+        sfxSounds[11].play()
+      }
+    }
+
+    if (this.frameCounter > 100 && this.frameCounter < 600 && this.frameCounter % 40 === 1) {
+      sfxSounds[24].volume = Math.max((settings.sfxVolume - 20) / 100, 0);
+      sfxSounds[24].play()
+    }
+    if (this.frameCounter === 600) {
+      sfxSounds[24].volume = settings.sfxVolume / 100;
+    }
+
+    if (this.frameCounter === 1250) {
+      sfxSounds[16].play()
+    }
+
+    if (this.frameCounter === 1350) {
+      sfxSounds[39].play()
+    }
+
     c.fillStyle = "black"
     c.fillRect(0, 0, canvas.width, canvas.height)
 
@@ -355,10 +389,45 @@ export class Cutscene {
 
     if (this.frameCounter > 1700) {
       this.frameCounter = 0;
+      musicSounds[1].pause();
     }
     if (this.frameCounter === 1) {
       playerWalkFrame = 0;
+      musicSounds[1].pause();
+      musicSounds[1].currentTime = 0;
+      musicSounds[1].play();
     }
+
+    if (this.frameCounter > 100 && this.frameCounter < 400) {
+      if (this.frameCounter % 30 === 1) {
+        sfxSounds[10].play()
+      }
+      if (this.frameCounter % 30 === 15) {
+        sfxSounds[11].play()
+      }
+    }
+
+    if (this.frameCounter > 600 && this.frameCounter < 1400) {
+      if (this.frameCounter % 20 === 1) {
+        sfxSounds[10].play()
+      }
+      if (this.frameCounter % 20 === 10) {
+        sfxSounds[11].play()
+      }
+    }
+
+    if (this.frameCounter === 400) {
+      sfxSounds[31].play();
+    }
+
+    if (this.frameCounter === 500) {
+      sfxSounds[21].play();
+    }
+
+    if (this.frameCounter === 700) {
+      sfxSounds[39].play();
+    }
+
     c.fillStyle = "black"
     c.fillRect(0, 0, canvas.width, canvas.height)
 
@@ -468,10 +537,25 @@ export class Cutscene {
     const text = languageText[settings.language]
     if (this.frameCounter > 1300) {
       this.frameCounter = 0;
+      musicSounds[1].pause();
     }
     if (this.frameCounter === 1) {
       playerWalkFrame = 0;
+      musicSounds[1].pause();
+      musicSounds[1].currentTime = 0;
+      musicSounds[1].play();
     }
+
+    if (this.frameCounter > 100 && this.frameCounter < 1000) {
+      if (this.frameCounter % 20 === 1) {
+        sfxSounds[10].play()
+      }
+      if (this.frameCounter % 20 === 10) {
+        sfxSounds[11].play()
+      }
+    }
+
+
     c.fillStyle = "black"
     c.fillRect(0, 0, canvas.width, canvas.height)
 
@@ -489,7 +573,7 @@ export class Cutscene {
 
 
       c.globalAlpha = 0.3;
-      c.fillStyle = "#white"
+      c.fillStyle = "white"
       c.beginPath();
       const path = new Path2D();
       path.moveTo(settings.UIRatio * (-15 + (this.frameCounter - 100) / 2), settings.UIRatio * 95);
@@ -506,15 +590,12 @@ export class Cutscene {
       c.fillStyle = "black"
       c.fillRect(0, 0, canvas.width, canvas.height)
 
-      c.globalAlpha = 1;
-
-
       if (this.frameCounter % 100 > 50) {
         c.drawImage(cutsceneTextures[16], settings.UIRatio * (-100 + (this.frameCounter - 100) / 2.5), settings.UIRatio * 85, settings.UIRatio * 40, settings.UIRatio * 40)
       } else {
         c.drawImage(cutsceneTextures[17], settings.UIRatio * (-100 + (this.frameCounter - 100) / 2.5), settings.UIRatio * 85, settings.UIRatio * 40, settings.UIRatio * 40)
       }
-
+      c.globalAlpha = 1;
     }
 
     if (this.frameCounter > 100 && this.frameCounter < 1000) {
@@ -547,7 +628,47 @@ export class Cutscene {
 
     if (this.frameCounter > 2300) {
       this.frameCounter = 0;
+      musicSounds[1].pause();
     }
+    if (this.frameCounter === 1) {
+      playerWalkFrame = 0;
+      musicSounds[1].pause();
+      musicSounds[1].currentTime = 0;
+      musicSounds[1].play();
+    }
+
+    if (this.frameCounter > 100 && this.frameCounter < 600) {
+      if (this.frameCounter % 30 === 1) {
+        sfxSounds[10].play()
+      }
+      if (this.frameCounter % 30 === 10) {
+        sfxSounds[11].play()
+      }
+    }
+
+    if (this.frameCounter === 1700) {
+      sfxSounds[0].play()
+    }
+
+    if (this.frameCounter === 700) {
+      sfxSounds[16].play()
+    }
+
+    if (this.frameCounter === 800) {
+      sfxSounds[39].play()
+    }
+
+    if (this.frameCounter >= 1000 && this.frameCounter < 1700) {
+      sfxSounds[24].volume = Math.max((settings.sfxVolume - 20) / 100, 0);
+      sfxSounds[24].play()
+    }
+    if (this.frameCounter === 1700) {
+      sfxSounds[24].volume = settings.sfxVolume / 100;
+      sfxSounds[24].pause()
+      sfxSounds[24].currentTime = 0
+      sfxSounds[24].play()
+    }
+
 
     c.fillStyle = "black"
     c.fillRect(0, 0, canvas.width, canvas.height)
@@ -1570,6 +1691,7 @@ export class Cutscene {
       this.frameCounter = 0;
       ls.screen = 8;
       ls.backScreen = [];
+      stopAudio();
     }
 
     if (this.frameCounter >= 100 && this.frameCounter < 700) {

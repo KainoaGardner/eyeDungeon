@@ -106,7 +106,6 @@ export class FireballWall {
       if (distance < 5) {
         sfxSounds[21].pause();
         sfxSounds[21].currentTime = 0;
-        sfxSounds[21].volume = ((5 - distance) / 10)
         sfxSounds[21].play();
       }
 

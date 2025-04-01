@@ -39,12 +39,16 @@ export class Bullet {
       ) {
         ls.map.map[blockY][blockX] = 0;
         this.alive = false;
+        sfxSounds[2].play();
       } else if (
         (ls.level === 7 && map[blockY][blockX] === 8) ||
         map[blockY][blockX] === 9
       ) {
         level7BlockHit(blockY, blockX, ls);
         this.alive = false;
+        sfxSounds[2].pause();
+        sfxSounds[2].currentTime = 0;
+        sfxSounds[2].play();
       } else {
         this.alive = false;
       }

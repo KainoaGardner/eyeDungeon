@@ -8,6 +8,7 @@ import { Boss } from "./boss";
 import { SpikeBall } from "./spikeball";
 import { Bullet } from "./bullet";
 import { level7BlockHit } from "./level7";
+import { pauseAudio } from "./util";
 
 import {
   texWidth,
@@ -40,7 +41,6 @@ import {
 
 import {
   sfxSounds,
-  musicSounds,
 } from "./sounds";
 
 import {
@@ -461,7 +461,7 @@ export class Player {
   }
 
   private drawInvisBlockBuffer() {
-    c.globalAlpha = 0.75;
+    c.globalAlpha = 0.8;
     c.fillStyle = "black";
     for (let i = 0; i < settings.graphicsWidth; i++) {
       if (invisBlockBuffer[i] !== 0) {
@@ -1587,6 +1587,8 @@ export class Player {
       this.running
     ) {
       if (this.viewDist === 64) {
+        sfxSounds[13].pause();
+        sfxSounds[13].currentTime = 0;
         sfxSounds[13].play()
       }
       this.viewDist = 16;
@@ -1667,6 +1669,8 @@ export class Player {
     }
 
     if (mine) {
+      sfxSounds[2].pause();
+      sfxSounds[2].currentTime = 0;
       sfxSounds[2].play();
     }
   }
@@ -2029,6 +2033,7 @@ export class Player {
       keyMap.set("Escape", false)
       ls.screen = 1;
       ls.backScreen.push(-1);
+      pauseAudio();
     }
 
   }

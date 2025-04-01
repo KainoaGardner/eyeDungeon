@@ -56,6 +56,13 @@ createSound("/sound/birds.wav", sfxSounds)//40
 
 createSound("/music/windChimes.wav", musicSounds)//0
 createSound("/music/drums.wav", musicSounds)//1
+createSound("/music/normal.wav", musicSounds)//2
+createSound("/music/level4.wav", musicSounds)//3
+createSound("/music/boss.wav", musicSounds)//4
+musicSounds[1].loop = true
+musicSounds[2].loop = true
+musicSounds[3].loop = true
+musicSounds[4].loop = true
 
 function setSFXVolume(volume: number) {
   for (let i = 0; i < sfxSounds.length; i++) {

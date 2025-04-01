@@ -38,10 +38,11 @@ export class CloseBlock {
 
       if (this.counter === this.speed) {
         map.map[this.y][this.x] = 7;
-        if (distance < 3) {
+        if (distance < 2) {
           sfxSounds[22].pause();
           sfxSounds[22].currentTime = 0;
           sfxSounds[22].play();
+
         }
       }
       if (this.counter === this.speed + this.stay) {

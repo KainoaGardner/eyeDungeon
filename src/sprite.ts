@@ -5,7 +5,7 @@ import { Slime, Mage, Ghost, Skeleton } from "./enemy";
 import { Boss } from "./boss";
 import { SpikeBall } from "./spikeball";
 import { Bullet } from "./bullet";
-import { sfxSounds } from "./sounds";
+import { sfxSounds, musicSounds } from "./sounds";
 
 interface sprite {
   x: number;
@@ -59,6 +59,9 @@ function spriteUpdate(ls: levelSettings) {
     } else if (ls.sprites[i].type instanceof HornItem) {
       if (!sprite.type.alive) {
         ls.sprites.splice(i, 1);
+        sfxSounds[39].pause()
+        sfxSounds[39].currentTime = 0;
+        sfxSounds[39].play()
       }
     }
     else if (ls.sprites[i].type instanceof Bullet) {
@@ -80,6 +83,8 @@ function spriteUpdate(ls: levelSettings) {
       }
 
       if (sprite.type.deadCounter === 1) {
+        sfxSounds[23].pause()
+        sfxSounds[23].currentTime = 0;
         sfxSounds[23].play()
       }
 
@@ -113,6 +118,8 @@ function spriteUpdate(ls: levelSettings) {
       }
 
       if (sprite.type.deadCounter === 1) {
+        sfxSounds[24].pause()
+        sfxSounds[24].currentTime = 0;
         sfxSounds[24].play()
       }
 
@@ -141,7 +148,7 @@ function spriteUpdate(ls: levelSettings) {
         (sprite.y - ls.player.posY) * (sprite.y - ls.player.posY),
       );
 
-      if (distance < 5) {
+      if (distance < 2) {
         sfxSounds[34].play();
       }
 
@@ -155,6 +162,8 @@ function spriteUpdate(ls: levelSettings) {
       }
 
       if (sprite.type.deadCounter === 1) {
+        sfxSounds[23].pause()
+        sfxSounds[23].currentTime = 0;
         sfxSounds[23].play()
       }
 
@@ -188,6 +197,8 @@ function spriteUpdate(ls: levelSettings) {
       }
 
       if (sprite.type.deadCounter === 1) {
+        sfxSounds[25].pause()
+        sfxSounds[25].currentTime = 0;
         sfxSounds[25].play()
       }
 
@@ -214,8 +225,12 @@ function spriteUpdate(ls: levelSettings) {
         sprite.type.update(ls);
       } else if (sprite.type.deadCounter === 1) {
 
+        sfxSounds[35].pause()
+        sfxSounds[35].currentTime = 0;
         sfxSounds[35].play()
+
         sfxSounds[29].pause()
+        musicSounds[4].pause()
         ls.moveWall = [];
         for (let i = 0; i < ls.map.map.length; i++) {
           for (let j = 0; j < ls.map.map[0].length; j++) {
@@ -288,6 +303,7 @@ function spriteUpdate(ls: levelSettings) {
       if (!sprite.type.alive) {
         ls.sprites.splice(i, 1);
 
+        ls.level = 0
         ls.cutscene.scene = 11
         ls.cutscene.frameCounter = 1
       }
