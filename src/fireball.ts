@@ -97,6 +97,19 @@ export class FireballWall {
       const sprite = { x: this.x, y: this.y, texture: 0, type: fireball };
       ls.sprites.push(sprite);
       this.counter = 0;
+
+      const distance = Math.sqrt(
+        (this.x - ls.player.posX) * (this.x - ls.player.posX) +
+        (this.y - ls.player.posY) * (this.y - ls.player.posY),
+      );
+
+      if (distance < 5) {
+        sfxSounds[21].pause();
+        sfxSounds[21].currentTime = 0;
+        sfxSounds[21].volume = ((5 - distance) / 10)
+        sfxSounds[21].play();
+      }
+
     }
     this.counter++;
   }

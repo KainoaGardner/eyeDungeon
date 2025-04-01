@@ -2206,12 +2206,23 @@ function level0(ls: levelSettings) {
   ls.map.lightList = [];
   ls.map.brightness = 0.5;
 
-  ls.moveWall = [new CloseBlock(6, 2, 50, 30)];
-  ls.fireWall = [new FireballWall(7.5, 1.5, -0.1, 0, 50)];
+  // ls.moveWall = [new CloseBlock(6, 2, 50, 30)];
+  // ls.fireWall = [new FireballWall(7.5, 1.5, -0.1, 0, 50)];
+  ls.moveWall = [];
+  ls.fireWall = [];
+
   ls.floorTex = 3;
   ls.ceilingTex = 1;
 
   ls.sprites = [
+    { x: 1.5, y: 6, texture: 5, type: new Slime(1.5, 6, 100, 2, 5) },
+    { x: 5, y: 6, texture: 3, type: new Mage(5, 6, 10, 0.1, 50, 20) },
+    {
+      x: 3,
+      y: 3,
+      texture: 19,
+      type: new Skeleton(3, 3, 300, 3, 10),
+    },
   ];
 }
 

@@ -2,6 +2,7 @@ import { levelSettings } from "./levels";
 import { level7BlockHit } from "./level7";
 import { Slime, Mage, Ghost, Skeleton } from "./enemy";
 import { Boss } from "./boss";
+import { sfxSounds } from "./sounds";
 
 export class Bullet {
   x: number;
@@ -72,6 +73,7 @@ export class Bullet {
 
         if (distance < 0.6) {
           sprite.takeDamage(150);
+          sfxSounds[26].play()
           this.alive = false;
           break;
         }

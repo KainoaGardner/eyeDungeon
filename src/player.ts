@@ -102,6 +102,7 @@ export class Player {
   private teleportX = 0;
   private teleportY = 0;
 
+
   private hit: number = 0;
   private fireballHit: number = 0;
 
@@ -119,6 +120,8 @@ export class Player {
   private sheildCounter = 1000;
   private sheildBreak = false;
 
+  private horn = false;
+
   private swordHit: boolean = false;
   private gunCounter = 0;
   private swordCounter = 0;
@@ -127,6 +130,9 @@ export class Player {
 
   holding: number = 1;
   //0 nothing 3 gun 1 flashlight 2 sword
+
+  private walkSoundCounter = 0;
+
 
   constructor(
     x: number,
@@ -1035,34 +1041,43 @@ export class Player {
 
     c.globalAlpha = 1;
     c.fillStyle = "#e74c3c";
-    c.font = `bold ${8 * settings.UIRatio}px Arial`
+    c.strokeStyle = "black";
+    c.lineWidth = 2 * settings.UIRatio / 10
+    c.font = `bold ${8 * settings.UIRatio}px Kappa20`
 
 
     if (this.inventory.flashlight) {
-      c.fillText("1", 5 * settings.UIRatio, canvas.height - 5 * settings.UIRatio);
+      c.fillText("1", 5 * settings.UIRatio, canvas.height - 6 * settings.UIRatio);
+      c.strokeText("1", 5 * settings.UIRatio, canvas.height - 6 * settings.UIRatio);
     }
 
     if (this.inventory.sword) {
-      c.fillText("2", 25 * settings.UIRatio, canvas.height - 5 * settings.UIRatio);
+      c.fillText("2", 25 * settings.UIRatio, canvas.height - 6 * settings.UIRatio);
+      c.strokeText("2", 25 * settings.UIRatio, canvas.height - 6 * settings.UIRatio);
     }
 
     if (this.inventory.gun) {
-      c.fillText("3", 45 * settings.UIRatio, canvas.height - 5 * settings.UIRatio);
+      c.fillText("3", 45 * settings.UIRatio, canvas.height - 6 * settings.UIRatio);
+      c.strokeText("3", 45 * settings.UIRatio, canvas.height - 6 * settings.UIRatio);
     }
 
     if (this.inventory.sheild) {
-      c.fillText("4", 65 * settings.UIRatio, canvas.height - 5 * settings.UIRatio);
+      c.fillText("4", 65 * settings.UIRatio, canvas.height - 6 * settings.UIRatio);
+      c.strokeText("4", 65 * settings.UIRatio, canvas.height - 6 * settings.UIRatio);
     }
 
     if (this.inventory.horn) {
-      c.fillText("5", 85 * settings.UIRatio, canvas.height - 5 * settings.UIRatio);
+      c.fillText("5", 85 * settings.UIRatio, canvas.height - 6 * settings.UIRatio);
+      c.strokeText("5", 85 * settings.UIRatio, canvas.height - 6 * settings.UIRatio);
     }
 
     if (this.inventory.dash) {
-      c.fillText("E", canvas.width - 79 * settings.UIRatio, canvas.height - 5 * settings.UIRatio);
+      c.fillText("E", canvas.width - 79 * settings.UIRatio, canvas.height - 6 * settings.UIRatio);
+      c.strokeText("E", canvas.width - 79 * settings.UIRatio, canvas.height - 6 * settings.UIRatio);
     }
     if (this.inventory.teleport) {
-      c.fillText("Q", canvas.width - 99 * settings.UIRatio, canvas.height - 5 * settings.UIRatio);
+      c.fillText("Q", canvas.width - 99 * settings.UIRatio, canvas.height - 6 * settings.UIRatio);
+      c.strokeText("Q", canvas.width - 99 * settings.UIRatio, canvas.height - 6 * settings.UIRatio);
     }
 
     c.globalAlpha = 1;
@@ -1121,7 +1136,6 @@ export class Player {
         20 * settings.UIRatio,
         20 * settings.UIRatio,
       );
-      c.stroke();
     }
     if (this.inventory.flashlight && !this.flashlight) {
       c.drawImage(
@@ -1184,9 +1198,9 @@ export class Player {
 
     c.fillRect(
       canvas.width - (this.stamina / 1000) * 58 * settings.UIRatio - 2 * settings.UIRatio,
-      canvas.height - 14 * settings.UIRatio,
+      canvas.height - 22 * settings.UIRatio,
       (this.stamina / 1000) * 58 * settings.UIRatio,
-      5 * settings.UIRatio,
+      9 * settings.UIRatio,
     );
   }
 
@@ -1194,9 +1208,9 @@ export class Player {
     c.fillStyle = "#e74c3c";
     c.fillRect(
       canvas.width - (this.health / 1000) * 58 * settings.UIRatio - 2 * settings.UIRatio,
-      canvas.height - 7 * settings.UIRatio,
+      canvas.height - 11 * settings.UIRatio,
       (this.health / 1000) * 58 * settings.UIRatio,
-      5 * settings.UIRatio,
+      9 * settings.UIRatio,
     );
   }
 
@@ -1315,6 +1329,11 @@ export class Player {
     if (keyMap.get("Space")) {
       if (!this.running) {
         if (this.holding === 1 && this.battery > 1 && this.flashlight) {
+          if (this.viewDist !== 64) {
+            sfxSounds[12].pause();
+            sfxSounds[12].currentTime = 0;
+            sfxSounds[12].play();
+          }
           this.viewDist = 64;
           this.battery -= 5;
         }
@@ -1352,10 +1371,31 @@ export class Player {
       }
       if (this.holding === 4) {
         if (!this.sheildBreak && this.sheildCounter > 0) {
+          if (!this.sheild) {
+            sfxSounds[16].pause()
+            sfxSounds[16].currentTime = 0;
+
+            sfxSounds[16].play()
+          }
           this.sheildCounter -= 5;
           this.sheild = true;
         }
       }
+
+      if (this.holding === 5) {
+        if (!this.horn) {
+          sfxSounds[17].play()
+        }
+        this.horn = true;
+      }
+    }
+  }
+
+  private hornUpdate() {
+    if (this.horn && !keyMap.get("Space")) {
+      sfxSounds[17].pause()
+      sfxSounds[17].currentTime = 0
+      this.horn = false;
     }
   }
 
@@ -1390,6 +1430,7 @@ export class Player {
         keyMap.get("KeyS"))
     ) {
       if (this.inventory.dash) {
+        sfxSounds[14].play()
         this.dashCount = 1;
       }
     }
@@ -1545,6 +1586,9 @@ export class Player {
       this.holding !== 1 ||
       this.running
     ) {
+      if (this.viewDist === 64) {
+        sfxSounds[13].play()
+      }
       this.viewDist = 16;
       if (this.battery < 1000) {
         this.battery += 3;
@@ -1575,6 +1619,7 @@ export class Player {
 
     if (map[blockY][blockX] === 7) {
       this.takeDamage(5);
+      sfxSounds[36].play()
     }
   }
 
@@ -1751,6 +1796,9 @@ export class Player {
 
   private sheildUpdate() {
     if (this.sheild && !keyMap.get("Space")) {
+      sfxSounds[16].pause()
+      sfxSounds[16].currentTime = 0;
+      sfxSounds[16].play()
       this.sheild = false;
     }
     if (this.sheild) {
@@ -1762,6 +1810,10 @@ export class Player {
     if (this.sheildCounter <= 0) {
       this.sheildBreak = true;
       this.sheild = false;
+      sfxSounds[16].pause()
+      sfxSounds[16].currentTime = 0;
+      sfxSounds[16].play()
+
     }
     if (this.sheildBreak && this.sheildCounter >= 1000) {
       this.sheildBreak = false;
@@ -1832,7 +1884,11 @@ export class Player {
               hit = false;
             }
             if (hit) {
-              sfxSounds[4].play();
+              if (this.sheild) {
+                sfxSounds[15].play();
+              } else {
+                sfxSounds[4].play();
+              }
             }
           }
         }
@@ -1867,6 +1923,8 @@ export class Player {
       this.teleportX = this.posX;
       this.teleportY = this.posY;
       this.teleportPlaced = true;
+      sfxSounds[19].play();
+      sfxSounds[18].play();
       keyMap.set("KeyQ", false);
       const teleport = new Teleport();
       const sprite = {
@@ -1878,6 +1936,9 @@ export class Player {
       ls.sprites.push(sprite);
     }
     if (this.teleportPlaced && keyMap.get("KeyQ")) {
+      sfxSounds[18].pause();
+      sfxSounds[18].currentTime = 0
+      sfxSounds[20].play();
       this.posX = this.teleportX;
       this.posY = this.teleportY;
       this.teleportPlaced = false;
@@ -1898,6 +1959,8 @@ export class Player {
       const invDet = 1 / (this.planeX * this.dirY - this.dirX * this.planeY);
       const spriteX = sprite.x - this.posX;
       const spriteY = sprite.y - this.posY;
+
+      let hit = false;
 
       const transformX = invDet * (this.dirY * spriteX - this.dirX * spriteY);
       const transformY =
@@ -1924,6 +1987,7 @@ export class Player {
             transformY < 1.5
           ) {
             sprite.takeDamage(10);
+            hit = true;
             if (!(sprite instanceof Boss)) {
               sprite.x += this.dirX * 0.05;
               sprite.y += this.dirY * 0.05;
@@ -1936,8 +2000,14 @@ export class Player {
           this.dashCount < 5 &&
           Math.abs(transformY) < 1
         ) {
+          hit = true;
           sprite.takeDamage(10);
         }
+
+        if (hit) {
+          sfxSounds[26].play()
+        }
+
       }
       if (this.ammo < 10 && sprite.health <= 0 && !(sprite instanceof Ghost)) {
         sfxSounds[1].play();
@@ -1949,6 +2019,8 @@ export class Player {
   private healthUpdate(ls: levelSettings) {
     if (this.health <= 0) {
       setLevel(ls);
+      ls.cutscene.scene = 12;
+      sfxSounds[28].play();
     }
   }
 
@@ -1959,6 +2031,34 @@ export class Player {
       ls.backScreen.push(-1);
     }
 
+  }
+
+  private soundUpdate() {
+    if (keyMap.get("KeyW") || keyMap.get("KeyS") || keyMap.get("ArrowUp") || keyMap.get("ArrowDown")) {
+      this.walkSoundCounter += 1;
+    } else {
+      this.walkSoundCounter = 0;
+    }
+
+    if (this.running) {
+      if (this.walkSoundCounter % 20 === 1) {
+        sfxSounds[10].play()
+      }
+      if (this.walkSoundCounter % 20 === 10) {
+        sfxSounds[11].play()
+      }
+    } else {
+      if (this.walkSoundCounter % 30 === 1) {
+        sfxSounds[10].play()
+      }
+      if (this.walkSoundCounter % 30 === 15) {
+        sfxSounds[11].play()
+      }
+    }
+
+
+    if (this.horn) {
+    }
   }
 
   update(ls: levelSettings): void {
@@ -1977,6 +2077,8 @@ export class Player {
     if (this.inventory.sheild) this.sheildUpdate();
     if (this.inventory.teleport) this.teleportUpdate(ls);
 
+    if (this.inventory.horn) this.hornUpdate();
+
     this.spriteCollisonUpdate(ls);
     this.hitUpdate();
 
@@ -1984,6 +2086,8 @@ export class Player {
     this.holdingUpdate();
     this.inblockUpdate(ls.map.map);
     this.damageEnemy(ls);
+
+    this.soundUpdate()
   }
 
   resetPlayer(): void {
@@ -2019,10 +2123,6 @@ export class Player {
 
     this.holding = 1
   }
-
-
-
-
 }
 
 

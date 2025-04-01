@@ -97,6 +97,26 @@ japaneseText.set("learnTeleport", "瞬間移動を習得しました")
 englishText.set("level", "Level")
 japaneseText.set("level", "レベル")
 
+englishText.set("controlsMove", "Move: WASD/←↑↓→")
+japaneseText.set("controlsMove", "移動: WASD/←↑↓→")
+
+englishText.set("controlsSprint", "Sprint: Shift")
+japaneseText.set("controlsSprint", "走る: Shift")
+
+englishText.set("controlsUse", "Use: Space")
+japaneseText.set("controlsUse", "使用: Space")
+
+englishText.set("controlsItems", "Items: 1-5")
+japaneseText.set("controlsItems", "アイテム: 1-5")
+
+englishText.set("controlsDash", "Dash: E")
+japaneseText.set("controlsDash", "ダッシュ: E")
+
+englishText.set("controlsTeleport", "Teleport: Q")
+japaneseText.set("controlsTeleport", "瞬間移動: Q")
+
+englishText.set("death", "You Died")
+japaneseText.set("death", "倒されました")
 
 
 

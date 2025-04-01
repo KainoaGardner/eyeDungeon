@@ -1,3 +1,4 @@
+import { setSFXVolume, setMusicVolume } from "./sounds";
 interface pos {
   x: number;
   y: number;
@@ -77,6 +78,9 @@ canvas.height = settings.displayHeight;
 const maxGraphicsHeight = 512;
 const maxGraphicsWidth = 288;
 
+setSFXVolume(settings.sfxVolume)
+setMusicVolume(settings.musicVolume)
+
 
 
 const c = canvas.getContext("2d")!;
@@ -103,7 +107,6 @@ if (userLang === "ja") {
   settings.language = 1;
 }
 
-
 export {
   canvas,
   c,
@@ -115,5 +118,5 @@ export {
   zBuffer,
   type pos,
   mouse,
-  unlockedLevels
+  unlockedLevels,
 };

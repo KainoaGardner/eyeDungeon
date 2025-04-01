@@ -12,7 +12,7 @@ import { Screen } from "./screens"
 document.body.style.overflow = "hidden";
 
 const ls = {
-  level: 1,
+  level: 0,
   player: new Player(0, 0, 1, 0.04, 0.05, {
     flashlight: false,
     gun: false,
@@ -52,35 +52,42 @@ function drawFrame(): void {
     case 1:
       uiScreen.pauseScreen();
       uiScreen.pauseScreenUpdate(ls);
+      uiScreen.backScreen();
       uiScreen.backUpdate(ls);
       break;
     case 2:
       uiScreen.controls();
+      uiScreen.backScreen();
       uiScreen.backUpdate(ls);
       break;
     case 3:
       uiScreen.settings();
       uiScreen.settingsUpdate(ls);
+      uiScreen.backScreen();
       uiScreen.backUpdate(ls);
       break;
     case 4:
       uiScreen.videoSettings();
       uiScreen.videoSettingsUpdate();
+      uiScreen.backScreen();
       uiScreen.backUpdate(ls);
       break;
     case 5:
       uiScreen.audioSettings();
       uiScreen.audioSettingsUpdate();
+      uiScreen.backScreen();
       uiScreen.backUpdate(ls);
       break;
     case 6:
       uiScreen.languageSettings();
       uiScreen.languageSettingsUpdate();
+      uiScreen.backScreen();
       uiScreen.backUpdate(ls);
       break;
     case 7:
       uiScreen.levelSelect();
       uiScreen.levelSelectUpdate(ls);
+      uiScreen.backScreen();
       uiScreen.backUpdate(ls);
       break;
     case 8:
@@ -115,7 +122,7 @@ function updateFrame(): void {
     levelUpdate(ls);
 
     for (let i = 0; i < ls.moveWall.length; i++) {
-      ls.moveWall[i].update(ls.map);
+      ls.moveWall[i].update(ls);
     }
 
     for (let i = 0; i < ls.fireWall.length; i++) {

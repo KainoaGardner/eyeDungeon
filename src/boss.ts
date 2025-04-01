@@ -2,6 +2,7 @@ import { canvas, c, pos, settings } from "./global";
 import { Fireball } from "./fireball";
 import { levelSettings } from "./levels";
 import { CloseBlock } from "./closeblock";
+import { sfxSounds } from "./sounds";
 
 import { Slime, Mage, Ghost, Skeleton } from "./enemy";
 import { SpikeBall } from "./spikeball";
@@ -61,6 +62,8 @@ export class Boss {
     if (this.attackCounter % 3 !== 0 || this.attackCounter < 30) {
       return;
     }
+
+
     const angle =
       (((this.attackCounter * 3 + Math.random() * 10 - 5) % 360) * Math.PI) / 180;
     const velX = this.shootSpeed * Math.cos(angle);
@@ -68,6 +71,8 @@ export class Boss {
     const fireball = new Fireball(this.x, this.y, velX, velY);
     const sprite = { x: this.x, y: this.y, texture: 0, type: fireball };
     ls.sprites.push(sprite);
+
+    sfxSounds[21].play()
   }
 
   private attack2(ls: levelSettings) {
@@ -87,6 +92,9 @@ export class Boss {
       const sprite = { x: this.x, y: this.y, texture: 0, type: fireball };
       ls.sprites.push(sprite);
     }
+    sfxSounds[21].pause()
+    sfxSounds[21].currentTime = 0
+    sfxSounds[21].play()
   }
 
   private attack3(ls: levelSettings) {
@@ -684,8 +692,15 @@ export class Boss {
   }
 
   private attack5() {
+    if (this.attackCounter < 10) {
+      sfxSounds[29].pause();
+      sfxSounds[29].currentTime = 0
+      sfxSounds[29].play();
+    }
     if (this.health / this.startHealth > 0.7 || this.attackCounter === 300) {
       this.attackCounter = 0;
+      sfxSounds[29].pause();
+      sfxSounds[29].currentTime = 0
     } else {
       this.health += 5;
     }
@@ -693,6 +708,7 @@ export class Boss {
 
   private attack6(ls: levelSettings) {
     if (this.attackCounter === 30) {
+      sfxSounds[30].play()
       ls.sprites.push(
         { x: this.x - 1, y: this.y - 1, texture: 8, type: new Slime(this.x - 1, this.y - 1, 100, 2, 10) },
         { x: this.x - 1, y: this.y + 1, texture: 8, type: new Slime(this.x - 1, this.y + 1, 100, 2, 10) },
@@ -708,6 +724,7 @@ export class Boss {
 
   private attack7(ls: levelSettings) {
     if (this.attackCounter === 30) {
+      sfxSounds[31].play()
       ls.sprites.push(
         { x: this.x - 1, y: this.y, texture: 3, type: new Mage(this.x - 1, this.y, 10, 0.2, 50, 20) },
         { x: this.x + 1, y: this.y, texture: 3, type: new Mage(this.x + 1, this.y, 10, 0.2, 50, 20, 25) },
@@ -721,6 +738,7 @@ export class Boss {
 
   private attack8(ls: levelSettings) {
     if (this.attackCounter === 30) {
+      sfxSounds[32].play()
       ls.sprites.push(
         {
           x: this.x,
@@ -739,6 +757,7 @@ export class Boss {
 
   private attack9(ls: levelSettings) {
     if (this.attackCounter === 30) {
+      sfxSounds[33].play()
       ls.sprites.push(
         { x: this.x, y: this.y, texture: 14, type: new Ghost(this.x, this.y, 0.03, 1, 100, 500) },
       )

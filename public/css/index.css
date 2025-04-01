@@ -1,7 +1,4 @@
 body {
-  /* display: flex; */
-  /* justify-content: center; */
-  /* align-items: middle; */
   margin: 0px 0px;
   padding: 0px 0px;
   height: 100%;
@@ -13,4 +10,12 @@ canvas {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+@font-face {
+  font-family: "Kappa20";
+  src: url("../fonts/Kappa20.ttf");
+
+  /* font-family: "jiskan24"; */
+  /* src: url("../fonts/jiskan24.ttf"); */
 }

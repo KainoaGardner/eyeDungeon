@@ -5,6 +5,7 @@ import { Slime, Mage, Ghost, Skeleton } from "./enemy";
 import { Boss } from "./boss";
 import { SpikeBall } from "./spikeball";
 import { Bullet } from "./bullet";
+import { sfxSounds } from "./sounds";
 
 interface sprite {
   x: number;
@@ -78,6 +79,10 @@ function spriteUpdate(ls: levelSettings) {
         sprite.type.update(ls);
       }
 
+      if (sprite.type.deadCounter === 1) {
+        sfxSounds[23].play()
+      }
+
       sprite.type.hurtUpdate();
 
       if (sprite.type.deadCounter > 0 && sprite.type.deadCounter < 10) {
@@ -107,6 +112,10 @@ function spriteUpdate(ls: levelSettings) {
         );
       }
 
+      if (sprite.type.deadCounter === 1) {
+        sfxSounds[24].play()
+      }
+
       sprite.type.hurtUpdate();
       if (sprite.type.deadCounter > 0 && sprite.type.deadCounter < 10) {
         sprite.texture = 11;
@@ -126,12 +135,27 @@ function spriteUpdate(ls: levelSettings) {
       sprite.type.update();
       sprite.x = sprite.type.x;
       sprite.y = sprite.type.y;
+
+      const distance = Math.sqrt(
+        (sprite.x - ls.player.posX) * (sprite.x - ls.player.posX) +
+        (sprite.y - ls.player.posY) * (sprite.y - ls.player.posY),
+      );
+
+      if (distance < 5) {
+        sfxSounds[34].play();
+      }
+
+
     } else if (ls.sprites[i].type instanceof Ghost) {
       if (sprite.type.deadCounter === 0) {
         sprite.x = sprite.type.x;
         sprite.y = sprite.type.y;
 
         sprite.type.update(ls);
+      }
+
+      if (sprite.type.deadCounter === 1) {
+        sfxSounds[23].play()
       }
 
       sprite.type.hurtUpdate();
@@ -163,6 +187,10 @@ function spriteUpdate(ls: levelSettings) {
         );
       }
 
+      if (sprite.type.deadCounter === 1) {
+        sfxSounds[25].play()
+      }
+
       sprite.type.hurtUpdate();
       if (sprite.type.deadCounter > 0 && sprite.type.deadCounter < 10) {
         sprite.texture = 23;
@@ -185,6 +213,9 @@ function spriteUpdate(ls: levelSettings) {
 
         sprite.type.update(ls);
       } else if (sprite.type.deadCounter === 1) {
+
+        sfxSounds[35].play()
+        sfxSounds[29].pause()
         ls.moveWall = [];
         for (let i = 0; i < ls.map.map.length; i++) {
           for (let j = 0; j < ls.map.map[0].length; j++) {

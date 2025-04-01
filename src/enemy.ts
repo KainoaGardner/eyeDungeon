@@ -1,6 +1,7 @@
 import { levelSettings } from "./levels";
 import { Fireball } from "./fireball";
 import { pos } from "./global";
+import { sfxSounds } from "./sounds"
 
 const dir: pos[] = [
   { x: 0, y: -1 },
@@ -266,6 +267,14 @@ export class Mage extends Enemy {
         const sprite = { x: this.x, y: this.y, texture: 0, type: fireball };
         ls.sprites.push(sprite);
         this.shootCount = 0;
+
+        if (distance < 5) {
+          sfxSounds[21].pause();
+          sfxSounds[21].currentTime = 0;
+          sfxSounds[21].volume = ((5 - distance) / 10)
+          sfxSounds[21].play();
+        }
+
       }
     } else {
       this.shootCount = 0;

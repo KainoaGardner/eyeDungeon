@@ -1,12 +1,20 @@
 import { canvas, c, settings, } from "./global";
 import {
-  cutsceneTextures, playerTextures, flashLightInvImg, swordInvImg, gunInvImg, gunInv1Img,
-  sheildInvImg, dashInvImg, clockInvImg
+  cutsceneTextures,
+  playerTextures,
+  flashLightInvImg,
+  swordInvImg,
+  gunInvImg,
+  gunInv1Img,
+  sheildInvImg,
+  dashInvImg,
+  clockInvImg
 } from "./textures"
 import { keyMap } from "./keypress"
 import { languageText } from "./text"
 import { drawImage } from "./util"
 import { levelSettings } from "./levels"
+import { sfxSounds, musicSounds } from "./sounds";
 
 let playerWalkFrame = 0;
 
@@ -57,12 +65,18 @@ export class Cutscene {
       case 11:
         this.winCutscene(ls);
         break;
+      case 12:
+        this.deathCutscene();
+        break;
 
       default:
         break;
     }
     this.cutsceneBars()
-    this.skipText()
+
+    if (this.scene !== 12) {
+      this.skipText()
+    }
 
     if (this.frameCounter !== 0) {
       this.frameCounter++;
@@ -73,7 +87,16 @@ export class Cutscene {
       if (this.scene === 11) {
         ls.screen = 8;
         ls.backScreen = [];
+
       }
+
+      for (let i = 0; i < musicSounds.length; i++) {
+        musicSounds[i].pause();
+      }
+      for (let i = 0; i < sfxSounds.length; i++) {
+        sfxSounds[i].pause();
+      }
+
       keyMap.set("Escape", false)
     }
 
@@ -90,10 +113,50 @@ export class Cutscene {
 
     if (this.frameCounter > 3000) {
       this.frameCounter = 0;
+      musicSounds[0].pause();
+      musicSounds[1].pause();
     }
+
     if (this.frameCounter === 1) {
       playerWalkFrame = 0;
+      musicSounds[0].play();
+      sfxSounds[40].play();
     }
+
+    if (this.frameCounter === 700) {
+      musicSounds[0].pause();
+      musicSounds[1].play();
+    }
+
+    if (this.frameCounter > 100 && this.frameCounter < 700) {
+      if (this.frameCounter % 30 === 1) {
+        sfxSounds[10].play()
+      }
+      if (this.frameCounter % 30 === 15) {
+        sfxSounds[11].play()
+      }
+    }
+
+    if (this.frameCounter === 800) {
+      sfxSounds[37].play()
+      sfxSounds[40].pause();
+    }
+    if (this.frameCounter === 1400) {
+      sfxSounds[37].pause()
+    }
+
+    if (this.frameCounter === 1500) {
+      sfxSounds[38].play();
+    }
+
+    if (this.frameCounter === 1900) {
+      sfxSounds[16].play();
+    }
+
+    if (this.frameCounter === 2000) {
+      sfxSounds[39].play()
+    }
+
     c.fillStyle = "black"
     c.fillRect(0, 0, canvas.width, canvas.height)
 
@@ -162,12 +225,12 @@ export class Cutscene {
       c.drawImage(playerTextures[5], canvas.width / 2 - settings.UIRatio * 20, settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
       c.drawImage(flashLightInvImg, canvas.width / 2 + settings.UIRatio * 5, settings.UIRatio * 85, settings.UIRatio * 20, settings.UIRatio * 20)
 
-      c.fillStyle = "white"
+      c.fillStyle = "#d63031"
       c.strokeStyle = "black"
-      c.font = `bold ${15 * settings.UIRatio}px Arial`
-      c.fillStyle = "white"
+      c.font = `bold ${15 * settings.UIRatio}px Kappa20`
+      c.fillStyle = "#d63031"
       c.strokeStyle = "black"
-      c.lineWidth = 2 * settings.UIRatio / 10;
+      c.lineWidth = 3 * settings.UIRatio / 10;
 
       c.fillText(text.get("getFlashlight")!, canvas.width / 2, canvas.height / 2 - settings.UIRatio * 10)
       c.strokeText(text.get("getFlashlight")!, canvas.width / 2, canvas.height / 2 - settings.UIRatio * 10)
@@ -182,10 +245,10 @@ export class Cutscene {
     }
 
     if (this.frameCounter > 2700) {
-      c.font = `bold ${10 * settings.UIRatio}px Arial`
-      c.fillStyle = "white"
+      c.font = `bold ${15 * settings.UIRatio}px Kappa20`
+      c.fillStyle = "#d63031"
       c.strokeStyle = "black"
-      c.lineWidth = 1 * settings.UIRatio / 10;
+      c.lineWidth = 3 * settings.UIRatio / 10;
 
       c.fillText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
       c.strokeText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
@@ -265,22 +328,22 @@ export class Cutscene {
       c.drawImage(playerTextures[5], canvas.width / 2 - settings.UIRatio * 20, settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
       c.drawImage(swordInvImg, canvas.width / 2 - settings.UIRatio * 10, settings.UIRatio * 75, settings.UIRatio * 30, settings.UIRatio * 30)
 
-      c.fillStyle = "white"
+      c.fillStyle = "#d63031"
       c.strokeStyle = "black"
-      c.font = `bold ${15 * settings.UIRatio}px Arial`
-      c.fillStyle = "white"
+      c.font = `bold ${15 * settings.UIRatio}px Kappa20`
+      c.fillStyle = "#d63031"
       c.strokeStyle = "black"
-      c.lineWidth = 2 * settings.UIRatio / 10;
+      c.lineWidth = 3 * settings.UIRatio / 10;
 
       c.fillText(text.get("findSword")!, canvas.width / 2, canvas.height / 2 - settings.UIRatio * 10)
       c.strokeText(text.get("findSword")!, canvas.width / 2, canvas.height / 2 - settings.UIRatio * 10)
     }
 
     if (this.frameCounter > 1900) {
-      c.font = `bold ${10 * settings.UIRatio}px Arial`
-      c.fillStyle = "white"
+      c.font = `bold ${15 * settings.UIRatio}px Kappa20`
+      c.fillStyle = "#d63031"
       c.strokeStyle = "black"
-      c.lineWidth = 1 * settings.UIRatio / 10;
+      c.lineWidth = 3 * settings.UIRatio / 10;
 
       c.fillText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
       c.strokeText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
@@ -351,12 +414,12 @@ export class Cutscene {
     }
 
     if (this.frameCounter >= 700 && this.frameCounter < 1400) {
-      c.fillStyle = "white"
+      c.fillStyle = "#d63031"
       c.strokeStyle = "black"
-      c.font = `bold ${15 * settings.UIRatio}px Arial`
-      c.fillStyle = "white"
+      c.font = `bold ${15 * settings.UIRatio}px Kappa20`
+      c.fillStyle = "#d63031"
       c.strokeStyle = "black"
-      c.lineWidth = 2 * settings.UIRatio / 10;
+      c.lineWidth = 3 * settings.UIRatio / 10;
 
       c.fillText(text.get("getRun")!, canvas.width / 2, canvas.height / 2 - settings.UIRatio * 10)
       c.strokeText(text.get("getRun")!, canvas.width / 2, canvas.height / 2 - settings.UIRatio * 10)
@@ -391,10 +454,10 @@ export class Cutscene {
     }
 
     if (this.frameCounter > 1400) {
-      c.font = `bold ${10 * settings.UIRatio}px Arial`
-      c.fillStyle = "white"
+      c.font = `bold ${15 * settings.UIRatio}px Kappa20`
+      c.fillStyle = "#d63031"
       c.strokeStyle = "black"
-      c.lineWidth = 1 * settings.UIRatio / 10;
+      c.lineWidth = 3 * settings.UIRatio / 10;
 
       c.fillText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
       c.strokeText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
@@ -426,7 +489,7 @@ export class Cutscene {
 
 
       c.globalAlpha = 0.3;
-      c.fillStyle = "white"
+      c.fillStyle = "#white"
       c.beginPath();
       const path = new Path2D();
       path.moveTo(settings.UIRatio * (-15 + (this.frameCounter - 100) / 2), settings.UIRatio * 95);
@@ -469,10 +532,10 @@ export class Cutscene {
     }
 
     if (this.frameCounter > 1000) {
-      c.font = `bold ${10 * settings.UIRatio}px Arial`
-      c.fillStyle = "white"
+      c.font = `bold ${15 * settings.UIRatio}px Kappa20`
+      c.fillStyle = "#d63031"
       c.strokeStyle = "black"
-      c.lineWidth = 1 * settings.UIRatio / 10;
+      c.lineWidth = 3 * settings.UIRatio / 10;
 
       c.fillText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
       c.strokeText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
@@ -511,10 +574,10 @@ export class Cutscene {
     } else if (this.frameCounter >= 800 && this.frameCounter < 1500) {
       c.drawImage(cutsceneTextures[5], 0, 0, canvas.width, canvas.height)
       c.drawImage(playerTextures[5], settings.UIRatio * 100, settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
-      c.font = `bold ${10 * settings.UIRatio}px Arial`
-      c.fillStyle = "white"
+      c.font = `bold ${15 * settings.UIRatio}px Kappa20`
+      c.fillStyle = "#d63031"
       c.strokeStyle = "black"
-      c.lineWidth = 1 * settings.UIRatio / 10;
+      c.lineWidth = 3 * settings.UIRatio / 10;
 
       c.fillText(text.get("findGun")!, canvas.width / 2, canvas.height / 2)
       c.strokeText(text.get("findGun")!, canvas.width / 2, canvas.height / 2)
@@ -585,10 +648,10 @@ export class Cutscene {
     }
 
     if (this.frameCounter > 2000) {
-      c.font = `bold ${10 * settings.UIRatio}px Arial`
-      c.fillStyle = "white"
+      c.font = `bold ${15 * settings.UIRatio}px Kappa20`
+      c.fillStyle = "#d63031"
       c.strokeStyle = "black"
-      c.lineWidth = 1 * settings.UIRatio / 10;
+      c.lineWidth = 3 * settings.UIRatio / 10;
 
       c.fillText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
       c.strokeText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
@@ -641,10 +704,10 @@ export class Cutscene {
     }
 
     if (this.frameCounter > 750) {
-      c.font = `bold ${10 * settings.UIRatio}px Arial`
-      c.fillStyle = "white"
+      c.font = `bold ${15 * settings.UIRatio}px Kappa20`
+      c.fillStyle = "#d63031"
       c.strokeStyle = "black"
-      c.lineWidth = 1 * settings.UIRatio / 10;
+      c.lineWidth = 3 * settings.UIRatio / 10;
 
       c.fillText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
       c.strokeText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
@@ -793,10 +856,10 @@ export class Cutscene {
 
 
     if (this.frameCounter > 2700) {
-      c.font = `bold ${10 * settings.UIRatio}px Arial`
-      c.fillStyle = "white"
+      c.font = `bold ${15 * settings.UIRatio}px Kappa20`
+      c.fillStyle = "#d63031"
       c.strokeStyle = "black"
-      c.lineWidth = 1 * settings.UIRatio / 10;
+      c.lineWidth = 3 * settings.UIRatio / 10;
 
       c.fillText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
       c.strokeText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
@@ -927,10 +990,10 @@ export class Cutscene {
     }
 
     if (this.frameCounter >= 800 && this.frameCounter < 1500) {
-      c.font = `bold ${10 * settings.UIRatio}px Arial`
-      c.fillStyle = "white"
+      c.font = `bold ${15 * settings.UIRatio}px Kappa20`
+      c.fillStyle = "#d63031"
       c.strokeStyle = "black"
-      c.lineWidth = 1 * settings.UIRatio / 10;
+      c.lineWidth = 3 * settings.UIRatio / 10;
 
       c.fillText(text.get("findSheild")!, canvas.width / 2, canvas.height / 2)
       c.strokeText(text.get("findSheild")!, canvas.width / 2, canvas.height / 2)
@@ -968,10 +1031,10 @@ export class Cutscene {
 
 
     if (this.frameCounter > 2500) {
-      c.font = `bold ${10 * settings.UIRatio}px Arial`
-      c.fillStyle = "white"
+      c.font = `bold ${15 * settings.UIRatio}px Kappa20`
+      c.fillStyle = "#d63031"
       c.strokeStyle = "black"
-      c.lineWidth = 1 * settings.UIRatio / 10;
+      c.lineWidth = 3 * settings.UIRatio / 10;
 
       c.fillText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
       c.strokeText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
@@ -1219,12 +1282,12 @@ export class Cutscene {
     }
 
     if (this.frameCounter >= 450 && this.frameCounter < 1150) {
-      c.fillStyle = "white"
+      c.fillStyle = "#d63031"
       c.strokeStyle = "black"
-      c.font = `bold ${15 * settings.UIRatio}px Arial`
-      c.fillStyle = "white"
+      c.font = `bold ${15 * settings.UIRatio}px Kappa20`
+      c.fillStyle = "#d63031"
       c.strokeStyle = "black"
-      c.lineWidth = 2 * settings.UIRatio / 10;
+      c.lineWidth = 3 * settings.UIRatio / 10;
 
       c.fillText(text.get("learnDash")!, canvas.width / 2, canvas.height / 2 - settings.UIRatio * 10)
       c.strokeText(text.get("learnDash")!, canvas.width / 2, canvas.height / 2 - settings.UIRatio * 10)
@@ -1259,10 +1322,10 @@ export class Cutscene {
     }
 
     if (this.frameCounter > 1400) {
-      c.font = `bold ${10 * settings.UIRatio}px Arial`
-      c.fillStyle = "white"
+      c.font = `bold ${15 * settings.UIRatio}px Kappa20`
+      c.fillStyle = "#d63031"
       c.strokeStyle = "black"
-      c.lineWidth = 1 * settings.UIRatio / 10;
+      c.lineWidth = 3 * settings.UIRatio / 10;
 
       c.fillText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
       c.strokeText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
@@ -1299,10 +1362,10 @@ export class Cutscene {
       c.drawImage(playerTextures[6], settings.UIRatio * 40, settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
     } else if (this.frameCounter >= 500 && this.frameCounter < 1200) {
       c.drawImage(playerTextures[5], settings.UIRatio * 40, settings.UIRatio * 90, settings.UIRatio * 40, settings.UIRatio * 40)
-      c.font = `bold ${10 * settings.UIRatio}px Arial`
-      c.fillStyle = "white"
+      c.font = `bold ${15 * settings.UIRatio}px Kappa20`
+      c.fillStyle = "#d63031"
       c.strokeStyle = "black"
-      c.lineWidth = 1 * settings.UIRatio / 10;
+      c.lineWidth = 3 * settings.UIRatio / 10;
 
       c.fillText(text.get("learnTeleport")!, canvas.width / 2, canvas.height / 2)
       c.strokeText(text.get("learnTeleport")!, canvas.width / 2, canvas.height / 2)
@@ -1405,10 +1468,10 @@ export class Cutscene {
     }
 
     if (this.frameCounter > 2400) {
-      c.font = `bold ${10 * settings.UIRatio}px Arial`
-      c.fillStyle = "white"
+      c.font = `bold ${15 * settings.UIRatio}px Kappa20`
+      c.fillStyle = "#d63031"
       c.strokeStyle = "black"
-      c.lineWidth = 1 * settings.UIRatio / 10;
+      c.lineWidth = 3 * settings.UIRatio / 10;
 
       c.fillText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
       c.strokeText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
@@ -1481,8 +1544,8 @@ export class Cutscene {
     } else {
       c.fillStyle = "black"
       c.fillRect(0, 0, canvas.width, canvas.height)
-      c.font = `bold ${9 * settings.UIRatio}px Arial`
-      c.fillStyle = "white"
+      c.font = `bold ${9 * settings.UIRatio}px Kappa20`
+      c.fillStyle = "#d63031"
       c.strokeStyle = "black"
       c.lineWidth = 3 * settings.UIRatio / 10;
     }
@@ -1693,21 +1756,39 @@ export class Cutscene {
 
 
     if (this.frameCounter > 3500) {
-      c.font = `bold ${10 * settings.UIRatio}px Arial`
-      c.fillStyle = "white"
+      c.font = `bold ${15 * settings.UIRatio}px Kappa20`
+      c.fillStyle = "#d63031"
       c.strokeStyle = "black"
-      c.lineWidth = 1 * settings.UIRatio / 10;
+      c.lineWidth = 3 * settings.UIRatio / 10;
 
       c.fillText(text.get("win")!, canvas.width / 2, canvas.height / 2)
       c.strokeText(text.get("win")!, canvas.width / 2, canvas.height / 2)
     }
   }
 
-  skipText() {
-    c.font = `bold ${5 * settings.UIRatio}px Arial`
-    c.fillStyle = "white"
+  deathCutscene() {
+    const text = languageText[settings.language]
+    if (this.frameCounter > 1000) {
+      this.frameCounter = 0;
+    }
+
+    c.fillStyle = "black"
+    c.fillRect(0, 0, canvas.width, canvas.height)
+
+    c.font = `bold ${20 * settings.UIRatio}px Kappa20`
+    c.fillStyle = "#d63031"
     c.strokeStyle = "black"
-    c.lineWidth = 1 * settings.UIRatio / 10;
+    c.lineWidth = 3 * settings.UIRatio / 10;
+
+    c.fillText(text.get("death")!, canvas.width / 2, canvas.height / 2)
+    c.strokeText(text.get("death")!, canvas.width / 2, canvas.height / 2)
+  }
+
+  skipText() {
+    c.font = `bold ${5 * settings.UIRatio}px Kappa20`
+    c.fillStyle = "#d63031"
+    c.strokeStyle = "black"
+    c.lineWidth = 0.5 * settings.UIRatio / 10;
 
     const text = languageText[settings.language]
     c.fillText(text.get("skip")!, canvas.width - settings.UIRatio * 40, canvas.height - settings.UIRatio * 5)
