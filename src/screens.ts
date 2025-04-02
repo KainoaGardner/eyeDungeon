@@ -5,7 +5,7 @@ import { keyMap } from "./keypress";
 import { setSFXVolume, setMusicVolume } from "./sounds";
 import { languageText } from "./text"
 import { saveData, uploadData } from "./save"
-import { sfxSounds, musicSounds } from "./sounds";
+import { sfxSounds } from "./sounds";
 import { unpauseAudio } from "./util";
 
 function checkHover(left: number, right: number, top: number, bottom: number): boolean {
