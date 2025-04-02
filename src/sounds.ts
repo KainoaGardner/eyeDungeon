@@ -53,12 +53,16 @@ createSound("/sound/windFall.wav", sfxSounds)//37
 createSound("/sound/fallLand.wav", sfxSounds)//38
 createSound("/sound/getItem.wav", sfxSounds)//39
 createSound("/sound/birds.wav", sfxSounds)//40
+createSound("/sound/doorOpen.wav", sfxSounds)//41
+createSound("/sound/doorClose.wav", sfxSounds)//42
+createSound("/sound/jump.wav", sfxSounds)//43
 
 createSound("/music/windChimes.wav", musicSounds)//0
 createSound("/music/drums.wav", musicSounds)//1
 createSound("/music/normal.wav", musicSounds)//2
 createSound("/music/level4.wav", musicSounds)//3
 createSound("/music/boss.wav", musicSounds)//4
+createSound("/music/victory.wav", musicSounds)//5
 musicSounds[1].loop = true
 musicSounds[2].loop = true
 musicSounds[3].loop = true

@@ -1,6 +1,7 @@
 import { levelSettings, getPlayerDirection } from "./levels";
 import { FireballWall } from "./fireball";
 import { SpikeBall } from "./spikeball";
+import { sfxSounds } from "./sounds"
 
 let fireballCount = 0;
 let spikeballCount = 0;
@@ -15,25 +16,32 @@ function level7Update(ls: levelSettings) {
     const tpBlock = playerXBlock.toString() + "," + playerYBlock;
     switch (tpBlock) {
       case "16,12":
+        sfxSounds[41].play();
         lampRoom(ls);
         break;
       case "17,12":
         enemyRoom1(ls);
+        sfxSounds[41].play();
         break;
       case "18,12":
         wallRoom(ls);
+        sfxSounds[41].play();
         break;
       case "19,12":
         walkRoom(ls);
+        sfxSounds[41].play();
         break;
       case "20,12":
         fireballRoom(ls);
+        sfxSounds[41].play();
         break;
       case "21,12":
         enemyRoom2(ls);
+        sfxSounds[41].play();
         break;
       case "22,12":
         strikeballRoom(ls);
+        sfxSounds[41].play();
         break;
       default:
         ls.player.posX = 19.5;

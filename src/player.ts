@@ -2061,7 +2061,6 @@ export class Player {
       }
     }
 
-
     if (this.horn) {
     }
   }

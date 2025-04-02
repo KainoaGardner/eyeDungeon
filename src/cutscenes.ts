@@ -641,7 +641,7 @@ export class Cutscene {
       if (this.frameCounter % 30 === 1) {
         sfxSounds[10].play()
       }
-      if (this.frameCounter % 30 === 10) {
+      if (this.frameCounter % 30 === 15) {
         sfxSounds[11].play()
       }
     }
@@ -784,7 +784,28 @@ export class Cutscene {
 
     if (this.frameCounter > 1100) {
       this.frameCounter = 0;
+      musicSounds[1].pause();
     }
+    if (this.frameCounter === 1) {
+      playerWalkFrame = 0;
+      musicSounds[1].pause();
+      musicSounds[1].currentTime = 0;
+      musicSounds[1].play();
+    }
+
+    if (this.frameCounter > 100 && this.frameCounter < 350 || this.frameCounter >= 450 && this.frameCounter < 800) {
+      if (this.frameCounter % 30 === 1) {
+        sfxSounds[10].play()
+      }
+      if (this.frameCounter % 30 === 15) {
+        sfxSounds[11].play()
+      }
+
+      if (this.frameCounter % 50 === 1) {
+        sfxSounds[34].play()
+      }
+    }
+
 
     c.fillStyle = "black"
     c.fillRect(0, 0, canvas.width, canvas.height)
@@ -840,6 +861,44 @@ export class Cutscene {
 
     if (this.frameCounter > 3000) {
       this.frameCounter = 0;
+      musicSounds[1].pause();
+    }
+
+    if (this.frameCounter === 1) {
+      playerWalkFrame = 0;
+      musicSounds[1].pause();
+      musicSounds[1].currentTime = 0;
+      musicSounds[1].play();
+    }
+
+    if (this.frameCounter > 100 && this.frameCounter < 840) {
+      if (this.frameCounter % 30 === 1) {
+        sfxSounds[10].play()
+      }
+      if (this.frameCounter % 30 === 15) {
+        sfxSounds[11].play()
+      }
+    }
+
+    if (this.frameCounter > 1500 && this.frameCounter < 1800 || this.frameCounter > 2000 && this.frameCounter < 2600) {
+      if (this.frameCounter % 20 === 1) {
+        sfxSounds[10].play()
+      }
+      if (this.frameCounter % 20 === 10) {
+        sfxSounds[11].play()
+      }
+    }
+
+    if (this.frameCounter === 1200) {
+      sfxSounds[38].play();
+    }
+
+    if (this.frameCounter === 900 || this.frameCounter === 1800) {
+      sfxSounds[42].play();
+    }
+
+    if (this.frameCounter === 1060 || this.frameCounter === 1860) {
+      sfxSounds[41].play();
     }
 
     c.fillStyle = "black"
@@ -992,6 +1051,85 @@ export class Cutscene {
 
     if (this.frameCounter > 2700) {
       this.frameCounter = 0;
+      musicSounds[1].pause();
+    }
+
+    if (this.frameCounter === 1) {
+      playerWalkFrame = 0;
+      musicSounds[1].pause();
+      musicSounds[1].currentTime = 0;
+      musicSounds[1].play();
+    }
+
+    if (this.frameCounter > 100 && this.frameCounter < 600) {
+      if (this.frameCounter % 30 === 1) {
+        sfxSounds[10].play()
+      }
+      if (this.frameCounter % 30 === 15) {
+        sfxSounds[11].play()
+      }
+    }
+
+    if (this.frameCounter > 1500 && this.frameCounter < 2500) {
+      if (this.frameCounter % 50 === 1) {
+        sfxSounds[10].play()
+      }
+      if (this.frameCounter % 50 === 25) {
+        sfxSounds[11].play()
+      }
+    }
+
+    if (this.frameCounter === 700) {
+      sfxSounds[16].play();
+    }
+
+    if (this.frameCounter === 800) {
+      sfxSounds[39].play();
+    }
+
+    if (this.frameCounter >= 100 && this.frameCounter < 800) {
+      c.drawImage(sheildInvImg, canvas.width / 2, settings.UIRatio * 100, settings.UIRatio * 30, settings.UIRatio * 30)
+    }
+    else if (this.frameCounter >= 800 && this.frameCounter < 1500) {
+      c.drawImage(sheildInvImg, canvas.width / 2 + settings.UIRatio * -5, settings.UIRatio * 85, settings.UIRatio * 30, settings.UIRatio * 30)
+    }
+    else if (this.frameCounter >= 1500 && this.frameCounter < 2500) {
+      c.drawImage(cutsceneTextures[26], settings.UIRatio * (115 + (this.frameCounter - 1500) / 6), settings.UIRatio * 86, settings.UIRatio * 40, settings.UIRatio * 40)
+    }
+
+    if (
+      this.frameCounter === 100 ||
+      this.frameCounter === 400 ||
+      this.frameCounter === 500 ||
+      this.frameCounter === 700 ||
+      this.frameCounter === 1000 ||
+      this.frameCounter === 1200 ||
+      this.frameCounter === 1450 ||
+      this.frameCounter === 1500 ||
+      this.frameCounter === 1600 ||
+      this.frameCounter === 1700 ||
+      this.frameCounter === 1750 ||
+      this.frameCounter === 1800 ||
+      this.frameCounter === 1900 ||
+      this.frameCounter === 2000 ||
+      this.frameCounter === 2100 ||
+      this.frameCounter === 2200
+    ) {
+      sfxSounds[21].pause();
+      sfxSounds[21].currentTime = 0;
+      sfxSounds[21].play();
+    }
+
+    if (
+      this.frameCounter === 2215 ||
+      this.frameCounter === 2040 ||
+      this.frameCounter === 1950 ||
+      this.frameCounter === 1780 ||
+      this.frameCounter === 1570
+    ) {
+      sfxSounds[15].pause();
+      sfxSounds[15].currentTime = 0;
+      sfxSounds[15].play();
     }
 
     c.fillStyle = "black"
@@ -1076,11 +1214,9 @@ export class Cutscene {
       c.drawImage(cutsceneTextures[13], canvas.width - settings.UIRatio * (this.frameCounter - 1500), settings.UIRatio * 35, settings.UIRatio * 40, settings.UIRatio * 40);
     }
 
-
     if (this.frameCounter >= 1600 && this.frameCounter < 2000) {
       c.drawImage(cutsceneTextures[13], canvas.width - settings.UIRatio * (this.frameCounter - 1600), settings.UIRatio * 55, settings.UIRatio * 40, settings.UIRatio * 40);
     }
-
 
     if (this.frameCounter >= 1700 && this.frameCounter < 1780) {
       c.drawImage(cutsceneTextures[13], canvas.width - settings.UIRatio * (this.frameCounter - 1700), settings.UIRatio * 85, settings.UIRatio * 40, settings.UIRatio * 40);
@@ -1120,8 +1256,6 @@ export class Cutscene {
       c.strokeText(text.get("findSheild")!, canvas.width / 2, canvas.height / 2)
     }
 
-
-
     if (this.frameCounter > 100 && this.frameCounter < 600) {
       if (this.frameCounter % 40 === 0) {
         if (playerWalkFrame === 0) {
@@ -1150,7 +1284,6 @@ export class Cutscene {
       }
     }
 
-
     if (this.frameCounter > 2500) {
       c.font = `bold ${15 * settings.UIRatio}px Kappa20`
       c.fillStyle = "#d63031"
@@ -1161,15 +1294,79 @@ export class Cutscene {
       c.strokeText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
     }
   }
+
+
   private cutscene9(level: number) {
     const text = languageText[settings.language]
 
     if (this.frameCounter > 1700) {
       this.frameCounter = 0;
+      musicSounds[1].pause();
     }
+
     if (this.frameCounter === 1) {
       playerWalkFrame = 0;
+      musicSounds[1].pause();
+      musicSounds[1].currentTime = 0;
+      musicSounds[1].play();
     }
+
+    if (this.frameCounter > 100 && this.frameCounter < 600) {
+      if (this.frameCounter % 30 === 1) {
+        sfxSounds[10].play()
+      }
+      if (this.frameCounter % 30 === 15) {
+        sfxSounds[11].play()
+      }
+    }
+
+    if (this.frameCounter > 600 && this.frameCounter < 1400) {
+      if (this.frameCounter % 20 === 1) {
+        sfxSounds[10].play()
+      }
+      if (this.frameCounter % 20 === 10) {
+        sfxSounds[11].play()
+      }
+    }
+
+    if (this.frameCounter === 400) {
+      sfxSounds[16].play()
+    }
+
+    if (this.frameCounter === 450) {
+      sfxSounds[39].play()
+    }
+
+    if (this.frameCounter === 800 || this.frameCounter === 1100 || this.frameCounter === 1300) {
+      sfxSounds[14].play()
+    }
+
+    if (
+      this.frameCounter === 500 ||
+      this.frameCounter === 600 ||
+      this.frameCounter === 650 ||
+      this.frameCounter === 700 ||
+      this.frameCounter === 750 ||
+      this.frameCounter === 800 ||
+      this.frameCounter === 850 ||
+      this.frameCounter === 900 ||
+      this.frameCounter === 950 ||
+      this.frameCounter === 1000 ||
+      this.frameCounter === 1050 ||
+      this.frameCounter === 1100 ||
+      this.frameCounter === 1150 ||
+      this.frameCounter === 1200 ||
+      this.frameCounter === 1250 ||
+      this.frameCounter === 1300 ||
+      this.frameCounter === 1350
+    ) {
+      sfxSounds[22].pause()
+      sfxSounds[22].currentTime = 0
+      sfxSounds[22].play()
+    }
+
+
+
     c.fillStyle = "black"
     c.fillRect(0, 0, canvas.width, canvas.height)
 
@@ -1458,7 +1655,71 @@ export class Cutscene {
 
     if (this.frameCounter > 2700) {
       this.frameCounter = 0;
+      musicSounds[1].pause();
     }
+
+    if (this.frameCounter === 1) {
+      playerWalkFrame = 0;
+      musicSounds[1].pause();
+      musicSounds[1].currentTime = 0;
+      musicSounds[1].play();
+    }
+
+    if (this.frameCounter > 100 && this.frameCounter < 300) {
+      if (this.frameCounter % 30 === 1) {
+        sfxSounds[10].play()
+      }
+      if (this.frameCounter % 30 === 15) {
+        sfxSounds[11].play()
+      }
+    }
+
+    if (
+      this.frameCounter > 1300 && this.frameCounter < 1500 ||
+      this.frameCounter > 2000 && this.frameCounter < 2300 ||
+      this.frameCounter > 1800 && this.frameCounter < 1920
+    ) {
+      if (this.frameCounter % 20 === 1) {
+        sfxSounds[10].play()
+      }
+      if (this.frameCounter % 20 === 10) {
+        sfxSounds[11].play()
+      }
+    }
+
+    if (
+      this.frameCounter === 400 ||
+      this.frameCounter === 1200 ||
+      this.frameCounter === 1921
+    ) {
+      sfxSounds[16].play()
+    }
+
+    if (this.frameCounter === 500) {
+      sfxSounds[39].play()
+    }
+
+    if (this.frameCounter === 1200) {
+      sfxSounds[19].play()
+    }
+
+    if (this.frameCounter === 1600) {
+      sfxSounds[20].play()
+    }
+
+    if (this.frameCounter === 1200) {
+      sfxSounds[18].play()
+    }
+    if (this.frameCounter === 1921) {
+      sfxSounds[18].pause()
+    }
+
+    if (this.frameCounter >= 1200 && this.frameCounter < 2000) {
+      if (this.frameCounter % 50 === 1) {
+        sfxSounds[34].play()
+      }
+    }
+
 
     c.fillStyle = "black"
     c.fillRect(0, 0, canvas.width, canvas.height)
@@ -1597,14 +1858,20 @@ export class Cutscene {
       c.fillText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
       c.strokeText(text.get("level")! + ` ${level}`, canvas.width / 2, canvas.height / 2)
     }
-
   }
-
-
 
   private bossCutscene() {
     if (this.frameCounter > 1850) {
       this.frameCounter = 0;
+      musicSounds[1].pause();
+    }
+
+    if (this.frameCounter === 1) {
+      musicSounds[1].play();
+    }
+
+    if (this.frameCounter === 1200) {
+      sfxSounds[35].play();
     }
 
     if (this.frameCounter < 50) {
@@ -1691,8 +1958,33 @@ export class Cutscene {
       this.frameCounter = 0;
       ls.screen = 8;
       ls.backScreen = [];
+      ls.level = 0
       stopAudio();
     }
+
+    if (this.frameCounter === 1) {
+      playerWalkFrame = 0;
+      musicSounds[5].play();
+    }
+
+    if (this.frameCounter > 700 && this.frameCounter < 2700 || this.frameCounter > 3000 && this.frameCounter < 3500) {
+      if (this.frameCounter % 30 === 1) {
+        sfxSounds[10].play()
+      }
+      if (this.frameCounter % 30 === 15) {
+        sfxSounds[11].play()
+      }
+    }
+
+    if (this.frameCounter === 3000) {
+      musicSounds[0].play();
+      sfxSounds[40].play();
+    }
+
+    if (this.frameCounter === 150 || this.frameCounter === 250 || this.frameCounter === 350 || this.frameCounter === 450) {
+      sfxSounds[43].play();
+    }
+
 
     if (this.frameCounter >= 100 && this.frameCounter < 700) {
       c.drawImage(cutsceneTextures[28], 0, 0, canvas.width, canvas.height);
@@ -1708,7 +2000,7 @@ export class Cutscene {
       c.drawImage(cutsceneTextures[31], canvas.width + settings.UIRatio * (0 - (this.frameCounter - 700) / 2), 0, canvas.width, canvas.height);
     }
 
-    if (this.frameCounter >= 1210 && this.frameCounter < 2500) {
+    if (this.frameCounter >= 1220 && this.frameCounter < 2500) {
       c.drawImage(cutsceneTextures[4], settings.UIRatio * (0 - (this.frameCounter - 1220) / 2),
         settings.UIRatio * (this.frameCounter - 1220) / 2.8, canvas.width, canvas.height);
       c.drawImage(cutsceneTextures[4], canvas.width + settings.UIRatio * (0 - (this.frameCounter - 1220) / 2),

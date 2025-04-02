@@ -31,7 +31,7 @@ const ls = {
   floorTex: 1,
   ceilingTex: 2,
   cutscene: new Cutscene(0, -1),
-  screen: 1,
+  screen: 0,
   backScreen: [0],
 };
 
@@ -139,16 +139,16 @@ function updateFrame(): void {
   interval = setInterval(updateFrame, 1000 / targetFps);
 }
 
-let times: number[] = [];
-function showFps(): void {
-  const now: number = performance.now();
-  while (times.length > 0 && times[0] <= now - 1000) {
-    times.shift();
-  }
-  times.push(now);
-  const fps: number = times.length;
-  console.log(fps);
-}
+// let times: number[] = [];
+// function showFps(): void {
+//   const now: number = performance.now();
+//   while (times.length > 0 && times[0] <= now - 1000) {
+//     times.shift();
+//   }
+//   times.push(now);
+//   const fps: number = times.length;
+//   console.log(fps);
+// }
 
 let interval = setInterval(updateFrame, 1000 / targetFps);
 
