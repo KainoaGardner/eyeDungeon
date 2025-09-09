@@ -7,9 +7,10 @@ Raycasted dungeon crawler game with 10 levels and a boss.
 
 <https://youtu.be/PuHCaP0AnjM?si=XzLj8G4t8k25T_OC>
   
+<a href="https://youtu.be/PuHCaP0AnjM?si=XzLj8G4t8k25T_OC">
 <img src=".github/eyeDungeon.png"
      alt="Image"
-     style="float: left; margin-right: 10px; height: 500px" />
+     style="float: left; margin-right: 10px; height: 500px" /></a>
 
 <h2>About</h2>
 
