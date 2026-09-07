@@ -1,7 +1,7 @@
 <h1 align="left">Eye Dungeon</h1>
 Raycasted dungeon crawler game with 10 levels and a boss.
 
-<http://kainoagardner.xyz/eyedungeon>
+<https://eyedungeon.kainoagardner.xyz/>
 
 <h2 align="left">Gameplay</h2>
 
